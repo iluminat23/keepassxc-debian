@@ -1,0 +1,15 @@
+keepassx (0.2.2-1) experimental; urgency=low
+
+  * cleanups to debian/rules
+  * upload to debian/experimental for now (Closes: #405896)
+  * small changes to description
+  * remove libstdc++6-4.0-dev from build-depends
+
+ -- Reinhard Tartler <siretart@tauware.de>  Mon,  8 Jan 2007 17:59:13 +0100
+
+keepassx (0.2.2-0ubuntu1) edgy; urgency=low
+
+  * Initial release
+
+ -- David Valot <ptitdav69@gmail.com>  Wed,  6 Sep 2006 21:07:02 +0200
+
