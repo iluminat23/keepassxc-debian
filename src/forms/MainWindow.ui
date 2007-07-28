@@ -227,8 +227,10 @@
     <property name="title" >
      <string>&amp;Help</string>
     </property>
+<!--
     <addaction name="HelpHandbookAction" />
     <addaction name="separator" />
+-->
     <addaction name="HelpAboutAction" />
    </widget>
    <addaction name="menuDatei" />
@@ -482,11 +484,13 @@
     <string>Show Statusbar</string>
    </property>
   </action>
+<!--
   <action name="HelpHandbookAction" >
    <property name="text" >
     <string>&amp;KeePassX Handbook...</string>
    </property>
   </action>
+-->
   <action name="FileExpPlainTextAction" >
    <property name="text" >
     <string>Plain Text (*.txt)</string>
