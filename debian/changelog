@@ -1,8 +1,10 @@
 keepassx (0.2.2-3) unstable; urgency=low
 
   * add watch file
+  * Remove link to handbook from the help menu, There is no handbook in
+    the source. thanks to Don (Closes: #434979).
 
- -- Reinhard Tartler <siretart@tauware.de>  Sat, 28 Jul 2007 13:28:54 +0200
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 28 Jul 2007 15:37:30 +0200
 
 keepassx (0.2.2-2) unstable; urgency=low
 

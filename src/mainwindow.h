@@ -97,7 +97,7 @@ private slots:
    void OnFileModified();
    void OnExtrasSettings();
    void OnHelpAbout();
-   void OnHelpHandbook();
+   //   void OnHelpHandbook();
    void OnItemExpanded(QTreeWidgetItem*);
    void OnItemCollaped(QTreeWidgetItem*);
    void OnHideSearchGroup();

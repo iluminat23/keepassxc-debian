@@ -136,7 +136,7 @@ void KeepassMainWindow::setupConnections(){
 	
 	connect(ExtrasSettingsAction,SIGNAL(triggered(bool)),this,SLOT(OnExtrasSettings()));
 	
-	connect(HelpHandbookAction,SIGNAL(triggered()),this,SLOT(OnHelpHandbook()));
+	//	connect(HelpHandbookAction,SIGNAL(triggered()),this,SLOT(OnHelpHandbook()));
 	connect(HelpAboutAction,SIGNAL(triggered()),this,SLOT(OnHelpAbout()));
 	
 	connect(GroupView,SIGNAL(entryDropped()),EntryView,SLOT(updateItems()));
@@ -200,7 +200,7 @@ EditSearchAction->setIcon(*Icon_EditSearch);
 EditGroupSearchAction->setIcon(*Icon_EditSearch);
 ExtrasSettingsAction->setIcon(*Icon_Configure);
 EditAutoTypeAction->setIcon(*Icon_AutoType);
-HelpHandbookAction->setIcon(*Icon_Help);
+//HelpHandbookAction->setIcon(*Icon_Help);
 }
 
 void KeepassMainWindow::setupMenus(){
@@ -1011,11 +1011,11 @@ void KeepassMainWindow::OnHelpAbout(){
 CAboutDialog dlg(this);
 dlg.exec();
 }
-
+/*
 void KeepassMainWindow::OnHelpHandbook(){
 openBrowser(AppDir+"/../share/doc/keepass/index.html");
 }
-
+*/
 void KeepassMainWindow::OnViewShowToolbar(bool show){
 config.Toolbar=show;
 toolBar->setVisible(config.Toolbar);
