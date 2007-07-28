@@ -3,8 +3,10 @@ keepassx (0.2.2-3) unstable; urgency=low
   * add watch file
   * Remove link to handbook from the help menu, There is no handbook in
     the source. thanks to Don (Closes: #434979).
+  * Bug fix: "keepassx: "copy to clipboard" functions do not work in other
+    environments than kde", thanks to Gabor Burjan (Closes: #414171).
 
- -- Reinhard Tartler <siretart@tauware.de>  Sat, 28 Jul 2007 15:37:30 +0200
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 28 Jul 2007 15:49:26 +0200
 
 keepassx (0.2.2-2) unstable; urgency=low
 

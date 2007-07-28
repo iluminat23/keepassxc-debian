@@ -886,6 +886,7 @@ ClipboardTimer.start(config.ClipboardTimeOut*1000);
 void KeepassMainWindow::OnEditPasswordToClipboard(){
 currentEntry()->Password.unlock();
 Clipboard->setText(currentEntry()->Password.string(),QClipboard::Clipboard);
+Clipboard->setText(currentEntry()->Password.string(),QClipboard::Selection);
 ClipboardTimer.setSingleShot(true);
 ClipboardTimer.start(config.ClipboardTimeOut*1000);
 currentEntry()->Password.lock();
@@ -894,6 +895,7 @@ currentEntry()->Password.lock();
 
 void KeepassMainWindow::OnClipboardTimeOut(){
 Clipboard->clear(QClipboard::Clipboard);
+Clipboard->clear(QClipboard::Selection);
 }
 
 void KeepassMainWindow::OnEditSaveAttachment(){
