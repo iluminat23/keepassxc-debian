@@ -1,3 +1,9 @@
+keepassx (0.2.2-3) unstable; urgency=low
+
+  * add watch file
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 28 Jul 2007 13:28:54 +0200
+
 keepassx (0.2.2-2) unstable; urgency=low
 
   * Upload to unstable
