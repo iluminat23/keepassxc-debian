@@ -21,21 +21,19 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -rf src/Makefile Makefile
-	dh_clean 
+	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_clean -k
 	dh_installdirs
 	make INSTALL_ROOT=$(CURDIR)/debian/keepassx install
         # Remove the executable attribut on png files
-	chmod 644 $(CURDIR)/debian/keepassx/usr/share/keepass/icons/*.png
+	chmod 644 $(CURDIR)/debian/keepassx/usr/share/keepassx/icons/*.png
         # desktop file and icon for KeePassX
-	mkdir $(CURDIR)/debian/keepassx/usr/share/applications/
-	mkdir $(CURDIR)/debian/keepassx/usr/share/pixmaps/
 	cp $(CURDIR)/debian/keepass.desktop $(CURDIR)/debian/keepassx/usr/share/applications/
 	cp $(CURDIR)/debian/keepass.xpm $(CURDIR)/debian/keepassx/usr/share/pixmaps/
 
