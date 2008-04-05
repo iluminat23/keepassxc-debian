@@ -1,4 +1,41 @@
 ---------------
+    0.3.1
+---------------
+- made key/password dialog more user friendly
+- added option for automatic database locking on inactivity
+- native file dialogs are used again under MacOS X and Windows
+- program accepts Qt command line switches like "-style" again
+- parameter "-cfg" now accepts relative paths (Bug #1825446)
+- fixed invalid entries in .desktop file (Bug #1906875)
+- fixed potential compilation problem in AES implementation (Bug #1905810)
+- fixed crash when re-arranging groups (Bug #1754998)
+- fixed size problems of some dialogs
+- files are not longer truncated when saving fails (Bug #1648616)
+- improved seeding of the random number generator
+
+---------------
+    0.3.0a
+---------------
+- fixed bug which prevented MacOS X bundle from starting (Bug #1906517)
+- fixed error message about missing license file when opening about dialog (Bug #1906696)
+
+---------------
+    0.3.0
+---------------
+- many bug fixes
+- global Auto-Type
+- fully customizable HTML based detail view
+- better structured settings dialog
+- secure random number generator based on 'Yarrow' including an optional entropy collector
+- new dialog to view expiered entries
+- calendar widget to edit expiration dates in a more confortable way
+- restructured password generator
+- much better appearance under MacOS X
+- fine tuning options for auto-type
+- system tray icon
+- workspace locking
+
+---------------
     0.2.2
 ---------------
 -fixed crash when parsing config file under Win32
@@ -16,6 +53,7 @@
 -alpha blending for banner icons
 -new standard banner icon
 -MacOS packages: all Qt libraries are now included in the application bundle (extra installation is not longer necessary)
+
 ---------------
     0.2.1
 ---------------
@@ -29,6 +67,7 @@
  for entries which don't expire
 -entry view now gets updated after changing the column setup
 -added menu entry to change the size of the toolbar icons
+
 ---------------
     0.2.0
 ---------------

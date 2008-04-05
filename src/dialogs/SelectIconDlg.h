@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -21,35 +21,34 @@
 #ifndef _SELECT_ICON_DLG_
 #define _SELECT_ICON_DLG_
 
-#include <QContextMenuEvent>
-#include <QMenu>
-#include <QAction>
-#include "main.h"
-#include "Database.h"
 #include "ui_SelectIconDlg.h"
 
-class CSelectIconDlg:public QDialog, public Ui_SelectIconDlg{
- Q_OBJECT
-public:
- CSelectIconDlg(Database* db,int,QWidget* parent = 0,  bool modal = false, Qt::WFlags fl = 0);
+class CSelectIconDlg:public QDialog, private Ui_SelectIconDlg{
+	Q_OBJECT
+	
+	public:
+		CSelectIconDlg(IDatabase* db,int ImageID,QWidget* parent = 0,  bool modal = false, Qt::WFlags fl = 0);
 
-public slots:
- void OnAddIcon();
- void OnPickIcon();
- void OnCancel();
- void OnDelete();
- void OnReplace();
- void OnSelectionChanged(QListWidgetItem*,QListWidgetItem*);
+	private slots:
+		void OnAddIcon();
+		void OnPickIcon();
+		void OnCancel();
+		void OnDelete();
+		void OnReplace();
+		void OnSelectionChanged(QListWidgetItem*);
 
-private:
- Database* db;
- void updateView();
- QMenu* CtxMenu;
- QAction* DeleteAction;
- QAction* ReplaceAction;
+	private:
+		int Id;
+		IDatabase* db;
+		void updateView();
+		QMenu* CtxMenu;
+		QAction* DeleteAction;
+		QAction* ReplaceAction;
+		QPushButton* Button_PickIcon;
 
-protected:
- virtual void contextMenuEvent(QContextMenuEvent *event);
+	protected:
+		virtual void contextMenuEvent(QContextMenuEvent *event);
+		virtual void showEvent(QShowEvent* event);
 
 };
 

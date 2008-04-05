@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "SecString.h"
-#include <iostream>
-#include "crypto/arcfour.h"
-#include "random.h"
+
+
 using namespace std;
 CArcFour SecString::RC4;
 
@@ -101,7 +99,7 @@ for(int i=0; i<str.length(); i++){
 void SecString::generateSessionKey(){
 CArcFour arc;
 unsigned char* sessionkey=new unsigned char[32];
-getRandomBytes(sessionkey,32,1,false);
+randomize(sessionkey,32);
 RC4.setKey(sessionkey,32);
 delete [] sessionkey;
 }

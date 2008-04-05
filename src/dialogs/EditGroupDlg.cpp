@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -18,25 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "main.h"
 
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <QShowEvent>
 #include "EditGroupDlg.h"
 #include "SelectIconDlg.h"
 
-
-CEditGroupDialog::CEditGroupDialog(Database* database,QWidget* parent, bool modal, Qt::WFlags fl)
+CEditGroupDialog::CEditGroupDialog(IDatabase* database,IGroupHandle* Handle,QWidget* parent, bool modal, Qt::WFlags fl)
 : QDialog(parent,fl)
 {
-setupUi(this);
-db=database;
-IconID=0;
-connect( ButtonOK, SIGNAL( clicked() ), this, SLOT( OnOK() ) );
-connect( ButtonCancel, SIGNAL( clicked() ), this, SLOT( OnCancel() ) );
-connect( Button_Icon, SIGNAL( clicked() ), this, SLOT( OnIconDlg() ));
-ModFlag=false;
+	setupUi(this);
+	db=database;
+	handle=Handle;
+	group=new CGroup();
+	group->Title=handle->title();
+	group->Image=handle->image();
+	connect( ButtonBox, SIGNAL( accepted() ), this, SLOT( OnOK() ) );
+	connect( ButtonBox, SIGNAL( rejected() ), this, SLOT( OnCancel() ) );
+	connect( Button_Icon, SIGNAL( clicked() ), this, SLOT( OnIconDlg() ));
+	adjustSize();
+	setMaximumSize(size());
+	setMinimumSize(size());
+}
+
+
+CEditGroupDialog::CEditGroupDialog(IDatabase* database,CGroup* Group,QWidget* parent, bool modal, Qt::WFlags fl)
+	: QDialog(parent,fl)
+{
+	setupUi(this);
+	db=database;
+	group=Group;
+	handle=NULL;
+	connect( ButtonBox, SIGNAL( accepted() ), this, SLOT( OnOK() ) );
+	connect( ButtonBox, SIGNAL( rejected() ), this, SLOT( OnCancel() ) );
+	connect( Button_Icon, SIGNAL( clicked() ), this, SLOT( OnIconDlg() ));
 }
 
 CEditGroupDialog::~CEditGroupDialog()
@@ -44,36 +57,47 @@ CEditGroupDialog::~CEditGroupDialog()
 }
 
 void CEditGroupDialog::showEvent(QShowEvent *event){
-if(event->spontaneous()==false){
-	EditTitle->setText(GroupName);
-	for(int i=0;i<db->numIcons();i++){
-		ComboIconPicker->insertItem(i,db->icon(i),"");
+	if(event->spontaneous()==false){
+		EditTitle->setText(group->Title);
+		for(int i=0;i<db->numIcons();i++){
+			ComboIconPicker->insertItem(i,db->icon(i),"");
+		}
+		ComboIconPicker->setCurrentIndex(group->Image);
 	}
-	ComboIconPicker->setCurrentIndex(IconID);
-}
 }
 
 void CEditGroupDialog::OnOK()
 {
-GroupName=EditTitle->text();
-IconID=ComboIconPicker->currentIndex();
-done(1);
+	int r=1;
+	if(EditTitle->text()!=group->Title){
+		group->Title=EditTitle->text();
+		r=2;
+	}
+	if(ComboIconPicker->currentIndex()!=group->Image){
+		group->Image=ComboIconPicker->currentIndex();
+		r=2;
+	}	
+	if(handle){
+		handle->setTitle(group->Title);
+		handle->setImage(group->Image);
+	}
+	done(r);
 }
 
 void CEditGroupDialog::OnCancel()
 {
-done(0);
+	done(0);
 }
 
 
 void CEditGroupDialog::OnIconDlg(){
-CSelectIconDlg dlg(db,IconID,this);
-int r=dlg.exec();
-if(r!=-1){
-	ComboIconPicker->clear();
-	for(int i=0;i<db->numIcons();i++)
-		ComboIconPicker->insertItem(i,db->icon(i),"");
-	IconID=r;
-	ComboIconPicker->setCurrentIndex(IconID);
-}
+	CSelectIconDlg dlg(db,group->Image,this);
+	int r=dlg.exec();
+	if(r!=-1){
+		ComboIconPicker->clear();
+		for(int i=0;i<db->numIcons();i++)
+			ComboIconPicker->insertItem(i,db->icon(i),"");
+		group->Image=r;
+		ComboIconPicker->setCurrentIndex(r);
+	}
 }

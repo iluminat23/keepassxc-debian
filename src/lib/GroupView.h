@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -20,63 +20,72 @@
 #ifndef _GROUP_VIEW_H_
 #define _GROUP_VIEW_H_
 
-#include <QTreeWidget>
-#include <QLine>
-#include <QContextMenuEvent>
-#include "../PwManager.h"
+#include "Kdb3Database.h"
 
 class GroupViewItem;
-typedef vector<GroupViewItem*>::iterator GroupItemItr;
 
 class KeepassGroupView:public QTreeWidget{
-Q_OBJECT
-public:
- KeepassGroupView(QWidget* parent=0);
- bool isSearchResultGroup(GroupViewItem* item);
- void selectSearchGroup();
- Database *db;
- bool ShowSearchGroup;  //needs a "updateItems()" after a change! 
- vector<GroupViewItem*>Items;
- QMenu *ContextMenu;
- QMenu *ContextMenuSearchGroup;
-
-public slots:
- void updateItems();
-
-signals:
- void fileModified();
- void entryDropped();
-
-protected:
- virtual void dragEnterEvent ( QDragEnterEvent * event );
- virtual void dragMoveEvent ( QDragMoveEvent * event );
- virtual void dragLeaveEvent ( QDragLeaveEvent * event );
- virtual void dropEvent ( QDropEvent * event );
- virtual void mousePressEvent(QMouseEvent *event);
- virtual void mouseMoveEvent(QMouseEvent *event);
- virtual void paintEvent ( QPaintEvent * event );
- virtual void contextMenuEvent(QContextMenuEvent *event);
-
-private:
- QLine InsertionMarker;
- QPoint DragStartPos;
- QPixmap DragPixmap;
- GroupViewItem* DragItem;
- GroupViewItem* LastHoverItem;
- GroupViewItem* getLastSameLevelItem(int level);
- enum tDragType{GROUP,ENTRY};
- tDragType DragType;
+	Q_OBJECT
+	public:
+		KeepassGroupView(QWidget* parent=0);
+		IDatabase *db;
+		QList<GroupViewItem*>Items;
+		QMenu *ContextMenu;
+		QMenu *ContextMenuSearchGroup;
+		GroupViewItem* SearchResultItem;
+		void createItems();
+		void showSearchResults();
+		void setCurrentGroup(IGroupHandle* group);
+		
+	private:
+		virtual void dragEnterEvent(QDragEnterEvent* event);
+		virtual void dragMoveEvent(QDragMoveEvent* event);
+		void entryDragMoveEvent(QDragMoveEvent* event);
+		virtual void dragLeaveEvent ( QDragLeaveEvent * event );
+		virtual void dropEvent ( QDropEvent * event );
+		void entryDropEvent(QDropEvent* event);
+		virtual void mousePressEvent(QMouseEvent *event);
+		virtual void mouseMoveEvent(QMouseEvent *event);
+		virtual void paintEvent ( QPaintEvent * event );
+		virtual void contextMenuEvent(QContextMenuEvent *event);	
+		void addChilds(GroupViewItem* item);
+		QPoint DragStartPos;
+		GroupViewItem* DragItem;
+		GroupViewItem* LastHoverItem;
+		int InsLinePos;
+		int InsLineStart;
+		enum GroupViewDragType{EntryDrag,GroupDrag};
+		GroupViewDragType DragType;
+		QList<QTreeWidgetItem*>* EntryDragItems;
+	
+	private slots:
+		void OnCurrentGroupChanged(QTreeWidgetItem*);
+		void OnDeleteGroup();
+		void OnNewGroup();
+		void OnEditGroup();
+		void updateIcons();
+		void OnHideSearchResults();
+		void OnItemExpanded(QTreeWidgetItem*);
+		void OnItemCollapsed(QTreeWidgetItem*);
+		
+	signals:
+		void groupChanged(IGroupHandle* NewGroup);
+		void searchResultsSelected();
+		void fileModified();
+		void entriesDropped();
 };
 
 
 class GroupViewItem:public QTreeWidgetItem{
-public:
-GroupViewItem(QTreeWidget *parent);
-GroupViewItem(QTreeWidget *parent, QTreeWidgetItem * preceding);
-GroupViewItem(QTreeWidgetItem *parent);
-GroupViewItem(QTreeWidgetItem *parent, QTreeWidgetItem * preceding);
-CGroup* pGroup;
+	public:
+		GroupViewItem();
+		GroupViewItem(QTreeWidget *parent);
+		GroupViewItem(QTreeWidget *parent, QTreeWidgetItem * preceding);
+		GroupViewItem(QTreeWidgetItem *parent);
+		GroupViewItem(QTreeWidgetItem *parent, QTreeWidgetItem * preceding);
+		IGroupHandle* GroupHandle;
 };
+
 
 
 #endif

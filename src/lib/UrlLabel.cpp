@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -20,14 +20,6 @@
 
 
 #include "UrlLabel.h"
-#include "main.h"
-#include <QFont>
-#include <QColor>
-#include <QCursor>
-#include <QFontMetrics>
-#include <QMouseEvent>
-#include <QLabel>
-#include <QPalette>
 
 LinkLabel::LinkLabel(QWidget *parent,const QString& text, int x, int y,Qt::WFlags f) : QLabel(parent,f){
 QFont font(parentWidget()->font()); font.setUnderline(true);
@@ -52,9 +44,10 @@ else return text();
 }
 
 void LinkLabel::mouseReleaseEvent(QMouseEvent* event){
-if(event->button()==Qt::LeftButton)
-emit clicked();
-openBrowser(url());
+	if(event->button()==Qt::LeftButton){
+		emit clicked();
+		openBrowser(url());
+	}
 }
 
 void LinkLabel::setPos(int x,int y){

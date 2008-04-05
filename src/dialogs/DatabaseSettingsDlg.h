@@ -1,11 +1,11 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Tarek Saidi                                     *
- *   tarek@linux                                                           *
+ *   Copyright (C) 2005-2006 by Tarek Saidi                                *
+ *   tarek.saidi@arcor.de                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -17,39 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+ 
 #ifndef DBSETTINGSDLG_H
 #define DBSETTINGSDLG_H
+
 #include "ui_DatabaseSettingsDlg.h"
-#include "main.h"
-#include "Database.h"
-//Added by qt3to4:
-#include <QShowEvent>
 
-class CDbSettingsDlg : public QDialog, public Ui_dbsettingdlg_base
+class CDbSettingsDlg : public QDialog, private Ui_DatabaseSettingsDlg
 {
-  Q_OBJECT
+	Q_OBJECT
+	public:
+  		CDbSettingsDlg(QWidget* parent,IDatabase* db, bool modal = FALSE, Qt::WFlags fl = 0 );
+  		~CDbSettingsDlg();
+		virtual void paintEvent(QPaintEvent *);
 
-public:
-  CDbSettingsDlg(QWidget* parent,Database* db, bool modal = FALSE, Qt::WFlags fl = 0 );
-  ~CDbSettingsDlg();
-   virtual void showEvent(QShowEvent *);
-  /*$PUBLIC_FUNCTIONS$*/
+	private slots:
+    	virtual void OnCancel();
+    	virtual void OnOK();
 
-public slots:
-  /*$PUBLIC_SLOTS$*/
-
-protected:
-  /*$PROTECTED_FUNCTIONS$*/
-
-protected slots:
-  /*$PROTECTED_SLOTS$*/
-
-public slots:
-    virtual void OnCancel();
-    virtual void OnOK();
-
-private:
-   Database* database;
+	private:
+		IKdbSettings* database;
+		QPixmap BannerPixmap;
 };
 
 #endif

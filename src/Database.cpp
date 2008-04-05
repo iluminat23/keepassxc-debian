@@ -1,11 +1,11 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Tarek Saidi                                     *
- *   mail@tarek-saidi.de                                                   *
+ *   Copyright (C) 2005-2007 by Tarek Saidi                                *
+ *   tarek.saidi@arcor.de                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -18,11 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "Database.h"
-#include "lib/random.h"
 
-KpxUuid::KpxUuid(){
-	Data.fill(0,16);
+
+KpxUuid::KpxUuid() : Data(16,0){
 }
 
 KpxUuid::KpxUuid(const void* src){
@@ -31,7 +29,7 @@ KpxUuid::KpxUuid(const void* src){
 
 void KpxUuid::generate(){
 	char uuid[16];
-	getRandomBytes(uuid,16);
+	randomize(uuid,16);
 	quint32 Secs=QDateTime::currentDateTime().toTime_t();
 	quint16 mSecs=QTime::currentTime().msec();
 	mSecs=(mSecs & 0x3FF) | (*((quint16*)(uuid+4)) & 0xFC00); //msec has only 10 Bits, filling the rest with random data
@@ -62,7 +60,7 @@ void KpxUuid::toRaw(void* dst)const{
 }
 
 void KpxUuid::fromRaw(const void* src){
-	Data=QByteArray((char*)src,16);
+	Data.replace(0,16,(char*)src);
 }
 
 bool KpxUuid::operator==(const KpxUuid& other)const{
@@ -76,60 +74,45 @@ bool KpxUuid::operator!=(const KpxUuid& other)const{
 
 
 QString KpxDateTime::toString(Qt::DateFormat format) const{
-if(*this==Date_Never)return QObject::tr("Never");
-else return QDateTime::toString(format);
+	if(*this==Date_Never)return QCoreApplication::translate("Database","Never");
+	else return QDateTime::toString(format);
 }
 
 QString KpxDateTime::dateToString(Qt::DateFormat format) const{
-if(*this==Date_Never)return QObject::tr("Never");
-else return date().toString(format);
+	if(*this==Date_Never)return QCoreApplication::translate("Database","Never");
+	else return date().toString(format);
 }
 
+
+KpxDateTime KpxDateTime::fromString(const QString& string,Qt::DateFormat format){
+	if(string.toLower()=="never")
+		return Date_Never;
+	else return QDateTime::fromString(string,format);	
+}
 
 CEntry::CEntry(){
-ImageID=0;
-OldImgID=0;
-GroupID=0;
-Creation=QDateTime::currentDateTime();
-LastMod=QDateTime::currentDateTime();
-LastAccess=QDateTime::currentDateTime();
-Expire=QDateTime(QDate(2999,12,28),QTime(23,59,59)); //Never
-BinaryData=QByteArray();
+	Image=0;
+	GroupId=0;
+	Creation=QDateTime::currentDateTime();
+	LastMod=QDateTime::currentDateTime();
+	LastAccess=QDateTime::currentDateTime();
+	Expire=QDateTime(QDate(2999,12,28),QTime(23,59,59)); //Never
+	Binary=QByteArray();
 }
 
-bool CGroup::UI_ExpandByDefault=true;
-
-bool CEntry::operator==(const CEntry& e)const{
-if(sID==e.sID)return true;
-else	      return false;
+bool KpxDateTime::operator<(const QDateTime& other){
+	if(*this!=Date_Never && other!=Date_Never)return ((QDateTime)(*this)<other);
+	if(*this==Date_Never && other==Date_Never)return false;
+	if(*this==Date_Never)return false;
+	if(other==Date_Never)return true;
+	
+	return false;
 }
 
-bool CGroup::operator==(const CGroup& g)const{
-if(ID==g.ID)return true;
-else	      return false;
-}
 
 CGroup::CGroup(){
-Creation=QDateTime::currentDateTime();
-LastAccess=QDateTime::currentDateTime();
-LastMod=QDateTime::currentDateTime();
-Expire=QDateTime(QDate(2999,12,28),QTime(23,59,59));
-Level=0;
-ImageID=0;
-OldImgID=0;
-Name="<Group>";
-UI_ItemIsExpanded=UI_ExpandByDefault;
+	Image=0;
+	IsExpanded=false;
 }
 
-CGroup::~CGroup(){
-}
 
-CEntry::~CEntry(){
-
-}
-
-Database::Database(){
-file=NULL;
-KeyEncRounds=6000;
-CryptoAlgorithmus=ALGO_AES;
-}

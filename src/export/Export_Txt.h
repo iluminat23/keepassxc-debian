@@ -1,11 +1,11 @@
 /***************************************************************************
- *   Copyright (C) 2005-2006 by Tarek Saidi                                 *
+ *   Copyright (C) 2005-2007 by Tarek Saidi                                *
  *   tarek.saidi@arcor.de                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -19,13 +19,16 @@
  ***************************************************************************/
 #ifndef _EXPORT_TXT_H_
 #define _EXPORT_TXT_H_
-#include <QObject>
-#include "PwManager.h"
 
-class Export_Txt:public QObject{
-public:
-	bool exportFile(const QString& filename,Database* db,QString& err);
+#include "Export.h"
 
+class Export_Txt:public ExporterBase, public IExport{
+	Q_OBJECT
+	
+	public:
+		virtual bool exportDatabase(QWidget* GuiParent, IDatabase* Database);	
+		virtual QString identifier(){return "e_txt";}
+		virtual QString title(){return tr("Text File");}
 };
 
 #endif

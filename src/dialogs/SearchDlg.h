@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -19,29 +19,26 @@
  ***************************************************************************/
 #ifndef SEARCHDLG_H
 #define SEARCHDLG_H
+
 #include "ui_SearchDlg.h"
-#include "main.h"
-#include "PwManager.h"
 
-class CSearchDlg : public QDialog, public Ui_Search_Dlg
+class SearchDialog : public QDialog, private Ui_Search_Dlg
 {
-  Q_OBJECT
-public:
-  CSearchDlg(Database* _db, CGroup* pGroup=NULL,QWidget* parent = 0,  
-	     bool modal = FALSE, Qt::WFlags fl = 0 );
-  ~CSearchDlg();
-  QList<quint32> Hits;
-
-public slots:
-    virtual void OnButtonClose();
-    virtual void OnButtonSearch();
-
-private:
-  QString txt;
-  CGroup* group;
-  bool regexp;
-  Database* db;
-  bool search(const QString& str);
+	Q_OBJECT
+	public:
+		SearchDialog(IDatabase* database, IGroupHandle* group,QWidget* parent);
+		~SearchDialog();
+		QList<IEntryHandle*> Result;
+	
+	private slots:
+		virtual void OnClose();
+		virtual void OnSearch();
+	
+	private:
+		QPixmap BannerPixmap;
+		IGroupHandle* group;
+		IDatabase* db;
+		virtual void paintEvent(QPaintEvent*);
 };
 
 #endif

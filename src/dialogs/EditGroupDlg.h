@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -22,30 +22,24 @@
 #define EDITGROUPDLG_H
 
 #include "ui_EditGroupDlg.h"
-#include <qstring.h>
-#include <QShowEvent>
-#include "Database.h"
 
-class CEditGroupDialog : public QDialog, public Ui_EditGroupDialog
+class CEditGroupDialog : public QDialog, private Ui_EditGroupDialog
 {
-  Q_OBJECT
+	Q_OBJECT
+	public:
+		CEditGroupDialog(IDatabase*,IGroupHandle*,QWidget* parent = 0,  bool modal = FALSE, Qt::WFlags fl = 0 );
+		CEditGroupDialog(IDatabase*,CGroup*,QWidget* parent = 0,  bool modal = FALSE, Qt::WFlags fl = 0 );
+		~CEditGroupDialog();
+		virtual void showEvent(QShowEvent *event);
+	private:
+		IDatabase* db;
+		IGroupHandle* handle; 
+		CGroup* group;
 
-public:
-  CEditGroupDialog(Database*,QWidget* parent = 0,  bool modal = FALSE, Qt::WFlags fl = 0 );
-  ~CEditGroupDialog();
-  bool ModFlag;
-virtual void showEvent(QShowEvent *event);
- int IconID;
- QString GroupName;
-
-private:
- Database* db;
- 
-
-public slots:
-    virtual void OnOK();
-    virtual void OnCancel();
-    virtual void OnIconDlg();
+	private slots:
+		virtual void OnOK();
+		virtual void OnCancel();
+		virtual void OnIconDlg();
 };
 
 #endif

@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -20,22 +20,26 @@
 
 #ifndef _IMPORT_PWMANAGER_
 #define _IMPORT_PWMANAGER_
-#include <qdom.h>
-#include <qstring.h>
-#include "PwManager.h"
 
-class Import_PwManager{
-public:
-bool importFile(QString FileName, QString Password,Database* db,QString& err);
-private:
- bool KeyFlag; // true=Password, false=Chipcard
- int Compression; // 0=none, 1=gzip, 2=bzip2
- unsigned char KeyHash[20];
- unsigned char DataHash[20];
- Database* database;
+#include "Import.h"
 
- bool parseXmlContent(char* content);
- bool xml_parseEntryAttributes(QDomElement* EntryTag,CGroup* parent);
+
+class Import_PwManager:public ImporterBase, public IImport{
+	Q_OBJECT
+	
+	public:
+		virtual bool importDatabase(QWidget* GuiParent, IDatabase* Database);
+		virtual QString identifier(){return "PwManager";}
+		virtual QString title(){return "PwManager File (*.pwm)";}
+	private:
+		bool KeyFlag; // true=Password, false=Chipcard
+		int Compression; // 0=none, 1=gzip, 2=bzip2
+		unsigned char KeyHash[20];
+		unsigned char DataHash[20];
+		IDatabase* database;
+		
+		bool parseXmlContent(char* content);
+		bool xml_parseEntryAttributes(QDomElement* EntryTag,IGroupHandle* parent);
 };
 
 #endif

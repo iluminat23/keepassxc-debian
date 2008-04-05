@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -20,28 +20,27 @@
 
 #ifndef _LINKLABEL_H_
 #define _LINKLABEL_H_
-#include <QLabel>
-#include <QMouseEvent>
 
 class LinkLabel : public QLabel{
-Q_OBJECT
-public:
-LinkLabel(QWidget *parent,const QString& text=QString::null, int x=0, int y=0,Qt::WFlags f=0);
-~LinkLabel();
-void setPos(int x,int y);
-QString url();
+	Q_OBJECT
+	
+	public:
+		LinkLabel(QWidget *parent,const QString& text=QString::null, int x=0, int y=0,Qt::WFlags f=0);
+		~LinkLabel();
+		void setPos(int x,int y);
+		QString url();
 
-public slots:
-virtual void setText(const QString&);
+	public slots:
+		virtual void setText(const QString&);
 
-signals:
- void clicked();
+	signals:
+		void clicked();
 
-protected:
-virtual void mouseReleaseEvent(QMouseEvent* event);
+	protected:
+		virtual void mouseReleaseEvent(QMouseEvent* event);
 
-private:
-QString URL;
+	private:
+		QString URL;
 
 };
 

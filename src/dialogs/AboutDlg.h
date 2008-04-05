@@ -1,11 +1,11 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Tarek Saidi                                     *
- *   tarek@linux                                                           *
+ *   Copyright (C) 2005-2007 by Tarek Saidi                                *
+ *   tarek.saidi@arcor.de                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -19,25 +19,19 @@
  ***************************************************************************/
 #ifndef _ABOUTDIALOG_H_
 #define _ABOUTDIALOG_H_
+
 #include "ui_AboutDlg.h"
-#include "lib/UrlLabel.h"
-#include "main.h"
 
-
-
-class CAboutDialog : public QDialog, public Ui_AboutDlg
+class AboutDialog : public QDialog, private Ui_AboutDlg
 {
-  Q_OBJECT
-public:
-  CAboutDialog(QWidget* parent = 0,  bool modal = FALSE, Qt::WFlags fl = 0 );
-  ~CAboutDialog();
+	Q_OBJECT
 
-public slots:
-    virtual void OnClose();
-    void OnHomepageClicked();
-    void OnEMailClicked();
-private:
-	inline void loadLicFromFile();
+	public:
+		AboutDialog(QWidget* parent);
+
+	private:
+		QPixmap BannerPixmap;
+		virtual void paintEvent(QPaintEvent*);
 };
 
 #endif

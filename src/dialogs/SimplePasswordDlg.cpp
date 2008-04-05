@@ -1,11 +1,11 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Tarek Saidi                                     *
- *   mail@tarek-saidi.de                                                   *
+ *   Copyright (C) 2005-2007 by Tarek Saidi                                *
+ *   tarek.saidi@arcor.de                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -18,46 +18,53 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include "main.h"
-#include "PwmConfig.h"
+
 #include "SimplePasswordDlg.h"
 
-CSimplePasswordDialog::CSimplePasswordDialog(QWidget* parent,  bool modal, Qt::WFlags fl)
+SimplePasswordDialog::SimplePasswordDialog(QWidget* parent,  bool modal, Qt::WFlags fl)
 : QDialog(parent,fl)
 {
-setupUi(this);
-if(!config.ShowPasswords)Button_HidePassword->toggle();
-connect(ButtonOK,SIGNAL(clicked()),this,SLOT(OnOK()));
-connect(ButtonCancel,SIGNAL(clicked()),this,SLOT(OnCancel()));
-connect(Button_HidePassword,SIGNAL(toggled(bool)),this,SLOT(OnHidePasswordToggled(bool)));
+	setupUi(this);
+	connect(buttonBox->button(QDialogButtonBox::Ok),SIGNAL(clicked()),this,SLOT(OnOK()));
+	connect(buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),this,SLOT(OnCancel()));
+	connect(Button_HidePassword,SIGNAL(toggled(bool)),this,SLOT(OnHidePasswordToggled(bool)));
+	connect(EditPassword,SIGNAL(textChanged(const QString&)),this,SLOT(OnTextChanged(const QString&)));
+	if(!config->showPasswordsPasswordDlg())Button_HidePassword->toggle();
+	buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
-CSimplePasswordDialog::~CSimplePasswordDialog()
+SimplePasswordDialog::~SimplePasswordDialog()
 {
 }
 
-void CSimplePasswordDialog::OnCancel()
+void SimplePasswordDialog::OnTextChanged(const QString& txt){
+	if(txt.isEmpty())
+		buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+	else
+		buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+}
+
+void SimplePasswordDialog::OnCancel()
 {
-done(0);
+	done(0);
 }
 
 
-void CSimplePasswordDialog::OnOK()
+void SimplePasswordDialog::OnOK()
 {
-password=EditPassword->text();
-done(1);
+	password=EditPassword->text();
+	done(1);
 }
 
 
-void CSimplePasswordDialog::OnHidePasswordToggled(bool state)
+void SimplePasswordDialog::OnHidePasswordToggled(bool state)
 {
-if(state)EditPassword->setEchoMode(QLineEdit::Password);
-else EditPassword->setEchoMode(QLineEdit::Normal);
+	if(state){
+		EditPassword->setEchoMode(QLineEdit::Password);
+		Button_HidePassword->setIcon(getIcon("pwd_hide"));
+	}
+	else {
+		EditPassword->setEchoMode(QLineEdit::Normal);
+		Button_HidePassword->setIcon(getIcon("pwd_show"));
+	}
 }
-
-
-/*$SPECIALIZATION$*/
-
-

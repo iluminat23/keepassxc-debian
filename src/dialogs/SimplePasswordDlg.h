@@ -4,8 +4,8 @@
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
+ *   the Free Software Foundation; version 2 of the License.               *
+
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
@@ -23,31 +23,20 @@
 
 #include "ui_SimplePasswordDlg.h"
 
-class CSimplePasswordDialog : public QDialog, public Ui_SimplePasswordDialog
+class SimplePasswordDialog : public QDialog, private Ui_SimplePasswordDialog
 {
-  Q_OBJECT
+	Q_OBJECT
 
-public:
-  CSimplePasswordDialog(QWidget* parent = 0,  bool modal = FALSE, Qt::WFlags fl = 0 );
-  ~CSimplePasswordDialog();
-  /*$PUBLIC_FUNCTIONS$*/
+	public:
+		SimplePasswordDialog(QWidget* parent = 0,  bool modal = FALSE, Qt::WFlags fl = 0 );
+		~SimplePasswordDialog();
+		QString password;
 
-public slots:
-  /*$PUBLIC_SLOTS$*/
-
-protected:
-  /*$PROTECTED_FUNCTIONS$*/
-
-protected slots:
-  /*$PROTECTED_SLOTS$*/
-public: QString password;
-
-public slots:
-    virtual void OnCancel();
-public slots:
-    virtual void OnOK();
-public slots:
-    virtual void OnHidePasswordToggled(bool state);
+	private slots:
+		virtual void OnCancel();
+		virtual void OnOK();
+		virtual void OnHidePasswordToggled(bool state);
+		virtual void OnTextChanged(const QString&);
 };
 
 #endif

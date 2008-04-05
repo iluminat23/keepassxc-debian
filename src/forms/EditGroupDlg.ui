@@ -1,7 +1,5 @@
 <ui version="4.0" >
  <author>Tarek Saidi</author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>EditGroupDialog</class>
  <widget class="QDialog" name="EditGroupDialog" >
   <property name="geometry" >
@@ -12,42 +10,25 @@
     <height>120</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy>
-    <hsizetype>0</hsizetype>
-    <vsizetype>0</vsizetype>
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <property name="minimumSize" >
    <size>
     <width>350</width>
-    <height>120</height>
-   </size>
-  </property>
-  <property name="maximumSize" >
-   <size>
-    <width>350</width>
-    <height>120</height>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle" >
    <string>Group Properties</string>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>9</number>
-   </property>
    <property name="spacing" >
     <number>6</number>
    </property>
    <item>
     <layout class="QGridLayout" >
-     <property name="margin" >
-      <number>0</number>
+     <property name="horizontalSpacing" >
+      <number>6</number>
      </property>
-     <property name="spacing" >
+     <property name="verticalSpacing" >
       <number>6</number>
      </property>
      <item row="1" column="0" >
@@ -106,57 +87,18 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
+    <widget class="QDialogButtonBox" name="ButtonBox" >
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
      </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
-     <item>
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>121</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="ButtonOK" >
-       <property name="text" >
-        <string>O&amp;K</string>
-       </property>
-       <property name="shortcut" >
-        <string>Alt+K</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="ButtonCancel" >
-       <property name="text" >
-        <string>&amp;Cancel</string>
-       </property>
-       <property name="shortcut" >
-        <string>Alt+C</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    </widget>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>EditTitle</tabstop>
   <tabstop>ComboIconPicker</tabstop>
-  <tabstop>ButtonOK</tabstop>
-  <tabstop>ButtonCancel</tabstop>
  </tabstops>
  <resources/>
  <connections/>
