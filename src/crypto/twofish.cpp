@@ -172,6 +172,7 @@
  */
 
 #include <qstring.h>     /* for memset(), memcpy(), and memcmp() */
+#include <cstdlib>
 #include "twofish.h"
 
 

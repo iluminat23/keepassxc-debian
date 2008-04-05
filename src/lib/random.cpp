@@ -22,6 +22,7 @@
 #include <qdatetime.h>
 #include <qobject.h>
 #include "random.h"
+#include <cstdlib>
 using namespace std;
 
 void getRandomBytes(void* buffer,int NumBlocks,int BlockSize,bool Strong){
