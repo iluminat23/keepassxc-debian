@@ -14,7 +14,8 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-	qmake PREFIX=/usr
+	qmake-qt4 PREFIX=/usr DEBUG=1 QMAKE_CFLAGS_DEBUG="$(CFLAGS)" \
+	     QMAKE_CXXFLAGS_DEBUG="$(CFLAGS)"
 	touch build-stamp
 
 clean:
