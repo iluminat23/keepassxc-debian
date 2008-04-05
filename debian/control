@@ -5,6 +5,7 @@ Maintainer: Reinhard Tartler <siretart@tauware.de>
 Uploaders: David Valot <ptitdav69@gmail.com>
 Build-Depends: debhelper (>= 5.0.0), libqt4-dev, libpng3-dev, libxtst-dev
 Standards-Version: 3.7.3
+Homepage: http://keepassx.sourceforge.net
 
 Package: keepassx
 Architecture: any
@@ -16,5 +17,3 @@ Description: Cross Platform Password Manager
  key-disk. So you only have to remember one single master password or
  insert the key-disk to unlock the whole database. The databases are
  encrypted using the algorithms AES or Twofish.
- .
-  Homepage: http://keepassx.sourceforge.net

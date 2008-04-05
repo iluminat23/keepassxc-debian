@@ -16,8 +16,9 @@ keepassx (0.3.1-1) unstable; urgency=low
     upstream release has totally reworked the new database dialog.
   * update reference to GPL-2 in debian/copyright.
   * Bump standard version to 3.7.2
+  * use Homepage header in debian/control
 
- -- Reinhard Tartler <siretart@tauware.de>  Sat, 05 Apr 2008 11:54:01 +0200
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 05 Apr 2008 12:06:35 +0200
 
 keepassx (0.2.2-3.1) unstable; urgency=low
 
