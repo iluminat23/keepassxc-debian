@@ -6,6 +6,8 @@ keepassx (0.3.3-1) experimental; urgency=low
   * add galician translation. Thanks to damufo <damufo@gmail.com> 
     Closes: #499097
   * install files using dh_install instead of 'cp'
+  * no longer install our own .desktop file, the one provided by upstream
+    is just fine.
 
  -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 09:27:19 +0200
 
