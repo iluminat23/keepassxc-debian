@@ -1,3 +1,9 @@
+keepassx (0.3.3-0ubuntu2) intrepid; urgency=low
+
+  * add Vcs-Bzr header.
+
+ -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 09:27:19 +0200
+
 keepassx (0.3.3-0ubuntu1) intrepid; urgency=low
 
   * New upstream release (LP: #250299). 
