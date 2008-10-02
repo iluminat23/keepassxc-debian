@@ -1,11 +1,13 @@
 Source: keepassx
 Section: utils
 Priority: optional
-Maintainer: Reinhard Tartler <siretart@tauware.de>
+Maintainer: Ubuntu MOTU Developers <ubuntu-motu@lists.ubuntu.com>
+XSBC-Original-Maintainer: Reinhard Tartler <siretart@tauware.de>
 Uploaders: David Valot <ptitdav69@gmail.com>
 Build-Depends: debhelper (>= 5.0.0), libqt4-dev, libpng3-dev, libxtst-dev
 Standards-Version: 3.7.3
 Homepage: http://keepassx.sourceforge.net
+Vcs-Bzr: http://code.launchpad.net/~siretart/keepassx/ubuntu
 
 Package: keepassx
 Architecture: any
