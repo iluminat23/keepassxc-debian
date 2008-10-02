@@ -2,6 +2,7 @@ keepassx (0.3.3-1) experimental; urgency=low
 
   * new upstream release. Closes: #492423 
   * add Vcs-Bzr header.
+  * build and install translations. Closes: #475073
   * add galician translation. Thanks to damufo <damufo@gmail.com> 
     Closes: #499097
 

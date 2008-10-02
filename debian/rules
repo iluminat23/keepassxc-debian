@@ -16,6 +16,7 @@ build-stamp:
 	dh_testdir
 	qmake-qt4 PREFIX=/usr DEBUG=1 QMAKE_CFLAGS_DEBUG="$(CFLAGS)" \
 	     QMAKE_CXXFLAGS_DEBUG="$(CFLAGS)"
+	lrelease-qt4 src/src.pro
 	touch build-stamp
 
 clean:
@@ -37,6 +38,7 @@ install: build
         # desktop file and icon for KeePassX
 	cp $(CURDIR)/debian/keepass.desktop $(CURDIR)/debian/keepassx/usr/share/applications/
 	cp $(CURDIR)/debian/keepass.xpm $(CURDIR)/debian/keepassx/usr/share/pixmaps/
+	cp $(CURDIR)/src/translations/*.qm $(CURDIR)/debian/keepassx/usr/share/keepassx/i18n/
 
 binary-indep: build install
 # We have nothing to do by default.
