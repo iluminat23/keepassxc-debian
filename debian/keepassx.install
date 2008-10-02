@@ -1,0 +1,3 @@
+debian/keepass.desktop	usr/share/applications/
+debian/keepass.xpm	usr/share/pixmaps/
+src/translations/*.qm	usr/share/keepassx/i18n/

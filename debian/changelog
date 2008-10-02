@@ -5,6 +5,7 @@ keepassx (0.3.3-1) experimental; urgency=low
   * build and install translations. Closes: #475073
   * add galician translation. Thanks to damufo <damufo@gmail.com> 
     Closes: #499097
+  * install files using dh_install instead of 'cp'
 
  -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 09:27:19 +0200
 

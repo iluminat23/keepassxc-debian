@@ -33,12 +33,9 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	make INSTALL_ROOT=$(CURDIR)/debian/keepassx install
+	dh_install
         # Remove the executable attribut on png files
 	chmod 644 $(CURDIR)/debian/keepassx/usr/share/keepassx/icons/*.png
-        # desktop file and icon for KeePassX
-	cp $(CURDIR)/debian/keepass.desktop $(CURDIR)/debian/keepassx/usr/share/applications/
-	cp $(CURDIR)/debian/keepass.xpm $(CURDIR)/debian/keepassx/usr/share/pixmaps/
-	cp $(CURDIR)/src/translations/*.qm $(CURDIR)/debian/keepassx/usr/share/keepassx/i18n/
 
 binary-indep: build install
 # We have nothing to do by default.
