@@ -1,5 +1,5 @@
 
-CONFIG = qt uic resources thread stl warn_off precompile_header
+CONFIG = qt uic resources thread stl warn_off
 QT += xml
 
 DEPENDPATH += crypto dialogs export forms import lib translations res
@@ -15,6 +15,12 @@ isEqual(DEBUG,1){
 }
 else {
     CONFIG += release
+}
+
+# lipo and freebsd cannot handle precompiled headers (yet)
+!isEqual(PRECOMPILED,1){
+	macx : isEqual(ARCH,UNIVERSAL) : PRECOMPILED = 0
+	freebsd-* : PRECOMPILED = 0
 }
 
 win32 : QMAKE_WIN32 = 1
@@ -76,12 +82,9 @@ macx {
     QMAKE_BUNDLE_DATA += data
     ICON = ../share/macx_bundle/icon.icns
     CONFIG += app_bundle
-    isEqual(ARCH,UNIVERSAL) {
+    isEqual(ARCH,UNIVERSAL){
         CONFIG += x86 ppc
-        # lipo cannot handle precompiled headers (yet)
-        CONFIG -= precompile_header
-        QMAKE_CXXFLAGS += -include keepassx.h
-	}
+    }
     isEqual(ARCH,INTEL): CONFIG += x86
     isEqual(ARCH,PPC): CONFIG += ppc
     SOURCES += main_macx.cpp
@@ -137,13 +140,13 @@ FORMS += forms/EditGroupDlg.ui \
          forms/AddBookmarkDlg.ui \
          forms/ManageBookmarksDlg.ui
 
-TRANSLATIONS += translations/keepass-de_DE.ts \
-                translations/keepass-ru_RU.ts \
-                translations/keepass-es_ES.ts \
-                translations/keepass-fr_FR.ts \
-                translations/keepass-cs_CZ.ts \
-                translations/keepass-ja_JP.ts \
-                translations/keepass-xx_XX.ts
+TRANSLATIONS += translations/keepassx-de_DE.ts \
+                translations/keepassx-ru_RU.ts \
+                translations/keepassx-es_ES.ts \
+                translations/keepassx-fr_FR.ts \
+                translations/keepassx-cs_CZ.ts \
+                translations/keepassx-ja_JP.ts \
+                translations/keepassx-xx_XX.ts
 
 HEADERS += lib/UrlLabel.h \
            mainwindow.h \
@@ -173,7 +176,7 @@ HEADERS += lib/UrlLabel.h \
            dialogs/CalendarDlg.h \
            dialogs/ExpiredEntriesDlg.h \
 #           dialogs/TrashCanDlg.h \
-           lib/random.h \
+#           lib/random.h \
            Database.h \
            lib/AutoType.h \
            lib/FileDialogs.h \
@@ -202,7 +205,8 @@ HEADERS += lib/UrlLabel.h \
            KpxConfig.h \
            dialogs/AddBookmarkDlg.h \
            lib/bookmarks.h \
-           dialogs/ManageBookmarksDlg.h
+           dialogs/ManageBookmarksDlg.h \
+ lib/AutoTypeTreeWidget.h
 
 SOURCES += lib/UrlLabel.cpp \
            main.cpp \
@@ -250,11 +254,18 @@ SOURCES += lib/UrlLabel.cpp \
            dialogs/AddBookmarkDlg.cpp \
            lib/bookmarks.cpp \
            dialogs/ManageBookmarksDlg.cpp \
-	crypto/aescrypt.c \
-	crypto/aeskey.c \
-	crypto/aes_modes.c \
-	crypto/aestab.c
+           crypto/aescrypt.c \
+           crypto/aeskey.c \
+           crypto/aes_modes.c \
+           crypto/aestab.c \
+           lib/AutoTypeTreeWidget.cpp
 
-PRECOMPILED_HEADER = keepassx.h
+isEqual(PRECOMPILED,0) {
+    QMAKE_CXXFLAGS += -include keepassx.h
+}
+else {
+    CONFIG += precompile_header
+    PRECOMPILED_HEADER = keepassx.h
+}
 
 RESOURCES += res/resources.qrc

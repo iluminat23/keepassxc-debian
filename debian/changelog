@@ -1,3 +1,9 @@
+keepassx (0.3.3-0ubuntu1) intrepid; urgency=low
+
+  * New upstream release (LP: #250299). 
+
+ -- Nick Ellery <nick.ellery@ubuntu.com>  Fri, 26 Sep 2008 16:48:37 -0700
+
 keepassx (0.3.1-1) unstable; urgency=low
 
   * Bug fix: "keepassx: Please use better watch file expression", thanks

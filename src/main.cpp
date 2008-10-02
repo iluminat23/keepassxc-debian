@@ -44,7 +44,6 @@ bool TrActive;
 QString DetailViewTemplate;
 bool EventOccurred;
 bool EventOccurredBlock = false;
-EventListener* eventListener;
 
 QPixmap* EntryIcons;
 IIconTheme* IconLoader=NULL;
@@ -56,7 +55,8 @@ int main(int argc, char **argv)
 	initAppPaths(argc,argv);
 	CmdLineArgs args;
 	if(!args.preparse(argc,argv)){ // searches only for the -cfg parameter
-		qCritical(CSTR(args.error()));
+		qCritical(CSTR( args.error().append("\n") ));
+		args.printHelp();
 		return 1;
 	}
 
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 	fileDlgHistory.load();
 	
 	// PlugIns
-
+#ifdef Q_WS_X11
 	if(config->integrPlugin()!=KpxConfig::NoIntegr){
 		QString LibName="libkeepassx-";
 		if(config->integrPlugin()==KpxConfig::KDE)
@@ -103,14 +103,14 @@ int main(int argc, char **argv)
 				if(config->integrPlugin()==KpxConfig::KDE){
 					IKdeInit* kdeinit=qobject_cast<IKdeInit*>(plugin.instance());
 					app=kdeinit->getMainAppObject(argc,argv);
-					if(!app)PluginLoadError=QObject::tr("Initialization failed.");
+					if(!app) PluginLoadError = "Initialization failed.";
 				}
 				if(config->integrPlugin()==KpxConfig::Gnome){
 					IGnomeInit* ginit=qobject_cast<IGnomeInit*>(plugin.instance());
 					if(!ginit->init(argc,argv)){
 						KpxFileDialogs::setPlugin(NULL);
 						qWarning("GtkIntegrPlugin: Gtk init failed.");
-						PluginLoadError=QObject::tr("Initialization failed.");
+						PluginLoadError = "Initialization failed.";
 					}
 				}
 			}
@@ -120,6 +120,7 @@ int main(int argc, char **argv)
 			PluginLoadError=QObject::tr("Could not locate library file.");
 		}
 	}
+#endif
 	if(!app){
 		#if defined(Q_WS_X11) && defined(GLOBAL_AUTOTYPE)
 			app = new KeepassApplication(argc,argv);
@@ -127,8 +128,15 @@ int main(int argc, char **argv)
 			app = new QApplication(argc,argv);
 		#endif	
 	}
-	args.parse(QApplication::arguments());
-	
+	if ( !args.parse(QApplication::arguments()) ){
+		qCritical(CSTR( args.error().append("\n") ));
+		args.printHelp();
+		return 1;
+	}
+	if (args.help()){
+		args.printHelp();
+		return 1;
+	}
 	
 	//Internationalization
 	QLocale loc;
@@ -137,23 +145,23 @@ int main(int argc, char **argv)
 	else
 		loc=QLocale(args.language());
 
-	QTranslator* translator = NULL;
-	QTranslator* qtTranslator=NULL;
-	translator=new QTranslator;
-	qtTranslator=new QTranslator;
+	QTranslator* translator = new QTranslator;
+	QTranslator* qtTranslator = new QTranslator;
 
-	if(loadTranslation(translator,"keepass-",loc.name(),QStringList()
+	if(loadTranslation(translator,"keepassx-",loc.name(),QStringList()
 						<< DataDir+"/i18n/"
 						<< HomeDir))
 	{
-		app->installTranslator(translator);
+		QApplication::installTranslator(translator);
 		TrActive=true;
 	}
 	else{
 		if(loc.name()!="en_US")
-			qWarning(QString("Kpx: No Translation found for '%1 (%2)' using 'English (UnitedStates)'")
+			qWarning(CSTR(
+				QString("Kpx: No Translation found for '%1 (%2)' using 'English (UnitedStates)'")
 				.arg(QLocale::languageToString(loc.language()))
-				.arg(QLocale::countryToString(loc.country())).toAscii());
+				.arg(QLocale::countryToString(loc.country()))
+			));
 		delete translator;
 		TrActive=false;
 	}
@@ -163,12 +171,14 @@ int main(int argc, char **argv)
 							<< QLibraryInfo::location(QLibraryInfo::TranslationsPath)
 							<< DataDir+"/i18n/"
 							<< HomeDir))
-			app->installTranslator(qtTranslator);
+			QApplication::installTranslator(qtTranslator);
 		else{
 			if(loc.name()!="en_US")
-				qWarning(QString("Qt: No Translation found for '%1 (%2)' using 'English (UnitedStates)'")
+				qWarning(CSTR(
+					QString("Qt: No Translation found for '%1 (%2)' using 'English (UnitedStates)'")
 					.arg(QLocale::languageToString(loc.language()))
-					.arg(QLocale::countryToString(loc.country())).toAscii());
+					.arg(QLocale::countryToString(loc.country()))
+				));
 			delete qtTranslator;
 		}
 	}
@@ -180,7 +190,7 @@ int main(int argc, char **argv)
 	initYarrow(); //init random number generator
 	SecString::generateSessionKey();
 
-	eventListener = new EventListener();
+	EventListener* eventListener = new EventListener();
 	app->installEventFilter(eventListener);
 
 	QApplication::setQuitOnLastWindowClosed(false);
@@ -201,8 +211,8 @@ void loadImages(){
 	QPixmap tmpImg(getImageFile("clientic.png"));
 	EntryIcons=new QPixmap[BUILTIN_ICONS];
 	for(int i=0;i<BUILTIN_ICONS;i++){
-	EntryIcons[i]=tmpImg.copy(i*16,0,16,16);}
-
+		EntryIcons[i]=tmpImg.copy(i*16,0,16,16);
+	}
 }
 
 
@@ -231,7 +241,7 @@ CmdLineArgs::CmdLineArgs(){
 
 bool CmdLineArgs::parse(const QStringList& argv){
 	for(int i=1;i<argv.size();i++){
-		if(argv[i]=="-help"){
+		if(argv[i]=="-help" || argv[i]=="--help" || argv[i]=="-h"){
 			Help=true;
 			break; // break, because other arguments will be ignored anyway
 		}
@@ -261,14 +271,14 @@ bool CmdLineArgs::parse(const QStringList& argv){
 			StartLocked=true;
 			continue;
 		}
-		if(i==1){
+		if(i==1 && argv[i].left(1)!="-"){
 			File=argv[1];
 			continue;
 		}
 		Error=QString("** Unrecognized argument: '%1'").arg(argv[i]);
 		return false;
 	}
-	return true;	
+	return true;
 }
 
 bool CmdLineArgs::preparse(int argc,char** argv){
@@ -292,17 +302,17 @@ bool CmdLineArgs::preparse(int argc,char** argv){
 }
 
 void CmdLineArgs::printHelp(){
-	cout << "KeePassX" << APP_VERSION << endl;
-	cout << "Usage: keepassx  [Filename] [Options]" << endl;
-	cout << "  -help             This Help" << endl;
-	cout << "  -cfg <CONFIG>     Use specified file for loading/saving the configuration." << endl;
-	cout << "  -min              Start minimized." << endl;
-	cout << "  -lock             Start locked." << endl;
-	cout << "  -lang <LOCALE>    Use specified language instead of systems default." << endl;
-	cout << "                    <LOCALE> is the ISO-639 language code with or without ISO-3166 country code" << endl;
-	cout << "                    Examples: de     German" << endl;
-	cout << "                              de_CH  German(Switzerland)"<<endl;
-	cout << "                              pt_BR  Portuguese(Brazil)"<<endl;
+	cerr << "KeePassX " << APP_VERSION << endl;
+	cerr << "Usage: keepassx  [Filename] [Options]" << endl;
+	cerr << "  -help             This Help" << endl;
+	cerr << "  -cfg <CONFIG>     Use specified file for loading/saving the configuration." << endl;
+	cerr << "  -min              Start minimized." << endl;
+	cerr << "  -lock             Start locked." << endl;
+	cerr << "  -lang <LOCALE>    Use specified language instead of systems default." << endl;
+	cerr << "                    <LOCALE> is the ISO-639 language code with or without ISO-3166 country code" << endl;
+	cerr << "                    Examples: de     German" << endl;
+	cerr << "                              de_CH  German(Switzerland)" << endl;
+	cerr << "                              pt_BR  Portuguese(Brazil)" << endl;
 }
 
 
