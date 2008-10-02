@@ -8,6 +8,7 @@ keepassx (0.3.3-1) experimental; urgency=low
   * install files using dh_install instead of 'cp'
   * no longer install our own .desktop file, the one provided by upstream
     is just fine.
+  * remove useless piece of documentation. Closes: #475126
 
  -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 09:27:19 +0200
 

@@ -36,6 +36,8 @@ install: build
 	dh_install
         # Remove the executable attribut on png files
 	chmod 644 $(CURDIR)/debian/keepassx/usr/share/keepassx/icons/*.png
+	# that piece of documentation is not helpfull at all, see #475126
+	rm -rv ./debian/keepassx/usr/share/keepassx/doc
 
 binary-indep: build install
 # We have nothing to do by default.
