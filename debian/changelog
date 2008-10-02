@@ -9,8 +9,9 @@ keepassx (0.3.3-1) experimental; urgency=low
   * no longer install our own .desktop file, the one provided by upstream
     is just fine.
   * remove useless piece of documentation. Closes: #475126
+  * rename manpage keepass.1 -> keepassx.1. Found by lintian.
 
- -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 09:27:19 +0200
+ -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 10:34:53 +0200
 
 keepassx (0.3.3-0ubuntu1) intrepid; urgency=low
 

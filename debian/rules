@@ -49,7 +49,7 @@ binary-arch: build install
 	dh_installchangelogs changelog
 	dh_installdocs
 	dh_installexamples
-	dh_installman debian/keepass.1
+	dh_installman debian/keepassx.1
 	dh_desktop
 	dh_link
 	dh_strip
