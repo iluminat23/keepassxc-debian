@@ -10,6 +10,7 @@ keepassx (0.3.3-1) experimental; urgency=low
     is just fine.
   * remove useless piece of documentation. Closes: #475126
   * rename manpage keepass.1 -> keepassx.1. Found by lintian.
+  * tighten dependency on libqt4, drop libpng3-dev dependency. Closes: #474387)
 
  -- Reinhard Tartler <siretart@tauware.de>  Thu, 02 Oct 2008 10:34:53 +0200
 
