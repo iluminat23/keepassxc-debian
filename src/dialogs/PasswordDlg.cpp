@@ -110,10 +110,13 @@ PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const
 		// Button Color
 		QPalette palette=Button_Bookmarks->palette();
 		palette.setColor(QPalette::Active,QPalette::Button,config->bannerColor1());
+		palette.setColor(QPalette::Inactive,QPalette::Button,config->bannerColor1());
 		palette.setColor(QPalette::Active,QPalette::Window,config->bannerColor2());
+		palette.setColor(QPalette::Inactive,QPalette::Window,config->bannerColor2());
 		Button_Bookmarks->setPalette(palette);
 		palette=Label_Bookmark->palette();
 		palette.setColor(QPalette::Active,QPalette::WindowText,config->bannerTextColor());
+		palette.setColor(QPalette::Inactive,QPalette::WindowText,config->bannerTextColor());
 		Label_Bookmark->setPalette(palette);		
 		// Create menu and add "last file" menu entry
 		QMenu* BookmarkMenu=new QMenu(this);
@@ -149,7 +152,10 @@ PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const
 	connect(Check_Password,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxesChanged(int)));
 	connect(Check_KeyFile,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxesChanged(int)));
 	connect(Button_Back,SIGNAL(clicked()),this,SLOT(OnButtonBack()));
-	if(!config->showPasswordsPasswordDlg())ChangeEchoModeDatabaseKey();
+	if(!config->showPasswordsPasswordDlg())
+		ChangeEchoModeDatabaseKey();
+	else
+		ButtonChangeEchoMode->setIcon(getIcon("pwd_show"));
 	
 	adjustSize();
 	setMaximumSize(size());
@@ -294,10 +300,12 @@ void PasswordDialog::ChangeEchoModeDatabaseKey(){
 	if(Edit_Password->echoMode()==QLineEdit::Normal){
 		Edit_Password->setEchoMode(QLineEdit::Password);
 		Edit_PwRepeat->setEchoMode(QLineEdit::Password);
+		ButtonChangeEchoMode->setIcon(getIcon("pwd_hide"));
 	}
 	else{
 		Edit_Password->setEchoMode(QLineEdit::Normal);
 		Edit_PwRepeat->setEchoMode(QLineEdit::Normal);
+		ButtonChangeEchoMode->setIcon(getIcon("pwd_show"));
 	}
 }
 

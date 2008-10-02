@@ -44,6 +44,7 @@ class AutoTypePrivate{
 		inline static void sleepKeyStrokeDelay(){ sleep(config->autoTypeKeyStrokeDelay()); };
 		static void templateToKeysyms(const QString& Template, QList<AutoTypeAction>& KeySymList,IEntryHandle* entry);
 		static void stringToKeysyms(const QString& string,QList<AutoTypeAction>& KeySymList);
+		static QString getRootGroupName(IEntryHandle* entry);
 };
 
 
@@ -111,8 +112,8 @@ void AutoType::perform(IEntryHandle* entry, QString& err,bool hideWindow,int nr)
 	
 	bool capsEnabled = HelperX11::keyboardModifiers(pDisplay)&LockMask;
 	if (capsEnabled){
-		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),true,CurrentTime);
-		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),false,CurrentTime);
+		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),true,0);
+		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),false,0);
 		AutoTypePrivate::sleepKeyStrokeDelay();
 	}
 	
@@ -129,7 +130,7 @@ void AutoType::perform(IEntryHandle* entry, QString& err,bool hideWindow,int nr)
 		if (Keys[i].type==TypeKey){
 			int keycode=XKeysymToKeycode(pDisplay,Keys[i].data);
 			if (keycode==0){
-				err = QCoreApplication::translate("AutoType","Auto-Type string contains illegal characters");
+				err = QCoreApplication::translate("AutoType","Auto-Type string contains invalid characters");
 				break;
 			}
 			int mods=HelperX11::getModifiers(pDisplay,Keys[i].data,keycode);
@@ -143,44 +144,47 @@ void AutoType::perform(IEntryHandle* entry, QString& err,bool hideWindow,int nr)
 			AutoTypePrivate::sleepKeyStrokeDelay();
 		}
 		else if (Keys[i].type==Delay){
-			QCoreApplication::processEvents();
+			QApplication::processEvents();
 			AutoTypePrivate::sleep(Keys[i].data);
 		}
 	}
 	
 	if (capsEnabled){
-		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),true,CurrentTime);
-		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),false,CurrentTime);
+		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),true,0);
+		XTestFakeKeyEvent(pDisplay,XKeysymToKeycode(pDisplay,XK_Caps_Lock),false,0);
 	}
 	
-	if (hideWindow){
+	if (hideWindow && !(config->showSysTrayIcon() && config->minimizeTray()) )
 		MainWin->showMinimized();
-		XIconifyWindow(pDisplay, MainWin->winId(), MainWin->x11Info().screen()); // workaround for Gnome
-	}
 }
 
 #ifdef GLOBAL_AUTOTYPE
 void AutoType::performGlobal(){
-	if (MainWin->db==NULL) return;
+	if (MainWin->isLocked())
+		MainWin->OnUnLockWorkspace();
+	
+	if (!MainWin->isOpened())
+		return;
 	
 	Display* d = QX11Info::display();
 	Window w;
 	int revert_to_return;
 	XGetInputFocus(d, &w, &revert_to_return);
-	char** list;
+	char** list = NULL;
 	int tree;
 	do {
 		XTextProperty textProp;
-		XGetWMName(d, w, &textProp);
-		int count;
-		Xutf8TextPropertyToTextList(d, &textProp, &list, &count);
-		if (list) break;
+		if (XGetWMName(d, w, &textProp) != 0) {
+			int count;
+			if (Xutf8TextPropertyToTextList(d, &textProp, &list, &count)<0) return;
+			if (list) break;
+		}
 		Window root = 0;
 		Window parent = 0;
 		Window* children = NULL;
 		unsigned int num_children;
 		tree = XQueryTree(d, w, &root, &parent, &children, &num_children);
-		w=parent;
+		w = parent;
 		if (children) XFree(children);
 	} while (tree && w);
 	if (!list) return;
@@ -193,8 +197,11 @@ void AutoType::performGlobal(){
 	QRegExp lineMatch("Auto-Type-Window(?:-(\\d+)|):([^\\n]+)", Qt::CaseInsensitive, QRegExp::RegExp2);
 	QDateTime now = QDateTime::currentDateTime();
 	for (int i=0; i<entries.size(); i++){
-		if (entries[i]->expire()!=Date_Never && entries[i]->expire()<now)
+		if ( (entries[i]->expire()!=Date_Never && entries[i]->expire()<now) ||
+			 (AutoTypePrivate::getRootGroupName(entries[i]).compare("backup",Qt::CaseInsensitive)==0)
+		){
 			continue;
+		}
 		
 		bool hasWindowEntry=false;
 		QString comment = entries[i]->comment();
@@ -563,4 +570,13 @@ void AutoTypePrivate::templateToKeysyms(const QString& tmpl, QList<AutoTypeActio
 void AutoTypePrivate::stringToKeysyms(const QString& string,QList<AutoTypeAction>& KeySymList){
 	for(int i=0; i<string.length();i++)
 		KeySymList << AutoTypeAction(TypeKey, HelperX11::getKeysym(string[i]));
+}
+
+QString AutoTypePrivate::getRootGroupName(IEntryHandle* entry){
+	IGroupHandle* group = entry->group();
+	int level = group->level();
+	for (int i=0; i<level; i++)
+		group = group->parent();
+	
+	return group->title();
 }
