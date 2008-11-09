@@ -25,11 +25,10 @@ int HelperX11::getModifiers(Display *d,KeySym keysym, int keycode){
 	int SymsPerKey;
 	KeySym* Syms=XGetKeyboardMapping(d,keycode,1,&SymsPerKey);
 	int c=-1;
-	for(int i=0;i<4;i++)
+	for(int i=0;i<SymsPerKey;i++)
 		if(Syms[i]==keysym){
 			c=i; break;
 		}
-	Q_ASSERT(c!=-1);
 	XFree(Syms);
 	return c;
 }
@@ -42,9 +41,11 @@ void HelperX11::pressModifiers(Display* d,int mods,bool press){
 				XTestFakeKeyEvent(d,XKeysymToKeycode(d,XK_Shift_L),press,2);
 				break;
 		case 2: //AltGr
+		case 4:
 				XTestFakeKeyEvent(d,XKeysymToKeycode(d,XK_ISO_Level3_Shift),press,2);
 				break;
 		case 3: //Shift+AltGr
+		case 5:
 				XTestFakeKeyEvent(d,XKeysymToKeycode(d,XK_Shift_L),press,2);
 				XTestFakeKeyEvent(d,XKeysymToKeycode(d,XK_ISO_Level3_Shift),press,2);
 				break;
