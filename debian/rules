@@ -16,6 +16,7 @@ build-stamp:
 	dh_testdir
 	qmake-qt4 PREFIX=/usr DEBUG=1 QMAKE_CFLAGS_DEBUG="$(CFLAGS)" \
 	     QMAKE_CXXFLAGS_DEBUG="$(CFLAGS)"
+	make
 	lrelease-qt4 src/src.pro
 	touch build-stamp
 
