@@ -2935,3 +2935,14 @@ See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=499097
 +</context>
 +</TS>
 
+--- old/src/src.pro	2008-10-02 07:26:09 +0000
++++ new/src/src.pro	2008-10-02 07:56:32 +0000
+@@ -144,6 +144,7 @@ TRANSLATIONS += translations/keepassx-de
+                 translations/keepassx-ru_RU.ts \
+                 translations/keepassx-es_ES.ts \
+                 translations/keepassx-fr_FR.ts \
++                translations/keepassx-gl_ES.ts \
+                 translations/keepassx-cs_CZ.ts \
+                 translations/keepassx-ja_JP.ts \
+                 translations/keepassx-xx_XX.ts
+

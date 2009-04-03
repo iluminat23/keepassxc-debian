@@ -144,7 +144,6 @@ TRANSLATIONS += translations/keepassx-de_DE.ts \
                 translations/keepassx-ru_RU.ts \
                 translations/keepassx-es_ES.ts \
                 translations/keepassx-fr_FR.ts \
-                translations/keepassx-gl_ES.ts \
                 translations/keepassx-cs_CZ.ts \
                 translations/keepassx-ja_JP.ts \
                 translations/keepassx-xx_XX.ts
