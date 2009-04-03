@@ -9,6 +9,9 @@ keepassx (0.3.4-2) unstable; urgency=low
 
   [ Reinhard Tartler ]
   * target unstable
+  * convert all format patches to quilt
+  * add a README.source file documenting quilt usage
+  * bump Standards-Version to 3.8.0
 
  -- Reinhard Tartler <siretart@tauware.de>  Fri, 03 Apr 2009 16:21:55 +0200
 
