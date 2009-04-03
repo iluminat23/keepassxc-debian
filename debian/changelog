@@ -1,11 +1,16 @@
-keepassx (0.3.4-2) experimental; urgency=low
+keepassx (0.3.4-2) unstable; urgency=low
 
+  [ Felix Geyer ]
+  * introduce quilt
   * Bug fix: "Keepassx crashes on save when password entry changes".
     LP: #311359
     - add debian/patches/svn281_fix_buffer_too_small.patch
     - build-depend on quilt
 
- -- Felix Geyer <debfx-pkg@fobos.de>  Mon, 16 Mar 2009 23:52:21 +0100
+  [ Reinhard Tartler ]
+  * target unstable
+
+ -- Reinhard Tartler <siretart@tauware.de>  Fri, 03 Apr 2009 16:21:55 +0200
 
 keepassx (0.3.4-1) experimental; urgency=low
 
