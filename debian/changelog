@@ -1,8 +1,9 @@
-keepassx (0.4.0-1) UNRELEASED; urgency=low
+keepassx (0.4.0-1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream release. (Closes: #522488)
+  * adapt debian/watch file to new upstream naming style.
 
- -- Reinhard Tartler <siretart@tauware.de>  Sat, 04 Apr 2009 11:13:41 +0200
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 04 Apr 2009 11:39:24 +0200
 
 keepassx (0.3.4-2) unstable; urgency=low
 
