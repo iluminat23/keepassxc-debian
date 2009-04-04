@@ -20,11 +20,18 @@
 #ifndef _SECSTRING_H_
 #define _SECSTRING_H_
 
+#include "crypto/arcfour.h"
+
+class SecData;
+
 //! QString based class with in-memory encryption of its content.
 /*!
 This class can hold a QString object in an encrypted buffer. To get access to the string it is neccassary to unlock the SecString object.
  */
 class SecString{
+
+friend class SecData;
+
 public:
 	SecString();
 	~SecString();
@@ -45,13 +52,31 @@ public:
 	static void overwrite(unsigned char* str,int len);
 	static void overwrite(QString& str);
 	static void generateSessionKey();
+	static void deleteSessionKey();
 	
 private:
-	bool locked;
 	static CArcFour RC4;
+	static quint8* sessionkey;
+	bool locked;
 	QByteArray crypt;
 	QString plain;
 
+};
+
+class SecData{
+	public:
+		SecData(int len);
+		~SecData();
+		void lock();
+		void unlock();
+		void copyData(quint8* src);
+		void copyData(SecData& secData);
+		quint8* operator*();
+	
+	private:
+		quint8* data;
+		int length;
+		bool locked;
 };
 
 

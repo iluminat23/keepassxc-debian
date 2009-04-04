@@ -1,32 +1,34 @@
- /**************************************************************************
- *                                                                         *
- *   Copyright (C) 2007 by Tarek Saidi <tarek.saidi@arcor.de>              *
- *   Copyright (c) 2003 Dr Brian Gladman, Worcester, UK                    *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; version 2 of the License.               *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+/*
+ ---------------------------------------------------------------------------
+ Copyright (c) 1998-2008, Brian Gladman, Worcester, UK. All rights reserved.
+
+ LICENSE TERMS
+
+ The redistribution and use of this software (with or without changes)
+ is allowed without the payment of fees or royalties provided that:
+
+  1. source code distributions include the above copyright notice, this
+     list of conditions and the following disclaimer;
+
+  2. binary distributions include the above copyright notice, this list
+     of conditions and the following disclaimer in their documentation;
+
+  3. the name of the copyright holder is not used to endorse products
+     built using this software without specific written permission.
+
+ DISCLAIMER
+
+ This software is provided 'as is' with no explicit or implied warranties
+ in respect of its properties, including, but not limited to, correctness
+ and/or fitness for purpose.
+ ---------------------------------------------------------------------------
+ Issue Date: 20/12/2007
+*/
 
 #define DO_TABLES
 
 #include "aes.h"
 #include "aesopt.h"
-
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
 
 #if defined(FIXED_TABLES)
 
@@ -181,11 +183,16 @@ extern "C"
 
 #include "aestab.h"
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+
 #if defined(FIXED_TABLES)
 
 /* implemented in case of wrong call for fixed tables */
 
-aes_rval gen_tabs(void)
+AES_RETURN aes_init(void)
 {
     return EXIT_SUCCESS;
 }
@@ -217,49 +224,63 @@ static uint_8t hibit(const uint_32t x)
 
 /* return the inverse of the finite field element x */
 
-static uint_8t fi(const uint_8t x)
+static uint_8t gf_inv(const uint_8t x)
 {   uint_8t p1 = x, p2 = BPOLY, n1 = hibit(x), n2 = 0x80, v1 = 1, v2 = 0;
 
-    if(x < 2) return x;
+    if(x < 2) 
+        return x;
 
-    for(;;)
+    for( ; ; )
     {
-        if(!n1) return v1;
+        if(n1)
+            while(n2 >= n1)             /* divide polynomial p2 by p1    */
+            {
+                n2 /= n1;               /* shift smaller polynomial left */ 
+                p2 ^= (p1 * n2) & 0xff; /* and remove from larger one    */
+                v2 ^= v1 * n2;          /* shift accumulated value and   */ 
+                n2 = hibit(p2);         /* add into result               */
+            }
+        else
+            return v1;
 
-        while(n2 >= n1)
-        {
-            n2 /= n1; p2 ^= p1 * n2; v2 ^= v1 * n2; n2 = hibit(p2);
-        }
-
-        if(!n2) return v2;
-
-        while(n1 >= n2)
-        {
-            n1 /= n2; p1 ^= p2 * n1; v1 ^= v2 * n1; n1 = hibit(p1);
-        }
+        if(n2)                          /* repeat with values swapped    */ 
+            while(n1 >= n2)
+            {
+                n1 /= n2; 
+                p1 ^= p2 * n1; 
+                v1 ^= v2 * n1; 
+                n1 = hibit(p1);
+            }
+        else
+            return v2;
     }
 }
 
 #endif
 
 /* The forward and inverse affine transformations used in the S-box */
+uint_8t fwd_affine(const uint_8t x)
+{   uint_32t w = x;
+    w ^= (w << 1) ^ (w << 2) ^ (w << 3) ^ (w << 4);
+    return 0x63 ^ ((w ^ (w >> 8)) & 0xff);
+}
 
-#define fwd_affine(x) \
-    (w = (uint_32t)x, w ^= (w<<1)^(w<<2)^(w<<3)^(w<<4), 0x63^(uint_8t)(w^(w>>8)))
-
-#define inv_affine(x) \
-    (w = (uint_32t)x, w = (w<<1)^(w<<3)^(w<<6), 0x05^(uint_8t)(w^(w>>8)))
+uint_8t inv_affine(const uint_8t x)
+{   uint_32t w = x;
+    w = (w << 1) ^ (w << 3) ^ (w << 6);
+    return 0x05 ^ ((w ^ (w >> 8)) & 0xff);
+}
 
 static int init = 0;
 
-aes_rval gen_tabs(void)
+AES_RETURN aes_init(void)
 {   uint_32t  i, w;
 
 #if defined(FF_TABLES)
 
     uint_8t  pow[512], log[256];
 
-    if(init) 
+    if(init)
         return EXIT_SUCCESS;
     /*  log and power tables for GF(2^8) finite field with
         WPOLY as modular polynomial - the simplest primitive
@@ -277,7 +298,7 @@ aes_rval gen_tabs(void)
     while (w != 1);
 
 #else
-    if(init) 
+    if(init)
         return EXIT_SUCCESS;
 #endif
 
@@ -290,7 +311,7 @@ aes_rval gen_tabs(void)
     for(i = 0; i < 256; ++i)
     {   uint_8t    b;
 
-        b = fwd_affine(fi((uint_8t)i));
+        b = fwd_affine(gf_inv((uint_8t)i));
         w = bytes2word(f2(b), b, b, f3(b));
 
 #if defined( SBX_SET )
@@ -308,7 +329,7 @@ aes_rval gen_tabs(void)
 #endif
         w = bytes2word(b, 0, 0, 0);
 
-#if defined( FL1_SET )                 /* tables for last encryption round (may also   */
+#if defined( FL1_SET )            /* tables for last encryption round (may also   */
         t_set(f,l)[i] = w;        /* be used in the key schedule)                 */
 #endif
 #if defined( FL4_SET )
@@ -318,7 +339,7 @@ aes_rval gen_tabs(void)
         t_set(f,l)[3][i] = upr(w,3);
 #endif
 
-#if defined( LS1_SET )                 /* table for key schedule if t_set(f,l) above is    */
+#if defined( LS1_SET )			/* table for key schedule if t_set(f,l) above is*/
         t_set(l,s)[i] = w;      /* not of the required form                     */
 #endif
 #if defined( LS4_SET )
@@ -328,10 +349,10 @@ aes_rval gen_tabs(void)
         t_set(l,s)[3][i] = upr(w,3);
 #endif
 
-        b = fi(inv_affine((uint_8t)i));
+        b = gf_inv(inv_affine((uint_8t)i));
         w = bytes2word(fe(b), f9(b), fd(b), fb(b));
 
-#if defined( IM1_SET )                 /* tables for the inverse mix column operation  */
+#if defined( IM1_SET )			/* tables for the inverse mix column operation  */
         t_set(i,m)[b] = w;
 #endif
 #if defined( IM4_SET )
@@ -344,7 +365,7 @@ aes_rval gen_tabs(void)
 #if defined( ISB_SET )
         t_set(i,box)[i] = b;
 #endif
-#if defined( IT1_SET )                 /* tables for a normal decryption round */
+#if defined( IT1_SET )			/* tables for a normal decryption round */
         t_set(i,n)[i] = w;
 #endif
 #if defined( IT4_SET )
@@ -354,7 +375,7 @@ aes_rval gen_tabs(void)
         t_set(i,n)[3][i] = upr(w,3);
 #endif
         w = bytes2word(b, 0, 0, 0);
-#if defined( IL1_SET )                 /* tables for last decryption round */
+#if defined( IL1_SET )			/* tables for last decryption round */
         t_set(i,l)[i] = w;
 #endif
 #if defined( IL4_SET )

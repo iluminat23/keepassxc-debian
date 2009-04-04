@@ -60,11 +60,10 @@ public:
 	bool hideUsernames(){return settings.value("UI/HideUsernames",true).toBool();}
 	QByteArray hSplitterPos(){return settings.value("UI/HSplitterPos").toByteArray();}
 	IntegrPluginType integrPlugin(){return stringToIntegrPluginType(settings.value("Options/IntegrPlugin").toString());}
-	QString langFile(){return settings.value("Options/LangFile").toString();}
 	QString lastFile(){return settings.value("Options/LastFile").toString();}
 	QString lastKeyLocation(){return settings.value("Options/LastKeyLocation").toString();}
 	tKeyType lastKeyType(){return stringToKeyType(settings.value("Options/LastKeyType").toString());}
-	QRect mainWindowGeometry(const QRect& defaultValue){return settings.value("UI/MainWindowGeometry",defaultValue).toRect();}
+	QByteArray mainWindowGeometry();
 	bool minimizeToTray(){return settings.value("Options/MinimizeToTray",false).toBool();}
 	bool minimizeTray(){return settings.value("Options/MinimizeTray",false).toBool();}
 	bool startMinimized(){return settings.value("Options/StartMinimized",false).toBool();}
@@ -72,9 +71,16 @@ public:
 	QString mountDir(){return settings.value("Options/MountDir",DEFAULT_MOUNT_DIR).toString();}
 	bool openLastFile(){return settings.value("Options/OpenLastFile",true).toBool();}
 	bool autoSave(){return settings.value("Options/AutoSave",false).toBool();}
+	bool autoSaveChange(){return settings.value("Options/AutoSaveChange",false).toBool();}
+	bool backup(){return settings.value("Options/Backup",true).toBool();}
+	bool backupDelete(){return settings.value("Options/BackupDelete",false).toBool();}
+	int backupDeleteAfter(){return settings.value("Options/BackupDeleteAfter",14).toInt();}
+	int pwGenCategory(){return settings.value("Options/PwGenCategory",0).toInt();}
 	QString pwGenCharList(){return settings.value("Options/PwGenCharList").toString();}
+	bool pwGenExcludeLookAlike(){return settings.value("Options/PwGenExcludeLookAlike").toBool();}
+	bool pwGenEveryGroup(){return settings.value("Options/PwGenEveryGroup").toBool();}
 	int pwGenLength(){return settings.value("Options/PwGenLength",25).toInt();}
-	QBitArray pwGenOptions(){return stringToBitArray(settings.value("Options/PwGenOptions","1111100001").toString(),10);}
+	QBitArray pwGenOptions(){return stringToBitArray(settings.value("Options/PwGenOptions","11111000011110").toString(),14);}
 	bool rememberLastKey(){return settings.value("Options/RememberLastKey",true).toBool();}
 	bool saveFileDlgHistory(){return settings.value("Options/SaveFileDlgHistory",true).toBool();}
 	bool saveRelativePaths(){return settings.value("Options/SaveRelativePaths",true).toBool();}
@@ -101,7 +107,9 @@ public:
 	Shortcut globalShortcut();
 	bool entryTitlesMatch(){return settings.value("Options/EntryTitlesMatch",true).toBool();}
 #endif
-	bool featureBookmarks(){return settings.value("Features/Bookmarks",true).toBool();}
+	//bool featureBookmarks(){return settings.value("Features/Bookmarks",true).toBool();}
+	bool featureBookmarks(){return true;}
+	QString language(){return settings.value("Options/Language","auto").toString();}
 	
 	void setAlternatingRowColors(bool value){settings.setValue("Options/AlternatingRowColors",value);}
 	void setBannerColor1(const QColor& value){settings.setValue("Options/BannerColor1",colorToString(value));}
@@ -119,11 +127,10 @@ public:
 	void setHideUsernames(bool value){settings.setValue("UI/HideUsernames",value);}
 	void setHSplitterPos(const QByteArray& value){settings.setValue("UI/HSplitterPos",value);}
 	void setIntegrPlugin(IntegrPluginType value){settings.setValue("Options/IntegrPlugin",integrPluginTypeToString(value));}
-	void setLangFile(const QString& value){settings.setValue("Options/LangFile",value);}
 	void setLastFile(const QString& value){settings.setValue("Options/LastFile",value);}
 	void setLastKeyLocation(const QString& value){settings.setValue("Options/LastKeyLocation",value);}
 	void setLastKeyType(tKeyType value){settings.setValue("Options/LastKeyType",keyTypeToString(value));}
-	void setMainWindowGeometry(const QRect& value){settings.setValue("UI/MainWindowGeometry",value);}
+	void setMainWindowGeometry(const QByteArray& value){settings.setValue("UI/MainWindowGeometry",value);}
 	void setMinimizeToTray(bool value){settings.setValue("Options/MinimizeToTray",value);}
 	void setMinimizeTray(bool value){settings.setValue("Options/MinimizeTray",value);}
 	void setStartMinimized(bool value){settings.setValue("Options/StartMinimized",value);}
@@ -131,7 +138,14 @@ public:
 	void setMountDir(const QString& value){settings.setValue("Options/MountDir",value);}
 	void setOpenLastFile(bool value){settings.setValue("Options/OpenLastFile",value);}
 	void setAutoSave(bool value){settings.setValue("Options/AutoSave",value);}
+	void setAutoSaveChange(bool value){settings.setValue("Options/AutoSaveChange",value);}
+	void setBackup(bool value){settings.setValue("Options/Backup",value);}
+	void setBackupDelete(bool value){settings.setValue("Options/BackupDelete",value);}
+	void setBackupDeleteAfter(int value){settings.setValue("Options/BackupDeleteAfter",value);}
+	void setPwGenCategory(int value){settings.setValue("Options/PwGenCategory",value);}
 	void setPwGenCharList(const QString& value){settings.setValue("Options/PwGenCharList",value);}
+	void setPwGenExcludeLookAlike(bool value){settings.setValue("Options/PwGenExcludeLookAlike",value);}
+	void setPwGenEveryGroup(bool value){settings.setValue("Options/PwGenEveryGroup",value);}
 	void setPwGenLength(int value){settings.setValue("Options/PwGenLength",value);}
 	void setPwGenOptions(const QBitArray& value){settings.setValue("Options/PwGenOptions",bitArrayToString(value));}
 	void setRememberLastKey(bool value){settings.setValue("Options/RememberLastKey",value);}
@@ -160,7 +174,8 @@ public:
 	void setGlobalShortcut(const Shortcut& s);
 	void setEntryTitlesMatch(bool value){settings.setValue("Options/EntryTitlesMatch",value);}
 #endif
-	void setFeatureBookmarks(bool value){settings.setValue("Features/Bookmarks",value);}
+	//void setFeatureBookmarks(bool value){settings.setValue("Features/Bookmarks",value);}
+	void setLanguage(const QString& value){settings.setValue("Options/Language",value);}
 
 	unsigned fileDlgHistorySize();
 	void clearFileDlgHistory(){settings.remove("FileDlgHistory");};

@@ -21,6 +21,8 @@
 
 #include "Import_PwManager.h"
 
+#include "crypto/blowfish.h"
+#include <QCryptographicHash>
 
 bool Import_PwManager::importDatabase(QWidget* GuiParent, IDatabase* db){	
 	database=db;
@@ -80,37 +82,32 @@ bool Import_PwManager::importDatabase(QWidget* GuiParent, IDatabase* db){
 	byte* xml=new byte[len-offset+1];
 	xml[len-offset]=0;
 	memcpy(Key,password.toAscii(),pwlen);
-	char* key_hash=new char[20];
-	CSHA1 sha;
-	sha.Update(Key,pwlen);
-	sha.Final();
-	sha.GetHash((unsigned char*)key_hash);
-	if(memcmp(key_hash,KeyHash,20)){
-		delete[] Key; delete [] key_hash; delete [] buffer;
+	QCryptographicHash sha(QCryptographicHash::Sha1);
+	sha.addData((const char*)Key,pwlen);
+	QByteArray key_hash = sha.result();
+	if(memcmp(key_hash.constData(),KeyHash,20)){
+		delete[] Key;
+		delete [] buffer;
 		QMessageBox::critical(GuiParent,tr("Import Failed"),tr("Wrong password."));
 		return false;
 	}
-	delete [] key_hash;
 	blowfish.bf_setkey(Key,password.length());
 	blowfish.bf_decrypt(xml,(byte*)buffer+offset,len-offset);
 	delete [] Key;
 	delete [] buffer;
-	char* content_hash=new char[20];
-	sha.Reset();
-	sha.Update(xml,strlen((char*)xml)-1);
-	sha.Final();
-	sha.GetHash((unsigned char*)content_hash);
-	if(memcmp(content_hash,DataHash,20)){
-		delete [] content_hash; delete [] xml;
+	sha.reset();
+	sha.addData((const char*)xml,strlen((char*)xml)-1);
+	QByteArray content_hash = sha.result();
+	if(memcmp(content_hash.constData(),DataHash,20)){
+		delete [] xml;
 		QMessageBox::critical(GuiParent,tr("Import Failed"),tr("File is damaged (hash test failed)."));
 		return false;
 	}
-	delete[] content_hash;
 	
 	if(!parseXmlContent((char*)xml)){
 		delete [] xml;
-		QMessageBox::critical(GuiParent,tr("Import Failed"),tr("Invalid XML data (see stdout for details).")); return false;}
-	database->setKey(password,QString());
+		QMessageBox::critical(GuiParent,tr("Import Failed"),tr("Invalid XML data (see stdout for details).")); return false;
+	}
 	return true;
 }
 
@@ -120,8 +117,9 @@ bool Import_PwManager::parseXmlContent(char* content){
 	int col,line;
 	if(!db.setContent(QString::fromUtf8(content,strlen(content)-1),false,&err,&line,&col)){
 		qWarning("Import_PwManager::parseXmlContent():\n");
-		qWarning(((err+" (Line:%1 Column:%2)").arg(line).arg(col)+QString('\n')).toAscii());
-		return false;}
+		qWarning("%s (Line:%d Column:%d)\n", CSTR(err), line, col);
+		return false;
+	}
 	QDomElement root=db.documentElement();
 	if(root.tagName()!="P")return false;
 	//Achtung! Kommentare und Kategorien haben das selbe Tag "c"
@@ -136,7 +134,8 @@ bool Import_PwManager::parseXmlContent(char* content){
 	if(!groups.elementsByTagName("c"+QString::number(i)).item(0).isElement())return false;
 	CurrGroup=groups.elementsByTagName("c"+QString::number(i)).item(0).toElement();
 	if(!CurrGroup.hasAttribute("n"))return false;
-	IGroupHandle* NewGroup=database->addGroup(&CGroup(),NULL);
+	CGroup tmpGroup;
+	IGroupHandle* NewGroup=database->addGroup(&tmpGroup,NULL);
 	NewGroup->setTitle(CurrGroup.attribute("n"));
 	int j=0;
 		while(1){

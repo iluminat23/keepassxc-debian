@@ -18,9 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "WaitAnimationWidget.h"
-
 
 WaitAnimationWidget::WaitAnimationWidget(QWidget* parent):QWidget(parent){
 	speed=60;
@@ -70,6 +68,7 @@ void WaitAnimationWidget::refreshAnimation(){
 }
 
 void WaitAnimationWidget::paintEvent(QPaintEvent* event){
+	Q_UNUSED(event);
 	if(timer.isActive()){
 		QPainter painter(this);
 		painter.setRenderHints(QPainter::Antialiasing,true);
@@ -84,6 +83,7 @@ void WaitAnimationWidget::paintEvent(QPaintEvent* event){
 }
 
 void WaitAnimationWidget::resizeEvent(QResizeEvent* event){
+	Q_UNUSED(event);
 	float r;
 	if(width()>height())
 		r=height()/2;
@@ -94,4 +94,3 @@ void WaitAnimationWidget::resizeEvent(QResizeEvent* event){
 		CircPositions[i].setY((r-10)*sin(-2.0*3.14159265*(0.16666667*i))+r);
 	}
 }
-

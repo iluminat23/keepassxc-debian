@@ -21,6 +21,10 @@
 #include "EntryView.h"
 #include "GroupView.h"
 #include "dialogs/EditGroupDlg.h"
+
+#include <QBrush>
+#include <QHeaderView>
+
 #define INSERT_AREA_WIDTH 4
 
 KeepassGroupView::KeepassGroupView(QWidget* parent):QTreeWidget(parent){
@@ -33,7 +37,7 @@ KeepassGroupView::KeepassGroupView(QWidget* parent):QTreeWidget(parent){
 }
 
 
-void KeepassGroupView::createItems(){	
+void KeepassGroupView::createItems(){
 	clear();
 	Items.clear();
 	InsLinePos=-1;
@@ -43,7 +47,7 @@ void KeepassGroupView::createItems(){
 			Items.append(new GroupViewItem(this));
 			Items.back()->setText(0,groups[i]->title());
 			Items.back()->GroupHandle=groups[i];
-			addChilds(Items.back());	
+			addChildren(Items.back());
 		}
 	}
 	for(int i=0;i<Items.size();i++){
@@ -57,33 +61,33 @@ void KeepassGroupView::createItems(){
 void KeepassGroupView::updateIcons(){
 	for(int i=0;i<Items.size();i++){
 		Items[i]->setIcon(0,db->icon(Items[i]->GroupHandle->image()));
-	}	
+	}
 }
 
 void KeepassGroupView::showSearchResults(){
 	if(topLevelItem(topLevelItemCount()-1)!=SearchResultItem){
 		addTopLevelItem(SearchResultItem);
-		setCurrentItem(SearchResultItem);
 	}
-	emit searchResultsSelected();	
+	setCurrentItem(SearchResultItem);
+	emit searchResultsSelected();
 }
 
-void KeepassGroupView::addChilds(GroupViewItem* item){
-	QList<IGroupHandle*>childs=item->GroupHandle->childs();
-	if(!childs.size())
+void KeepassGroupView::addChildren(GroupViewItem* item){
+	QList<IGroupHandle*>children=item->GroupHandle->children();
+	if(!children.size())
 		return;
-	for(int i=0; i<childs.size(); i++){
+	for(int i=0; i<children.size(); i++){
 		Items.push_back(new GroupViewItem(item));
-		Items.back()->setText(0,childs[i]->title());
-		Items.back()->GroupHandle=childs[i]; 
-		addChilds(Items.back());		
+		Items.back()->setText(0,children[i]->title());
+		Items.back()->GroupHandle=children[i];
+		addChildren(Items.back());
 	}	
 }
 
 void KeepassGroupView::OnDeleteGroup(){
 	if(config->askBeforeDelete()){
 		if(QMessageBox::question(this,tr("Delete?"),
-		   tr("Are you sure you want to delete this group, all it's child groups and all their entries?"),
+		   tr("Are you sure you want to delete this group, all its child groups and all their entries?"),
 			  QMessageBox::Yes | QMessageBox::No,QMessageBox::No) == QMessageBox::No)
 			return;			
 	}
@@ -100,58 +104,54 @@ void KeepassGroupView::OnHideSearchResults(){
 }
 
 void KeepassGroupView::OnNewGroup(){
-	GroupViewItem* parent=(GroupViewItem*)currentItem();
 	CGroup NewGroup;
-	CEditGroupDialog dlg(db,&NewGroup,parentWidget(),true);
-	if(dlg.exec()){
-		IGroupHandle* group;
-		if(parent){
-			group=db->addGroup(&NewGroup,parent->GroupHandle);
-			Items.append(new GroupViewItem(parent));
-		}
-		else{
-			if(topLevelItemCount()){
-				if(topLevelItem(topLevelItemCount()-1)==SearchResultItem)
-					Items.append(new GroupViewItem(this,topLevelItem(topLevelItemCount()-2)));
-				else
-					Items.append(new GroupViewItem(this,topLevelItem(topLevelItemCount()-1)));
-			}
-			else
-				Items.append(new GroupViewItem(this));
-			group=db->addGroup(&NewGroup,NULL);
-		}
-		Items.back()->GroupHandle=group;
-		Items.back()->setText(0,group->title());
-		Items.back()->setIcon(0,db->icon(group->image()));
-	}
-	emit fileModified();	
+	CEditGroupDialog dlg(db,&NewGroup,parentWidget());
+	if(dlg.exec())
+		createGroup(NewGroup.Title, NewGroup.Image, NULL);
 }
 
-void KeepassGroupView::createGroup(const QString& title, quint32 image){
+void KeepassGroupView::OnNewSubgroup(){
+	GroupViewItem* parent=(GroupViewItem*)currentItem();
+	CGroup NewGroup;
+	CEditGroupDialog dlg(db,&NewGroup,parentWidget());
+	if(dlg.exec())
+		createGroup(NewGroup.Title, NewGroup.Image, parent);
+}
+
+void KeepassGroupView::createGroup(const QString& title, quint32 image, GroupViewItem* parent){
 	CGroup NewGroup;
 	NewGroup.Title = title;
 	NewGroup.Image = image;
 	
 	IGroupHandle* group;
-	if(topLevelItemCount()){
-		if(topLevelItem(topLevelItemCount()-1)==SearchResultItem)
-			Items.append(new GroupViewItem(this,topLevelItem(topLevelItemCount()-2)));
-		else
-			Items.append(new GroupViewItem(this,topLevelItem(topLevelItemCount()-1)));
+	if(parent){
+		group=db->addGroup(&NewGroup,parent->GroupHandle);
+		Items.append(new GroupViewItem(parent));
 	}
-	else
-		Items.append(new GroupViewItem(this));
-	
-	group = db->addGroup(&NewGroup,NULL);
+	else{
+		if(topLevelItemCount()){
+			int i=1;
+			if(topLevelItem(topLevelItemCount()-i)==SearchResultItem)
+				i++;
+			if(title!="Backup" && topLevelItem(topLevelItemCount()-i)->text(0)=="Backup")
+				i++;
+			Items.append(new GroupViewItem(this,topLevelItem(topLevelItemCount()-i)));
+		}
+		else
+			Items.append(new GroupViewItem(this));
+		
+		group = db->addGroup(&NewGroup,NULL);
+	}
 	
 	Items.back()->GroupHandle = group;
 	Items.back()->setText(0, group->title());
 	Items.back()->setIcon(0, db->icon(group->image()));
+	emit fileModified();
 }
 
 void KeepassGroupView::OnEditGroup(){
 	GroupViewItem* item=(GroupViewItem*)currentItem();
-	CEditGroupDialog dlg(db,item->GroupHandle,parentWidget(),true);
+	CEditGroupDialog dlg(db,item->GroupHandle,parentWidget());
 	int r=dlg.exec();
 	if(r){
 		item->setIcon(0,db->icon(item->GroupHandle->image()));
@@ -178,7 +178,7 @@ void KeepassGroupView::OnCurrentGroupChanged(QTreeWidgetItem* cur){
 			emit groupChanged(((GroupViewItem*)cur)->GroupHandle);
 	}
 	else
-		emit groupChanged(NULL);	
+		emit groupChanged(NULL);
 }
 
 
@@ -188,11 +188,11 @@ void KeepassGroupView::setCurrentGroup(IGroupHandle* group){
 	for(i=0;i<Items.size();i++)
 		if(Items[i]->GroupHandle==group){found=true; break;}
 	if(!found)return;
-	setCurrentItem(Items[i]);	
+	setCurrentItem(Items[i]);
 }
 
 void KeepassGroupView::dragEnterEvent ( QDragEnterEvent * event ){
-	LastHoverItem=NULL;	
+	LastHoverItem=NULL;
 	InsLinePos=-1;
 	
 	if(event->mimeData()->hasFormat("application/x-keepassx-group")){
@@ -212,6 +212,7 @@ void KeepassGroupView::dragEnterEvent ( QDragEnterEvent * event ){
 
 
 void KeepassGroupView::dragLeaveEvent ( QDragLeaveEvent * event ){
+	Q_UNUSED(event);
 	if(LastHoverItem){
 		LastHoverItem->setBackgroundColor(0,QApplication::palette().color(QPalette::Base));
 		LastHoverItem->setForeground(0,QBrush(QApplication::palette().color(QPalette::Text)));
@@ -300,15 +301,15 @@ void KeepassGroupView::dropEvent( QDropEvent * event ){
 			if(event->pos().y()>ItemRect.y()+2){
 				qDebug("Insert behind sibling '%s'",((char*)Item->text(0).toUtf8().data()));
 				if(DragItem->parent()){
-					DragItem->parent()->takeChild(DragItem->parent()->indexOfChild(DragItem));			
+					DragItem->parent()->takeChild(DragItem->parent()->indexOfChild(DragItem));
 				}
 				else{
-					takeTopLevelItem(indexOfTopLevelItem(DragItem));			
+					takeTopLevelItem(indexOfTopLevelItem(DragItem));
 				}				
 				if(Item->parent()){
 					int index=Item->parent()->indexOfChild(Item)+1;
 					db->moveGroup(DragItem->GroupHandle,((GroupViewItem*)Item->parent())->GroupHandle,index);
-					Item->parent()->insertChild(index,DragItem);					
+					Item->parent()->insertChild(index,DragItem);
 				}
 				else{
 					int index=indexOfTopLevelItem(Item)+1;
@@ -320,15 +321,15 @@ void KeepassGroupView::dropEvent( QDropEvent * event ){
 			else{	
 				qDebug("Insert before sibling '%s'",((char*)Item->text(0).toUtf8().data()));
 				if(DragItem->parent()){
-					DragItem->parent()->takeChild(DragItem->parent()->indexOfChild(DragItem));			
+					DragItem->parent()->takeChild(DragItem->parent()->indexOfChild(DragItem));
 				}
 				else{
-					takeTopLevelItem(indexOfTopLevelItem(DragItem));			
+					takeTopLevelItem(indexOfTopLevelItem(DragItem));
 				}				
 				if(Item->parent()){
 					int index=Item->parent()->indexOfChild(Item);
 					db->moveGroup(DragItem->GroupHandle,((GroupViewItem*)Item->parent())->GroupHandle,index);
-					Item->parent()->insertChild(index,DragItem);					
+					Item->parent()->insertChild(index,DragItem);
 				}
 				else{
 					int index=indexOfTopLevelItem(Item);
@@ -344,7 +345,7 @@ void KeepassGroupView::dropEvent( QDropEvent * event ){
 	
 }
 
-void KeepassGroupView::entryDragMoveEvent( QDragMoveEvent * event ){
+void KeepassGroupView::entryDragMoveEvent(QDragMoveEvent* event){
 
 	GroupViewItem* Item=(GroupViewItem*)itemAt(event->pos());
 	if(!Item){
@@ -379,7 +380,7 @@ void KeepassGroupView::entryDragMoveEvent( QDragMoveEvent * event ){
 	
 }
 
-void KeepassGroupView::dragMoveEvent( QDragMoveEvent * event ){
+void KeepassGroupView::dragMoveEvent(QDragMoveEvent* event){
 	if(DragType==EntryDrag){
 		entryDragMoveEvent(event);
 		return;
@@ -436,7 +437,7 @@ void KeepassGroupView::dragMoveEvent( QDragMoveEvent * event ){
 					InsLinePos=ItemRect.y();
 				}
 				InsLineStart=ItemRect.x();
-				viewport()->update(QRegion(0,InsLinePos-2,viewport()->width(),4));			
+				viewport()->update(QRegion(0,InsLinePos-2,viewport()->width(),4));
 			}
 			event->acceptProposedAction();
 			return;
@@ -452,7 +453,7 @@ void KeepassGroupView::paintEvent(QPaintEvent* event){
 	if(InsLinePos != -1){
 		QPainter painter(viewport());
 		painter.setBrush(QBrush(QColor(0,0,0),Qt::Dense4Pattern));
-		painter.setPen(Qt::NoPen);		
+		painter.setPen(Qt::NoPen);
 		painter.drawRect(InsLineStart,InsLinePos-2,viewport()->width(),4);
 	}
 }
@@ -495,11 +496,47 @@ void KeepassGroupView::mouseMoveEvent(QMouseEvent *event){
 }
 
 void KeepassGroupView::OnItemExpanded(QTreeWidgetItem* item){
-	dynamic_cast<GroupViewItem*>(item)->GroupHandle->setExpanded(true);
+	static_cast<GroupViewItem*>(item)->GroupHandle->setExpanded(true);
 }
 
 void KeepassGroupView::OnItemCollapsed(QTreeWidgetItem* item){
-	dynamic_cast<GroupViewItem*>(item)->GroupHandle->setExpanded(false);
+	static_cast<GroupViewItem*>(item)->GroupHandle->setExpanded(false);
+}
+
+void KeepassGroupView::OnSort() {
+	QHash<QTreeWidgetItem*,int> oldIndex;
+	for (int i=0; i<Items.size(); i++) {
+		if (Items[i]->parent())
+			oldIndex.insert(Items[i], Items[i]->parent()->indexOfChild(Items[i]));
+		else
+			oldIndex.insert(Items[i], invisibleRootItem()->indexOfChild(Items[i]));
+	}
+	
+	sortItems(0, Qt::AscendingOrder);
+	
+	bool modified = false;
+	QMutableHashIterator<QTreeWidgetItem*, int> i(oldIndex);
+	while (i.hasNext()) {
+		i.next();
+		int newIndex;
+		IGroupHandle* parent;
+		if (i.key()->parent()) {
+			newIndex = i.key()->parent()->indexOfChild(i.key());
+			parent = static_cast<GroupViewItem*>(i.key()->parent())->GroupHandle;
+		}
+		else {
+			newIndex = invisibleRootItem()->indexOfChild(i.key());
+			parent = NULL;
+		}
+		
+		if (newIndex != i.value()) {
+			db->moveGroup(static_cast<GroupViewItem*>(i.key())->GroupHandle, parent, newIndex);
+			modified = true;
+		}
+	}
+	
+	if (modified)
+		emit fileModified();
 }
 
 
@@ -519,3 +556,21 @@ GroupViewItem::GroupViewItem(QTreeWidgetItem *parent):QTreeWidgetItem(parent){
 GroupViewItem::GroupViewItem(QTreeWidgetItem *parent, QTreeWidgetItem *preceding):QTreeWidgetItem(parent,preceding){
 }
 
+bool GroupViewItem::operator<(const QTreeWidgetItem& other) const {
+	const GroupViewItem* otherItem = static_cast<const GroupViewItem*>(&other);
+	KeepassGroupView* groupView = static_cast<KeepassGroupView*>(treeWidget());
+	
+	// Search result is always at the bottom
+	if (this == groupView->SearchResultItem)
+		return false;
+	if (otherItem == groupView->SearchResultItem)
+		return true;
+	
+	// Backup group is always at the bottom but above search results
+	if (!parent() && text(0).compare("Backup", Qt::CaseInsensitive) == 0)
+		return false;
+	if (!other.parent() && other.text(0).compare("Backup", Qt::CaseInsensitive) == 0)
+		return true;
+	
+	return QString::localeAwareCompare(text(0), other.text(0)) < 0;
+}

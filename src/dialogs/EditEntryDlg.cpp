@@ -24,8 +24,11 @@
 #include "EditEntryDlg.h"
 #include "CalendarDlg.h"
 
+#ifdef GLOBAL_AUTOTYPE
+#include "TargetWindowDlg.h"
+#endif
 
-CEditEntryDlg::CEditEntryDlg(IDatabase* _db, IEntryHandle* _entry,QWidget* parent,  bool modal, bool newEntry)
+CEditEntryDlg::CEditEntryDlg(IDatabase* _db, IEntryHandle* _entry,QWidget* parent, bool newEntry)
 : QDialog(parent)
 {
 	Q_ASSERT(_db);
@@ -53,7 +56,7 @@ CEditEntryDlg::CEditEntryDlg(IDatabase* _db, IEntryHandle* _entry,QWidget* paren
 	connect(CheckBox_ExpiresNever,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxExpiresNeverChanged(int)));
 	connect(Button_Icons,SIGNAL(clicked()),this,SLOT(OnButtonIcons()));
 	connect(ExpirePresetsMenu,SIGNAL(triggered(QAction*)),this,SLOT(OnExpirePreset(QAction*)));
-	connect(ButtonExpirePresets,SIGNAL(triggered(QAction*)),this,SLOT(OnCalendar()));
+	connect(ButtonExpirePresets,SIGNAL(triggered(QAction*)),this,SLOT(OnCalendar(QAction*)));
 	connect(this, SIGNAL(finished(int)), this, SLOT(OnClose()));
 
 	// QAction::data() contains the time until expiration in days.
@@ -69,7 +72,9 @@ CEditEntryDlg::CEditEntryDlg(IDatabase* _db, IEntryHandle* _entry,QWidget* paren
 	ExpirePresetsMenu->addSeparator();
 	ExpirePresetsMenu->addAction(tr("1 Year"))->setData(365);
 	ButtonExpirePresets->setMenu(ExpirePresetsMenu);
-	ButtonExpirePresets->setDefaultAction(new QAction(tr("Calendar..."),ButtonExpirePresets));
+	QAction* actionCalendar = new QAction(tr("Calendar..."),ButtonExpirePresets);
+	actionCalendar->setData(-1);
+	ButtonExpirePresets->setDefaultAction(actionCalendar);
 
 	IconIndex = entry->image();
 	Button_Icons->setIcon(db->icon(IconIndex));
@@ -105,10 +110,6 @@ CEditEntryDlg::CEditEntryDlg(IDatabase* _db, IEntryHandle* _entry,QWidget* paren
 	Edit_Comment->setPlainText(entry->comment());
 	InitGroupComboBox();
 
-/* MX-TO-DO: After approval, remove this invokation
-	InitIconComboBox();
-*/
-
 	if(!entry->binarySize()){
 		ButtonSaveAttachment->setDisabled(true);
 		ButtonDeleteAttachment->setDisabled(true);
@@ -124,12 +125,22 @@ CEditEntryDlg::CEditEntryDlg(IDatabase* _db, IEntryHandle* _entry,QWidget* paren
 	else{
 		DateTime_Expire->setDateTime(entry->expire());
 	}
+	
+#ifdef AUTOTYPE
+	QToolButton* buttonTools = new QToolButton(buttonBox);
+	buttonTools->setText("Tools");
+	buttonTools->setPopupMode(QToolButton::InstantPopup);
+	QMenu* menuTools = new QMenu(buttonTools);
+	connect(menuTools->addAction("Auto-Type: Customize Sequence"), SIGNAL(triggered(bool)), SLOT(OnCustomizeSequence()));
+#ifdef GLOBAL_AUTOTYPE
+	connect(menuTools->addAction("Auto-Type: Select target window"), SIGNAL(triggered(bool)), SLOT(OnSelectTarget()));
+#endif
+	buttonTools->setMenu(menuTools);
+	buttonBox->addButton(buttonTools, QDialogButtonBox::ResetRole); // ResetRole: workaround to display button on the left
+#endif
 }
 
-CEditEntryDlg::~CEditEntryDlg()
-{
-
-
+CEditEntryDlg::~CEditEntryDlg(){
 }
 
 void CEditEntryDlg::resizeEvent(QResizeEvent *event){
@@ -145,16 +156,6 @@ void CEditEntryDlg::paintEvent(QPaintEvent *event){
 	painter.setClipRegion(event->region());
 	painter.drawPixmap(QPoint(0,0),BannerPixmap);
 }
-
-/* MX-TO-DO: After approval, remove this implementation
-
-void CEditEntryDlg::InitIconComboBox(){
-	for(int i=0;i<db->numIcons();i++){
-		Combo_IconPicker->insertItem(i,db->icon(i),"");
-	}
-	Combo_IconPicker->setCurrentIndex(entry->image());
-}
-*/
 
 void CEditEntryDlg::InitGroupComboBox(){
 	QString Space;
@@ -202,9 +203,10 @@ void CEditEntryDlg::OnButtonOK()
 		ModFlag=true;
 
 	if(ModFlag){
+		QDateTime now = QDateTime::currentDateTime();
 		entry->setExpire(DateTime_Expire->dateTime());
-		entry->setLastAccess(QDateTime::currentDateTime());
-		entry->setLastMod(QDateTime::currentDateTime());
+		entry->setLastAccess(now);
+		entry->setLastMod(now);
 		entry->setTitle(Edit_Title->text());
 		entry->setUsername(Edit_UserName->text());
 		entry->setUrl(Edit_URL->text());
@@ -213,18 +215,19 @@ void CEditEntryDlg::OnButtonOK()
 		pw.setString(password,true);
 		entry->setPassword(pw);
 		entry->setComment(Edit_Comment->toPlainText());
+		entry->setImage(IconIndex);
 	}
 	if(Combo_Group->currentIndex()!=GroupIndex){
 		db->moveEntry(entry,groups[Combo_Group->currentIndex()]);
-		EntryMoved=true; ModFlag=true;
+		EntryMoved=true;
 	}
-	// MX-COMMENT: Should not this line go inside the if(Modflag) block?
-	entry->setImage(IconIndex);
 
-	if(ModFlag&&EntryMoved)done(2);
-	else if(ModFlag)done(1);
-	else done(0);
-
+	if(EntryMoved)
+		done(ModFlag?2:3);
+	else if (ModFlag)
+		done(1);
+	else
+		done(0);
 }
 
 void CEditEntryDlg::OnButtonCancel()
@@ -235,64 +238,55 @@ void CEditEntryDlg::OnButtonCancel()
 
 void CEditEntryDlg::ChangeEchoMode()
 {
-if(Edit_Password->echoMode()==QLineEdit::Normal){
-Edit_Password->setEchoMode(QLineEdit::Password);
-Edit_Password_w->setEchoMode(QLineEdit::Password);
-ButtonEchoMode->setIcon(getIcon("pwd_hide"));
-}
-else
-{
-Edit_Password->setEchoMode(QLineEdit::Normal);
-Edit_Password_w->setEchoMode(QLineEdit::Normal);
-ButtonEchoMode->setIcon(getIcon("pwd_show"));
-}
-
-
+	if(Edit_Password->echoMode()==QLineEdit::Normal){
+		Edit_Password->setEchoMode(QLineEdit::Password);
+		Edit_Password_w->setEchoMode(QLineEdit::Password);
+		ButtonEchoMode->setIcon(getIcon("pwd_hide"));
+	}
+	else
+	{
+		Edit_Password->setEchoMode(QLineEdit::Normal);
+		Edit_Password_w->setEchoMode(QLineEdit::Normal);
+		ButtonEchoMode->setIcon(getIcon("pwd_show"));
+	}
 }
 
 void CEditEntryDlg::OnTitleTextChanged(const QString& txt)
 {
-    setWindowTitle((txt=="") ? tr("[Untitled Entry]") : txt);
+	setWindowTitle((txt=="") ? tr("[Untitled Entry]") : txt);
 }
 
 void CEditEntryDlg::OnPasswordTextChanged()
 {
-Edit_Password_w->setText(QString());
-int bits=(Edit_Password->text().length()*8);
-Label_Bits->setText(QString::number(bits)+" Bit");
-if(bits>128)bits=128;
-Progress_Quali->setValue(100*bits/128);
+	Edit_Password_w->setText(QString());
+	int bits=(Edit_Password->text().length()*8);
+	Label_Bits->setText(QString::number(bits)+" Bit");
+	if(bits>128)bits=128;
+	Progress_Quali->setValue(100*bits/128);
 }
 
 void CEditEntryDlg::OnPasswordwTextChanged()
 {
-
-if(QString::compare(Edit_Password_w->text(),Edit_Password->text().mid(0,(Edit_Password_w->text().length())))!=0){
-    QPalette palette;
-    palette.setColor(Edit_Password_w->backgroundRole(),QColor(255,125,125));
-	Edit_Password_w->setPalette(palette);
-}else
-{
-	Edit_Password_w->setPalette(QApplication::palette());
-}
-
-
-
+	if(QString::compare(Edit_Password_w->text(),Edit_Password->text().mid(0,(Edit_Password_w->text().length())))!=0){
+		QPalette palette;
+		palette.setColor(Edit_Password_w->backgroundRole(),QColor(255,125,125));
+		Edit_Password_w->setPalette(palette);
+	}
+	else {
+		Edit_Password_w->setPalette(QApplication::palette());
+	}
 }
 
 void CEditEntryDlg::OnPasswordwLostFocus()
 {
-if(QString::compare(Edit_Password_w->text(),Edit_Password->text())!=0){
-	QPalette palette;
-    palette.setColor(Edit_Password_w->backgroundRole(),QColor(255,125,125));
-	Edit_Password_w->setPalette(palette);
-}
-else
-{
-	Edit_Password_w->setPalette(QApplication::palette ());
-}
-
-
+	if (QString::compare(Edit_Password_w->text(),Edit_Password->text())!=0){
+		QPalette palette;
+		palette.setColor(Edit_Password_w->backgroundRole(),QColor(255,125,125));
+		Edit_Password_w->setPalette(palette);
+	}
+	else {
+		Edit_Password_w->setPalette(QApplication::palette ());
+	}
 }
 
 void CEditEntryDlg::OnNewAttachment()
@@ -300,7 +294,7 @@ void CEditEntryDlg::OnNewAttachment()
 	QString filename=QFileDialog::getOpenFileName(this,tr("Add Attachment..."),QDir::homePath());
 	if(filename=="")return;
 	QFile file(filename);
-	if(file.open(QIODevice::ReadOnly)==false){
+	if(!file.open(QIODevice::ReadOnly)){
 		file.close();
 		QMessageBox::warning(NULL,tr("Error"),tr("Could not open file."),tr("OK"));
 		return;
@@ -350,12 +344,13 @@ void CEditEntryDlg::saveAttachment(IEntryHandle* pEntry, QWidget* ParentWidget)
 		return;
 	}
 	file.close();
-
 }
 
 void CEditEntryDlg::OnDeleteAttachment()
 {
-	int r=QMessageBox::warning(this,tr("Delete Attachment?"),tr("You are about to delete the attachment of this entry.\nAre you sure?"),tr("Yes"),tr("No, Cancel"),NULL,1,1);
+	int r=QMessageBox::warning(this,tr("Delete Attachment?"),
+			tr("You are about to delete the attachment of this entry.\nAre you sure?"),
+			tr("Yes"),tr("No, Cancel"),NULL,1,1);
 	if(r==0){
 		ModFlag=true;
 		entry->setBinary(QByteArray());
@@ -400,11 +395,26 @@ void CEditEntryDlg::OnButtonIcons(){
 
 void CEditEntryDlg::OnExpirePreset(QAction* action){
 	CheckBox_ExpiresNever->setChecked(false);
-	DateTime_Expire->setDate(QDate::fromJulianDay(QDate::currentDate().toJulianDay()+action->data().toInt()));
+	int days = action->data().toInt();
+	switch (days){
+		case 30:
+		case 90:
+		case 180:
+			DateTime_Expire->setDate(QDate::currentDate().addMonths(days/30));
+			break;
+		case 365:
+			DateTime_Expire->setDate(QDate::currentDate().addYears(1));
+			break;
+		default:
+			DateTime_Expire->setDate(QDate::currentDate().addDays(days));
+	}
 	DateTime_Expire->setTime(QTime(0,0,0));
 }
 
-void CEditEntryDlg::OnCalendar(){
+void CEditEntryDlg::OnCalendar(QAction* action){
+	if (action->data().toInt()!=-1)
+		return;
+	
 	CalendarDialog dlg(this);
 	if(dlg.exec()==QDialog::Accepted){
 		CheckBox_ExpiresNever->setChecked(false);
@@ -415,4 +425,26 @@ void CEditEntryDlg::OnCalendar(){
 
 void CEditEntryDlg::OnClose(){
 	config->setDialogGeometry(this);
+}
+
+
+void CEditEntryDlg::OnCustomizeSequence(){
+#ifdef AUTOTYPE
+	QString text = Edit_Comment->toPlainText();
+	if (!text.isEmpty())
+		text.append("\n");
+	Edit_Comment->setPlainText(text.append("Auto-Type: {USERNAME}{TAB}{PASSWORD}{ENTER}"));
+#endif
+}
+
+void CEditEntryDlg::OnSelectTarget(){
+#ifdef GLOBAL_AUTOTYPE
+	TargetWindowDlg dlg(this);
+	if (dlg.exec() && !dlg.windowTitle().isEmpty()){
+		QString text = Edit_Comment->toPlainText();
+		if (!text.isEmpty())
+			text.append("\n");
+		Edit_Comment->setPlainText(text.append("Auto-Type-Window: "+dlg.windowTitle()));
+	}
+#endif
 }

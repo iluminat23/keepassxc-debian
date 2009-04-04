@@ -18,13 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifdef Q_WS_X11
-#include <sys/mman.h>
-#include <limits.h>
-#endif
-
-using namespace std;
 CArcFour SecString::RC4;
+quint8* SecString::sessionkey;
 
 SecString::operator QString(){
 	return string();
@@ -54,7 +49,7 @@ void SecString::unlock(){
 	if(!crypt.length())
 		return;
 	const unsigned char* buffer = new unsigned char[crypt.length()];
-	SecString::RC4.decrypt( (byte*)crypt.data(), (unsigned char*)buffer, crypt.length() );
+	RC4.decrypt( (quint8*)crypt.data(), (unsigned char*)buffer, crypt.length() );
 	plain = QString::fromUtf8((const char*)buffer, crypt.size());
 	overwrite((unsigned char*)buffer, crypt.size());
 	delete [] buffer;
@@ -69,7 +64,7 @@ void SecString::setString(QString& str, bool DeleteSource){
 	QByteArray StrData = str.toUtf8();
 	int len = StrData.size();
 	unsigned char* buffer = new unsigned char[len];
-	SecString::RC4.encrypt((const unsigned char*)StrData.data(), buffer, len);
+	RC4.encrypt((const unsigned char*)StrData.data(), buffer, len);
 	crypt = QByteArray((const char*)buffer, len);
 	overwrite(buffer, len);
 	overwrite((unsigned char*)StrData.data(), len);
@@ -90,28 +85,64 @@ void SecString::overwrite(unsigned char* str, int strlen){
 }
 
 void SecString::overwrite(QString& str){
-	if(str.length()==0)
-		return;
-	
-	for(int i=0; i<str.length(); i++)
-		((char*)str.data())[i] = 0;
+	for (int i=0; i<str.length(); i++) {
+		str[i] = '\0';
+	}
 }
 
 void SecString::generateSessionKey(){
-	CArcFour arc;
-	unsigned char sessionkey[32];
-	
-#ifdef Q_WS_X11
-	
-#ifdef PAGESIZE
-	mlock(sessionkey - sessionkey%PAGESIZE, 32);
-#else
-	mlock(sessionkey, 32);
-#endif
-	
-#endif // Q_WS_X11
-	
-	randomize(sessionkey,32);
-	RC4.setKey(sessionkey,32);
-	overwrite(sessionkey,32);
+	sessionkey = new quint8[32];
+	if (!lockPage(sessionkey, 32))
+		qDebug("Failed to lock session key page");
+	randomize(sessionkey, 32);
+	RC4.setKey(sessionkey, 32);
+}
+
+void SecString::deleteSessionKey() {
+	overwrite(sessionkey, 32);
+	unlockPage(sessionkey, 32);
+	delete[] sessionkey;
+}
+
+
+SecData::SecData(int len) : locked(true){
+	length = len;
+	data = new quint8[len];
+}
+
+SecData::~SecData(){
+	if (!locked){
+		for (int i=0; i<length; i++)
+			data[i] = 0;
+	}
+	delete[] data;
+}
+
+void SecData::lock(){
+	Q_ASSERT(!locked);
+	SecString::RC4.encrypt(data, data, length);
+	locked = true;
+}
+
+void SecData::unlock(){
+	Q_ASSERT(locked);
+	SecString::RC4.decrypt(data, data, length);
+	locked = false;
+}
+
+void SecData::copyData(quint8* src){
+	locked = false;
+	memcpy(data, src, length);
+	lock();
+}
+
+void SecData::copyData(SecData& secData){
+	secData.unlock();
+	copyData(*secData);
+	secData.lock();
+}
+
+quint8* SecData::operator*(){
+	Q_ASSERT(!locked);
+	return data;
 }

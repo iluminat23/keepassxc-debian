@@ -1,7 +1,6 @@
 /***************************************************************************
+ *   Copyright (C) 2001-2003 by Christophe Devine                          *
  *   Copyright (C) 2005-2006 by Tarek Saidi                                *
- *   based on the FIPS-180-2 compliant SHA-256 implementation of	       *
- *   Christophe Devine.                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,6 +42,20 @@ void SHA256::hashBuffer(const void* input, void* digest, quint32 length){
 	sha256_starts(&ctx);
 	sha256_update(&ctx,(quint8*)input,length);
 	sha256_finish(&ctx,(quint8*)digest);
+	overwriteCtx(&ctx);
+}
+
+void SHA256::overwriteCtx(sha256_context* ctx) {
+	ctx->total[0] = 0;
+	ctx->total[1] = 0;
+	
+	for (int i=0; i<8; i++) {
+		ctx->state[i] = 0;
+	}
+	
+	for (int i=0; i<8; i++) {
+		ctx->buffer[i] = 0;
+	}
 }
 
 void sha256_starts( sha256_context *ctx )

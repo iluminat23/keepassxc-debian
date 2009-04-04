@@ -23,7 +23,7 @@
 
 extern const QDateTime Date_Never;
 
-typedef enum CryptAlgorithm{
+enum CryptAlgorithm{
 	Rijndael_Cipher=0,
 	Twofish_Cipher=1
 };
@@ -110,7 +110,6 @@ The IEntryHandle interface provides access to Entry data structures without usin
 class IEntryHandle{
 public:
 	virtual void setImage(const quint32& ImageID)=0;
-	virtual void setOldImage(const quint32& OldImgID)=0;
 	virtual void setTitle(const QString& Title)=0;
 	virtual void setUrl(const QString& URL)=0;
     virtual void setUsername(const QString& Username)=0;
@@ -123,23 +122,22 @@ public:
 	virtual void setExpire(const KpxDateTime& Expire)=0;
 	virtual void setBinary(const QByteArray& BinaryData)=0;
 
-	virtual KpxUuid uuid()=0;
-	virtual IGroupHandle* group()=0;
-	virtual quint32 image()=0;
-	virtual quint32 oldImage()=0;
-	virtual QString title()=0;
-	virtual QString url()=0;
-    virtual QString username()=0;
-	virtual SecString password()=0;
-	virtual QString comment()=0;
-	virtual QString binaryDesc()=0;
-	virtual KpxDateTime creation()=0;
-	virtual KpxDateTime lastMod()=0;
-	virtual KpxDateTime lastAccess()=0;
-	virtual KpxDateTime expire()=0;
-	virtual QByteArray binary()=0;
-	virtual quint32 binarySize()=0;
-    virtual QString friendlySize()=0;
+	virtual KpxUuid uuid()const=0;
+	virtual IGroupHandle* group()const=0;
+	virtual quint32 image()const=0;
+	virtual QString title()const=0;
+	virtual QString url()const=0;
+	virtual QString username()const=0;
+	virtual SecString password()const=0;
+	virtual QString comment()const=0;
+	virtual QString binaryDesc()const=0;
+	virtual KpxDateTime creation()const=0;
+	virtual KpxDateTime lastMod()const=0;
+	virtual KpxDateTime lastAccess()const=0;
+	virtual KpxDateTime expire()const=0;
+	virtual QByteArray binary()const=0;
+	virtual quint32 binarySize()const=0;
+	virtual QString friendlySize()const=0;
 
 	//! \return the index of the entry amongst the entries of its group. The index of the first entry is 0.
 	virtual int visualIndex()const=0;
@@ -159,7 +157,7 @@ public:
 		\return TRUE if the handle is valid and FALSE if the handle is invalid e.g. because the associated entry was deleted.*/
 	virtual bool isValid()const=0;
 
-
+	virtual CEntry data()const=0;
 };
 
 //! Custom Icon Interface
@@ -208,16 +206,16 @@ public:
 	//! \return a pointer to the handle of the parent group or NULL if the group has no parent.
 	virtual IGroupHandle* parent()=0;
 
-	//! \return a List of pointers to the handles of all childs of the group and an empty list if the group has no childs. The list is sorted and starts with the first child.
-	virtual QList<IGroupHandle*> childs()=0;
+	//! \return a List of pointers to the handles of all children of the group and an empty list if the group has no children. The list is sorted.
+	virtual QList<IGroupHandle*> children()=0;
 
-	//! \return the index of the group amongst the childs of its parent. The index of the first child is 0.
+	//! \return the index of the group amongst the children of its parent. The index of the first child is 0.
 	virtual int index()=0;
 
-	/*! Sets the index of a group amongst the childs of its parent.
+	/*! Sets the index of a group amongst the children of its parent.
 		This function can be used to sort the groups of the database in a specific order.
 		\param index The new index of the group. The indices of the other groups which are affected by this operation will be automatically adjusted.*/
-	virtual void setIndex(int index)=0;
+	//virtual void setIndex(int index)=0;
 
 	/*! Tests the validity of the handle.
 		\return TRUE if the handle is valid and FALSE if the handle is invalid e.g. because the associated group was deleted.*/
@@ -241,13 +239,14 @@ public:
 	
 	virtual bool setKey(const QString& password,const QString& keyfile)=0;
 	virtual bool isKeyError()=0;
+	virtual void generateMasterKey()=0;
 
 	//! Loads a database.
    	/*! It is not allowed to call this function if a database is already loaded.
 		\param  identifier Normally this is the filename of the database but it can also be an IP address or something else if the database is not file based.
 		\return TRUE if loading was successfull, otherwise FALSE.
 	*/
-	virtual bool load(QString identifier)=0;
+	virtual bool load(QString identifier, bool readOnly)=0;
 
 	//! Saves the current database.
    	/*! It is not allowed to call this function if no database is loaded.
@@ -281,6 +280,10 @@ public:
 	//! \return a list of pointers to the handles of all entries which belong to the given group. The list contains only valid handles and is sorted in an ascending order regarding to the entry indices.
 	virtual QList<IEntryHandle*> entries(IGroupHandle* Group)=0;
 
+	//! \param Group The group which contains the wanted entries.
+	//! \return a list of pointers to the handles of all entries which belong to the given group. The list contains only valid handles and is sorted in an ascending order (title, username).
+	virtual QList<IEntryHandle*> entriesSortedStd(IGroupHandle* Group)=0;
+
 	//! \return a list with the pointers to the handles of all expired entries of the database. The list contains only valid handles. The list is not sorted.
 	virtual QList<IEntryHandle*> expiredEntries()=0;
 
@@ -292,6 +295,10 @@ public:
 		\return a list with the pointers to the handles of all entries of the database. The list ist sorted and contains only valid handles.*/
 	virtual QList<IGroupHandle*> sortedGroups()=0;
 
+	/*! \return handle of the backup group or NULL if it doesn't exist
+		\param create Create the backup group if it doesn't exist
+	 */
+	virtual IGroupHandle* backupGroup(bool create=false)=0;
 
 	/*! \return the last error message or an empty QString() object if no error occured.*/
 	virtual QString getError()=0;
@@ -368,7 +375,7 @@ public:
 	*/
 	virtual QPixmap& icon(int index)=0;
 	//! \return the number of icons provided by the database. This number can vary at runtime if the database supports custom icons.
- 	virtual int	numIcons()=0;
+ 	virtual int numIcons()=0;
 
 	/*! Deletes all old invalid handles of the database.
 		Make sure that there are no pointers to those handles which are still in use before calling this function.*/
@@ -392,16 +399,8 @@ public:
 		\param Fields A pointer to a six element bool array. It defines which fields are included into the search. The order is: title, username, url, password, comment, attachment description. The pointer can also be NULL, than the default pattern is used instead.
 		\return the search results as a list of pointers to the entry handles.*/
 	virtual QList<IEntryHandle*> search(IGroupHandle* Group,const QString& SearchString, bool CaseSensitve, bool RegExp,bool Recursive,bool* Fields)=0;
-
-	//! Moves an entry to the recycle bin.
-	virtual void moveToTrash(IEntryHandle* entry)=0;
-
-	//! \returns all entries of the recycle bin.
-	virtual QList<IEntryHandle*> trashEntries()=0;
-
-	//! Empty the recycle bin.
-	virtual void emptyTrash()=0;
-
+	
+	//virtual IDatabase* groupToNewDb(IGroupHandle* group)=0;
 };
 
 class IKdbSettings{

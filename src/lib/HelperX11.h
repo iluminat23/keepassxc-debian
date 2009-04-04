@@ -20,25 +20,21 @@
 #ifndef HELPERX11_H
 #define HELPERX11_H
 
-#include "AutoType.h"
-#include <QChar>
-
 #define XK_MISCELLANY
 #define XK_XKB_KEYS
 #define XK_3270
 #define XK_CURRENCY
-#include <X11/Xlib.h>
+
+#include "AutoType.h"
+#include <QChar>
 #include <X11/extensions/XTest.h>
 #include <X11/keysymdef.h>
 
 class HelperX11{
 	public:
-		static int getModifiers(Display *d,KeySym keysym, int keycode);
-		static void pressModifiers(Display*,int mods,bool Press=true);
-		static void releaseModifiers(Display*,int mods);
-		static quint16 getKeysym(const QChar& c);
+		static KeySym getKeysym(const QChar& c);
 #ifdef GLOBAL_AUTOTYPE
-		static int getShortcutModifierMask(const Shortcut& s);
+		static uint getShortcutModifierMask(const Shortcut& s);
 #endif
 		static unsigned int keyboardModifiers(Display* d);
 		
@@ -51,7 +47,6 @@ class HelperX11{
 		static int (*oldHandler) (Display*, XErrorEvent*);
 		static bool catchErrors;
 		static bool pErrorOccurred;
-		static const quint16 KeysymMap[][2];
 };
 
 #endif // HELPERX11_H

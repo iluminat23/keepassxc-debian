@@ -26,6 +26,7 @@
 #define NUM_COLUMNS 11
 
 class EntryViewItem;
+class GroupViewItem;
 enum SelectionState{NONE,SINGLE,MULTIPLE,SEARCHGROUP};
 
 class KeepassEntryView:public QTreeWidget{
@@ -44,8 +45,9 @@ class KeepassEntryView:public QTreeWidget{
 		QMenu *ContextMenu;
 		QBitArray Columns;
 		void setCurrentEntry(IEntryHandle* entry);
+		inline IGroupHandle* getCurrentGroup() { return CurrentGroup; };
 	private:
-		void setEntry(IEntryHandle* entry);
+		//void setEntry(IEntryHandle* entry);
 		void updateEntry(EntryViewItem*);
 		void editEntry(EntryViewItem*);
 		void createItems(QList<IEntryHandle*>& entries);
@@ -64,17 +66,19 @@ class KeepassEntryView:public QTreeWidget{
 		QList<int> ColumnOrder;
 		float GroupColumnSize;
 
-		virtual void contextMenuEvent(QContextMenuEvent *event);
-		virtual void paintEvent(QPaintEvent* event);
-		virtual void resizeEvent(QResizeEvent* event);
-		virtual void mousePressEvent(QMouseEvent *event);
-		virtual void mouseMoveEvent(QMouseEvent *event);
+		void contextMenuEvent(QContextMenuEvent *event);
+		void paintEvent(QPaintEvent* event);
+		void resizeEvent(QResizeEvent* event);
+		void mousePressEvent(QMouseEvent *event);
+		void mouseMoveEvent(QMouseEvent *event);
+	
 	private slots:
-		void OnColumnResized(int index,int OldSize, int NewSize);
+		void OnColumnResized();
 		void OnHeaderSectionClicked(int index);
 		void OnGroupChanged(IGroupHandle* group);
 		void OnShowSearchResults();
 		void OnEntryActivated(QTreeWidgetItem*,int);
+		void OnEntryDblClicked(QTreeWidgetItem*,int);
 		void OnNewEntry();
 		void OnItemsChanged();
 		void updateIcons();
@@ -89,11 +93,14 @@ class KeepassEntryView:public QTreeWidget{
 		void OnAutoType();
 #endif
 		void removeDragItems();
-		void OnColumnMoved(int LogIndex,int OldVisIndex,int NewVisIndex);
+		void OnColumnMoved();
 		void OnEditOpenUrl();
+		void OnEditCopyUrl();
+	
 	signals:
 		void fileModified();
 		void selectionChanged(SelectionState);
+		void requestCreateGroup(QString title, quint32 image, GroupViewItem* parent);
 };
 
 
@@ -104,7 +111,9 @@ class EntryViewItem:public QTreeWidgetItem{
 		EntryViewItem(QTreeWidgetItem *parent);
 		EntryViewItem(QTreeWidgetItem *parent, QTreeWidgetItem * preceding);
 		IEntryHandle* EntryHandle;
-		virtual bool operator<(const QTreeWidgetItem& other)const;
+		bool operator<(const QTreeWidgetItem& other) const;
+	private:
+		int compare(const QTreeWidgetItem& other, int col, int index) const;
 };
 
 

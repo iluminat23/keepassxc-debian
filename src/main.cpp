@@ -19,19 +19,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "main.h"
+#include "mainwindow.h"
+#if defined(Q_WS_X11) && defined(GLOBAL_AUTOTYPE)
+	#include "Application_X11.h"
+#endif
+
 #include "plugins/interfaces/IFileDialog.h"
 #include "plugins/interfaces/IKdeInit.h"
 #include "plugins/interfaces/IGnomeInit.h"
 
-
-#include <QTranslator>
-#include <QLibraryInfo>
-#include <QPluginLoader>
-#include "mainwindow.h"
-#include "main.h"
-#if defined(Q_WS_X11) && defined(GLOBAL_AUTOTYPE)
-	#include "Application_X11.h"
-#endif
+//#include <QPluginLoader>
+#include <iostream>
 
 using namespace std;
 
@@ -40,7 +39,6 @@ QString  AppDir;
 QString HomeDir;
 QString DataDir;
 QString PluginLoadError;
-bool TrActive;
 QString DetailViewTemplate;
 bool EventOccurred;
 bool EventOccurredBlock = false;
@@ -51,11 +49,59 @@ IIconTheme* IconLoader=NULL;
 
 int main(int argc, char **argv)
 {
-	QApplication* app=NULL;
-	initAppPaths(argc,argv);
+	setlocale(LC_CTYPE, "");
+	
+	QT_REQUIRE_VERSION(argc, argv, "4.3.0");
+	
+#if defined(Q_WS_X11) && defined(GLOBAL_AUTOTYPE)
+	QApplication* app = new KeepassApplication(argc,argv);
+#else
+	QApplication* app = new QApplication(argc,argv);
+#endif
+	EventListener* eventListener = new EventListener();
+	app->installEventFilter(eventListener);
+	
+	QApplication::setQuitOnLastWindowClosed(false);
+	
+	AppDir = QApplication::applicationFilePath();
+	AppDir.truncate(AppDir.lastIndexOf("/"));
+#if defined(Q_WS_X11)
+	DataDir = AppDir+"/../share/keepassx";
+	if (!QFile::exists(DataDir) && QFile::exists(AppDir+"/share"))
+		DataDir = AppDir+"/share";
+	const char* env = getenv("XDG_CONFIG_HOME");
+	if (!env) {
+		HomeDir = QDir::homePath() + "/.config";
+	}
+	else {
+		QString qenv = QTextCodec::codecForLocale()->toUnicode(env);
+		if (qenv[0] == '/')
+			HomeDir = qenv;
+		else
+			HomeDir = QDir::homePath() + '/' + qenv;
+	}
+	HomeDir += "/keepassx";
+#elif defined(Q_WS_MAC)
+	HomeDir = QDir::homePath()+"/.keepassx";
+	DataDir = AppDir+"/../Resources/keepassx";
+#else //Q_WS_WIN
+	HomeDir = qtWindowsConfigPath(CSIDL_APPDATA);
+	if(!HomeDir.isEmpty() && QFile::exists(HomeDir))
+		HomeDir = QDir::fromNativeSeparators(HomeDir)+"/KeePassX";
+	else
+		HomeDir = QDir::homePath()+"/KeePassX";
+	
+	DataDir = AppDir+"/share";
+#endif
+	DataDir = QDir::cleanPath(DataDir);
+	
 	CmdLineArgs args;
-	if(!args.preparse(argc,argv)){ // searches only for the -cfg parameter
-		qCritical(CSTR( args.error().append("\n") ));
+	if ( !args.parse(QApplication::arguments()) ){
+		qCritical("%s\n", CSTR( args.error() ));
+		args.printHelp();
+		return 1;
+	}
+	if (args.help()){
 		args.printHelp();
 		return 1;
 	}
@@ -68,15 +114,29 @@ int main(int argc, char **argv)
 			if(!QDir().mkpath(HomeDir))
 				qWarning("Warning: Could not create directory '%s'", CSTR(HomeDir));
 		}
-		IniFilename=HomeDir+"/config";
+		IniFilename=HomeDir+"/config.ini";
 	}
 	else
 		IniFilename=args.configLocation();
 
+#ifdef Q_WS_X11
+	{
+		QString OldHomeDir = QDir::homePath()+"/.keepassx";
+		if (args.configLocation().isEmpty() && QFile::exists(OldHomeDir+"/config") && !QFile::exists(HomeDir+"/config")) {
+			QFile::rename(OldHomeDir+"/config", HomeDir+"/config.ini");
+			if (QDir(OldHomeDir).entryList(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::Hidden|QDir::System).count()==0)
+				QDir().rmdir(OldHomeDir);
+		}
+	}
+#else
+	if (args.configLocation().isEmpty() && QFile::exists(HomeDir+"/config") && !QFile::exists(HomeDir+"/config.ini"))
+		QFile::rename(HomeDir+"/config", HomeDir+"/config.ini");
+#endif
 	config = new KpxConfig(IniFilename);
 	fileDlgHistory.load();
 	
 	// PlugIns
+	/*
 #ifdef Q_WS_X11
 	if(config->integrPlugin()!=KpxConfig::NoIntegr){
 		QString LibName="libkeepassx-";
@@ -90,7 +150,7 @@ int main(int argc, char **argv)
 			if(!plugin.load()){
 				PluginLoadError=plugin.errorString();
 				qWarning("Could not load desktop integration plugin:");
-				qWarning(CSTR(PluginLoadError));
+				qWarning("%s", CSTR(PluginLoadError));
 			}
 			else{
 				QObject *plugininstance=plugin.instance();
@@ -117,89 +177,39 @@ int main(int argc, char **argv)
 		}
 		else{
 			qWarning(CSTR(QString("Could not load desktop integration plugin: File '%1' not found.").arg(LibName)));
-			PluginLoadError=QObject::tr("Could not locate library file.");
+			PluginLoadError=QApplication::translate("Main", "Could not locate library file.");
 		}
 	}
 #endif
-	if(!app){
-		#if defined(Q_WS_X11) && defined(GLOBAL_AUTOTYPE)
-			app = new KeepassApplication(argc,argv);
-		#else
-			app = new QApplication(argc,argv);
-		#endif	
-	}
-	if ( !args.parse(QApplication::arguments()) ){
-		qCritical(CSTR( args.error().append("\n") ));
-		args.printHelp();
-		return 1;
-	}
-	if (args.help()){
-		args.printHelp();
-		return 1;
-	}
+	*/
 	
-	//Internationalization
-	QLocale loc;
-	if(!args.language().size())
-		loc=QLocale::system();
-	else
-		loc=QLocale(args.language());
-
-	QTranslator* translator = new QTranslator;
-	QTranslator* qtTranslator = new QTranslator;
-
-	if(loadTranslation(translator,"keepassx-",loc.name(),QStringList()
-						<< DataDir+"/i18n/"
-						<< HomeDir))
-	{
-		QApplication::installTranslator(translator);
-		TrActive=true;
-	}
-	else{
-		if(loc.name()!="en_US")
-			qWarning(CSTR(
-				QString("Kpx: No Translation found for '%1 (%2)' using 'English (UnitedStates)'")
-				.arg(QLocale::languageToString(loc.language()))
-				.arg(QLocale::countryToString(loc.country()))
-			));
-		delete translator;
-		TrActive=false;
-	}
-	
-	if(TrActive){
-		if(loadTranslation(qtTranslator,"qt_",loc.name(),QStringList()
-							<< QLibraryInfo::location(QLibraryInfo::TranslationsPath)
-							<< DataDir+"/i18n/"
-							<< HomeDir))
-			QApplication::installTranslator(qtTranslator);
-		else{
-			if(loc.name()!="en_US")
-				qWarning(CSTR(
-					QString("Qt: No Translation found for '%1 (%2)' using 'English (UnitedStates)'")
-					.arg(QLocale::languageToString(loc.language()))
-					.arg(QLocale::countryToString(loc.country()))
-				));
-			delete qtTranslator;
-		}
-	}
-
 	DetailViewTemplate=config->detailViewTemplate();
 
 	loadImages();
 	KpxBookmarks::load();
 	initYarrow(); //init random number generator
 	SecString::generateSessionKey();
+	
+	installTranslator();
 
-	EventListener* eventListener = new EventListener();
-	app->installEventFilter(eventListener);
+#ifdef Q_WS_MAC
+	QApplication::processEvents();
+	if (args.file().isEmpty() && !eventListener->file().isEmpty()) {
+		args.setFile(eventListener->file());
+	}
+#endif
 
-	QApplication::setQuitOnLastWindowClosed(false);
 	KeepassMainWindow *mainWin = new KeepassMainWindow(args.file(), args.startMinimized(), args.startLocked());
+#ifdef Q_WS_MAC
+	eventListener->setMainWin(mainWin);
+#endif
+
 	int r=app->exec();
 	delete mainWin;
 	delete eventListener;
 
 	fileDlgHistory.save();
+	SecString::deleteSessionKey();
 	delete app;
 	delete config;
 	return r;
@@ -216,21 +226,7 @@ void loadImages(){
 }
 
 
-bool loadTranslation(QTranslator* tr,const QString& prefix,const QString& loc,const QStringList& paths){
-	for(int i=0;i<paths.size();i++)
-		if(tr->load(prefix+loc+".qm",paths[i])) return true;
-	
-	for(int i=0;i<paths.size();i++){
-		QDir dir(paths[i]);
-		QStringList TrFiles=dir.entryList(QStringList()<<"*.qm",QDir::Files);
-		for(int j=0;j<TrFiles.size();j++){
-			if(TrFiles[j].left(prefix.length()+2)==prefix+loc.left(2)){
-				if(tr->load(TrFiles[j],paths[i]))return true;
-			}
-		}
-	}
-	return false;
-}
+
 
 
 CmdLineArgs::CmdLineArgs(){
@@ -245,21 +241,17 @@ bool CmdLineArgs::parse(const QStringList& argv){
 			Help=true;
 			break; // break, because other arguments will be ignored anyway
 		}
-		if(argv[i]=="-lang"){
-			if(argv.size()==i+1){
-				Error="Missing argument for '-lang'.";
-				return false;
-			}
-			if(argv[i+1].size() != 2 && argv[i+1].size() != 5 ){
-				Error=QString("'%1' is not a valid language code.").arg(argv[i+1]);
-				return false;
-			}
-			Language=argv[i+1];
-			i++;
-			continue;
-		}
 		if(argv[i]=="-cfg"){
-			//already done in preparse() -> skip
+			if(argv.size() == i+1){
+				Error="Missing argument for '-cfg'.";
+				return false;
+			}
+			if(argv[i+1].left(1)=="-"){
+				Error=QString("Expected a path as argument for '-cfg' but got '%1.'").arg(argv[i+1]);
+				return false;
+			}
+			QFileInfo file(argv[i+1]);
+			ConfigLocation=file.absoluteFilePath();
 			i++;
 			continue;
 		}
@@ -281,56 +273,46 @@ bool CmdLineArgs::parse(const QStringList& argv){
 	return true;
 }
 
-bool CmdLineArgs::preparse(int argc,char** argv){
-	for(int i=1;i<argc;i++){
-		if(QString(argv[i])=="-cfg"){
-			if(argc==i+1){
-				Error="Missing argument for '-cfg'.";
-				return false;
-			}
-			if(QString(argv[i+1]).left(1)=="-"){
-				Error=QString("Expected a path as argument for '-cfg' but got '%1.'").arg(argv[i+1]);
-				return false;
-			}
-			QFileInfo file(argv[i+1]);
-			ConfigLocation=file.absoluteFilePath();
-			i++;
-			return true;
-		}
-	}
-	return true;
-}
-
 void CmdLineArgs::printHelp(){
 	cerr << "KeePassX " << APP_VERSION << endl;
-	cerr << "Usage: keepassx  [Filename] [Options]" << endl;
+	cerr << "Usage: keepassx [filename] [options]" << endl;
 	cerr << "  -help             This Help" << endl;
 	cerr << "  -cfg <CONFIG>     Use specified file for loading/saving the configuration." << endl;
 	cerr << "  -min              Start minimized." << endl;
 	cerr << "  -lock             Start locked." << endl;
-	cerr << "  -lang <LOCALE>    Use specified language instead of systems default." << endl;
-	cerr << "                    <LOCALE> is the ISO-639 language code with or without ISO-3166 country code" << endl;
-	cerr << "                    Examples: de     German" << endl;
-	cerr << "                              de_CH  German(Switzerland)" << endl;
-	cerr << "                              pt_BR  Portuguese(Brazil)" << endl;
 }
 
 
-QString findPlugin(const QString& filename){
+/*QString findPlugin(const QString& filename){
 	QFileInfo info;	
 	info.setFile(AppDir+"/../lib/"+filename);
 	if(info.exists() && info.isFile())
 		return AppDir+"/../lib/"+filename;	
 	return QString();
-}
+}*/
 
 
 bool EventListener::eventFilter(QObject*, QEvent* event){
 	if (!EventOccurred){
 		int t = event->type();
-		if ( t>=QEvent::MouseButtonPress&&t<=QEvent::KeyRelease || t>=QEvent::HoverEnter&&t<=QEvent::HoverMove )
+		if ( (t>=QEvent::MouseButtonPress && t<=QEvent::KeyRelease) || (t>=QEvent::HoverEnter && t<=QEvent::HoverMove) )
 			EventOccurred = true;
 	}
+	
+#ifdef Q_WS_MAC
+	if (event->type() == QEvent::FileOpen) {
+		QString filename = static_cast<QFileOpenEvent*>(event)->file();
+		if (pMainWindow) {
+			if (QApplication::activeModalWidget() == NULL)
+				pMainWindow->openFile(filename);
+			else
+				return true; // ignore file open events while a modal dialog is displayed
+		}
+		else {
+			pFile = filename;
+		}
+	}
+#endif
 	
 	return false;
 }

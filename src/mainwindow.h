@@ -39,6 +39,7 @@ class KeepassMainWindow : public QMainWindow, private Ui_MainWindow{
 	
 	public slots:
 		void OnUnLockWorkspace();
+		void openFile(const QString& filename);
 
 	signals:
 		void entryChanged();
@@ -63,8 +64,8 @@ class KeepassMainWindow : public QMainWindow, private Ui_MainWindow{
 		void OnViewToolbarIconSize28(bool);
 		void OnGroupSelectionChanged(IGroupHandle*);
 		void OnQuickSearch();
-		void OnColumnVisibilityChanged(QAction* action);
-		void OnUsernPasswVisibilityChanged(bool hide);
+		void OnColumnVisibilityChanged();
+		void OnUsernPasswVisibilityChanged();
 		void OnFileModified();
 		void OnExtrasSettings();
 		void OnExtrasPasswordGen();
@@ -72,8 +73,8 @@ class KeepassMainWindow : public QMainWindow, private Ui_MainWindow{
 		//void OnExtrasTrashCan(); //TODO TrashCan
 		void OnHelpAbout();
 		//void OnHelpHandbook(); //TODO Handbook
-		void OnItemExpanded(QTreeWidgetItem*);
-		void OnItemCollaped(QTreeWidgetItem*);
+		//void OnItemExpanded(QTreeWidgetItem*);
+		//void OnItemCollaped(QTreeWidgetItem*);
 		void OnShowSearchResults();
 		void OnEntryChanged(SelectionState);
 		void OnSysTrayActivated(QSystemTrayIcon::ActivationReason);
@@ -90,6 +91,11 @@ class KeepassMainWindow : public QMainWindow, private Ui_MainWindow{
 		void showEvent(QShowEvent* event);
 		void setLock();
 		void resetLock();
+		enum StatusBarMsg {
+			StatusBarReady, StatusBarLoading, StatusBarLoadingFailed,
+			StatusBarReadOnlyLock
+		};
+		void setStatusBarMsg(StatusBarMsg statusBarMsg);
 		SelectionState GroupSelection, EntrySelection;
 		bool FileOpen;
 		bool ModFlag;
@@ -115,7 +121,7 @@ class KeepassMainWindow : public QMainWindow, private Ui_MainWindow{
 		void createBookmarkActions();
 		QLineEdit* QuickSearchEdit;
 		QLabel* StatusBarGeneral;
-		QLabel* StatusBarSelection;
+		//QLabel* StatusBarSelection;
 		QToolBar* toolBar;
 		QSystemTrayIcon* SysTray;
 		QAction* ViewShowToolbarAction;
@@ -131,6 +137,8 @@ class KeepassMainWindow : public QMainWindow, private Ui_MainWindow{
 		QString currentFile;
 		int inactivityCounter;
 		QTimer* inactivityTimer;
+		StatusBarMsg statusbarState;
+		bool dbReadOnly;
 };
 
 #endif

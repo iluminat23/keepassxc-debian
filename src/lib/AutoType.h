@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005-2006 by Tarek Saidi, Felix Geyer                   *
+ *   Copyright (C) 2005-2008 by Tarek Saidi, Felix Geyer                   *
  *   tarek.saidi@arcor.de                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -16,32 +16,42 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/ 
+ ***************************************************************************/
 
 #ifndef _AUTOTYPE_H_
 #define _AUTOTYPE_H_
+
+class KeepassMainWindow;
+void initAutoType(KeepassMainWindow* mainWin);
+
+class AutoType{
+	public:
+		virtual void perform(IEntryHandle* entry, bool hideWindow=true, int nr=0, bool wasLocked=false) = 0;
+};
 
 #ifdef GLOBAL_AUTOTYPE
 struct Shortcut{
 	bool ctrl, shift, alt, altgr, win;
 	quint32 key;
 };
+
+class AutoTypeGlobal : public AutoType{
+	public:
+		virtual void performGlobal() = 0;
+		inline const Shortcut& getShortcut() { return shortcut; };
+		virtual bool registerGlobalShortcut(const Shortcut& s) = 0;
+		virtual void unregisterGlobalShortcut() = 0;
+		virtual QStringList getAllWindowTitles() = 0;
+	
+	protected:
+		Shortcut shortcut;
+};
 #endif
 
-#ifdef AUTOTYPE
-class KeepassMainWindow;
-
-class AutoType{
-	public:
-		static KeepassMainWindow* MainWin;
-		static void perform(IEntryHandle* entry, QString& err,bool hideWindow=true,int nr=0);
 #ifdef GLOBAL_AUTOTYPE
-		static Shortcut shortcut;
-		static void performGlobal();
-		static bool registerGlobalShortcut(const Shortcut& s);
-		static void unregisterGlobalShortcut();
-#endif // GLOBAL_AUTOTYPE
-};
-#endif // AUTOTYPE
+extern AutoTypeGlobal* autoType;
+#else
+extern AutoType* autoType;
+#endif
 
 #endif
