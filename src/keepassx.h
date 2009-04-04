@@ -20,13 +20,13 @@
 #ifndef KEEPASSX_H_
 #define KEEPASSX_H_
 
-// global defines 
+// global defines
 
 #define APP_DISPLAY_NAME    "KeePassX"
 #define APP_CODE_NAME       "keepassx"
 #define APP_SHORT_FUNC      "Password Manager"
 #define APP_LONG_FUNC       "Cross Platform Password Manager"
-#define APP_VERSION         "0.3.4"
+#define APP_VERSION         "0.4.0"
 
 #define BUILTIN_ICONS 69
 
@@ -35,20 +35,15 @@
 #ifdef __cplusplus
 
 #include <cstdlib>
-#include <iostream>
 
-#include <cassert>
 #include <cmath>
-#include <ctime>
 
 #include <QApplication>
 #include <QBitArray>
-#include <QBrush>
 #include <QByteArray>
 #include <QCheckBox>
 #include <QColor>
 #include <QComboBox>
-#include <QDataStream>
 #include <QDateTime>
 #include <QDialog>
 #include <QDir>
@@ -69,18 +64,12 @@
 #include <QSettings>
 #include <QString>
 #include <QStringList>
+#include <QTextCodec>
 #include <QTimer>
-#include <QToolButton>
 #include <QTreeWidget>
 #include <QUrl>
-#include <QVarLengthArray>
 
 #include "crypto/aescpp.h"
-#include "crypto/arcfour.h"
-#include "crypto/blowfish.h"
-#include "crypto/sha1.h"
-#include "crypto/sha256.h"
-#include "crypto/twoclass.h"
 #include "crypto/yarrow.h"
 #include "lib/bookmarks.h"
 #include "lib/FileDialogs.h"

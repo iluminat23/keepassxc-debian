@@ -20,11 +20,25 @@
 #ifndef RANDOM_H_
 #define RANDOM_H_
 
-#include <QObject>
+#ifndef quint8
+typedef unsigned char quint8;
+#endif
 
-namespace Random {
-	void getEntropy(quint8* buffer, int length);
-	void initStdRand();
-};
+#ifndef quint32
+typedef unsigned int quint32;
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void getEntropy(quint8* buffer, int length);
+quint32 randint(quint32 limit); // generate random number: 0 <= n < limit
+
+#ifdef __cplusplus
+}
+#endif
+
+quint32 randintRange(quint32 min, quint32 max); // generate random number: min <= n <= max
 
 #endif

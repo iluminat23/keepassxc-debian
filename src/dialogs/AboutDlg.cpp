@@ -30,9 +30,9 @@ AboutDialog::AboutDialog(QWidget* parent):QDialog(parent)
     labelAppFunc->setText(QString(" -  ").append(APP_LONG_FUNC));
 
 	QString AboutTr=QString("<b>%1: %2</b><br><br>").arg(tr("Current Translation")).arg(tr("None","Please replace 'None' with the language of your translation"));
-	if(TrActive){
-		AboutTr+=QString("<b>%1:</b> %2<br>").arg(tr("Author")).arg(tr("$TRANSLATION_AUTHOR"));
-		QString mail=tr("$TRANSLATION_AUTHOR_EMAIL","Here you can enter your email or homepage if you want.");
+	if(isTranslationActive()){
+		AboutTr+=QString("<b>%1:</b> %2<br>").arg(tr("Author")).arg(QApplication::translate("Translation", "$TRANSLATION_AUTHOR"));
+		QString mail=QApplication::translate("Translation", "$TRANSLATION_AUTHOR_EMAIL","Here you can enter your email or homepage if you want.");
 		if(!mail.isEmpty()){
 			AboutTr+=mail+"<br>";
 		}
@@ -45,11 +45,13 @@ AboutDialog::AboutDialog(QWidget* parent):QDialog(parent)
 	str+="<div style='margin-left:10px;'>";
 	str+="<u>Tarek Saidi</u><br>"+tr("Developer, Project Admin")+"<br>tarek_saidi@users.sf.net<br>";
 	str+="<br>";
+	str+="<u>Felix Geyer</u><br>"+tr("Developer, Project Admin")+"<br>sniperbeamer@users.sf.net<br>";
+	str+="<br>";
+	str+="<u>Brandon Mayes</u><br>"+tr("Developer")+"<br>bdmayes@users.sourceforge.net<br>";
+	str+="<br>";
 	str+="<u>Eugen Gorschenin</u><br>"+tr("Web Designer")+"<br>geugen@users.sf.de<br>";
 	str+="<br>";
 	str+="<u>Juan J Gonz&aacute;lez C&aacute;rdenas [Jota Jota]</u><br>"+tr("Developer")+"<br>myxelf@users.sf.net<br>";
-	str+="<br>";
-	str+="<u>Felix Geyer</u><br>"+tr("Developer")+"<br>sniperbeamer@users.sf.net<br>";
 	str+="</div><br><div style='margin-left:0px;'>";
     str+="<b>"+tr("Thanks To")+"</b><br>";
 	str+="</div><div style='margin-left:10px;'>";

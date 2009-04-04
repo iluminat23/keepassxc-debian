@@ -49,7 +49,6 @@ public:
 		public:
 			EntryHandle(Kdb3Database* db);
 			virtual void setImage(const quint32& ImageID);
-			void setOldImage(const quint32& OldImgID);
 			virtual void setTitle(const QString& Title);
 			virtual void setUrl(const QString& URL);
 			virtual void setUsername(const QString& Username);
@@ -61,27 +60,27 @@ public:
 			virtual void setLastAccess(const KpxDateTime& LastAccess);
 			virtual void setExpire(const KpxDateTime& Expire);
 			virtual void setBinary(const QByteArray& BinaryData);
-			virtual KpxUuid uuid();
-			virtual IGroupHandle* group();
-			virtual quint32 image();
+			virtual KpxUuid uuid()const;
+			virtual IGroupHandle* group()const;
+			virtual quint32 image()const;
 			virtual int visualIndex() const;
 			virtual void setVisualIndex(int i);
 			virtual void setVisualIndexDirectly(int i);
-			quint32 oldImage();
-			virtual QString title();
-			virtual QString url();
-			virtual QString username();
-			virtual SecString password();
-			virtual QString comment();
-			virtual QString binaryDesc();
-			virtual KpxDateTime creation();
-			virtual KpxDateTime lastMod();
-			virtual KpxDateTime lastAccess();
-			virtual KpxDateTime expire();
-			virtual QByteArray binary();
-			virtual quint32 binarySize();
-            virtual QString friendlySize();
+			virtual QString title()const;
+			virtual QString url()const;
+			virtual QString username()const;
+			virtual SecString password()const;
+			virtual QString comment()const;
+			virtual QString binaryDesc()const;
+			virtual KpxDateTime creation()const;
+			virtual KpxDateTime lastMod()const;
+			virtual KpxDateTime lastAccess()const;
+			virtual KpxDateTime expire()const;
+			virtual QByteArray binary()const;
+			virtual quint32 binarySize()const;
+			virtual QString friendlySize()const;
 			virtual bool isValid() const;
+			virtual CEntry data()const;
 		private:
 			void invalidate(){valid=false;}
 			bool valid;
@@ -96,15 +95,13 @@ public:
 		public:
 			virtual void setTitle(const QString& Title);
 			virtual void setImage(const quint32& ImageId);
-			void setOldImage(const quint32& ImageId);
 			virtual QString title();
 			virtual quint32 image();
-			quint32 oldImage();
 			virtual bool isValid();
 			virtual IGroupHandle* parent();
-			virtual QList<IGroupHandle*> childs();
+			virtual QList<IGroupHandle*> children();
 			virtual int index();
-			virtual void setIndex(int index);
+			//virtual void setIndex(int index);
 			virtual int level();
 			virtual bool expanded();
 			virtual void setExpanded(bool IsExpanded);
@@ -120,7 +117,6 @@ public:
 
 	class StdEntry:public CEntry{
 		public:
-				quint32 OldImage;
 				quint16 Index;
 				EntryHandle* Handle;
 				StdGroup* Group;
@@ -130,21 +126,16 @@ public:
 		public:
 			StdGroup():CGroup(){};
 			StdGroup(const CGroup&);
-			quint32 OldImage;
 			quint16 Index;
 			StdGroup* Parent;
 			GroupHandle* Handle;
-			QList<StdGroup*> Childs;
+			QList<StdGroup*> Children;
 			QList<StdEntry*> Entries;
 	};
 
-	class TrashEntry: public StdEntry{
-		public:
-			QStringList GroupPath;
-	};
-
+	Kdb3Database();
 	virtual ~Kdb3Database(){};
-	virtual bool load(QString identifier);
+	virtual bool load(QString identifier, bool readOnly);
 	virtual bool save();
 	virtual bool close();
 	virtual void create();
@@ -154,7 +145,7 @@ public:
 	virtual bool isKeyError();
 	virtual void cleanUpHandles();
 	virtual QPixmap& icon(int index);
- 	virtual int	numIcons();
+ 	virtual int numIcons();
 	virtual void addIcon(const QPixmap& icon);
 	virtual void removeIcon(int index);
 	virtual void replaceIcon(int index,const QPixmap& icon);
@@ -173,6 +164,7 @@ public:
 
 	virtual QList<IEntryHandle*> entries();
 	virtual QList<IEntryHandle*> entries(IGroupHandle* Group);
+	virtual QList<IEntryHandle*> entriesSortedStd(IGroupHandle* Group);
 	virtual QList<IEntryHandle*> expiredEntries();
 
 	virtual IEntryHandle* cloneEntry(const IEntryHandle* entry);
@@ -182,9 +174,6 @@ public:
 	virtual IEntryHandle* addEntry(const CEntry* NewEntry, IGroupHandle* group);
 	virtual void moveEntry(IEntryHandle* entry, IGroupHandle* group);
 	virtual void deleteLastEntry();
-	virtual void moveToTrash(IEntryHandle* entry);
-	virtual QList<IEntryHandle*> trashEntries();
-	virtual void emptyTrash();
 
 
 	virtual QList<IGroupHandle*> groups();
@@ -192,12 +181,16 @@ public:
 	virtual void deleteGroup(IGroupHandle* group);
 	virtual void moveGroup(IGroupHandle* Group,IGroupHandle* NewParent,int Position);
 	virtual IGroupHandle* addGroup(const CGroup* Group,IGroupHandle* Parent);
+	virtual IGroupHandle* backupGroup(bool create=false);
 	virtual bool isParent(IGroupHandle* parent, IGroupHandle* child);
-
-
-
+	
+	virtual void generateMasterKey();
+	//virtual IDatabase* groupToNewDb(IGroupHandle* group);
+	
+	inline bool hasPasswordEncodingChanged() { return passwordEncodingChanged; };
 
 private:
+	bool loadReal(QString filename, bool readOnly, bool differentEncoding);
 	QDateTime dateFromPackedStruct5(const unsigned char* pBytes);
 	void dateToPackedStruct5(const QDateTime& datetime, unsigned char* dst);
 	bool isMetaStream(StdEntry& Entry);
@@ -208,20 +201,24 @@ private:
 	void createCustomIconsMetaStream(StdEntry* e);
 	void createGroupTreeStateMetaStream(StdEntry* e);
 	bool readEntryField(StdEntry* entry, quint16 FieldType, quint32 FieldSize, quint8 *pData);
-	bool readGroupField(StdGroup* group,QList<quint32>& Levels,quint16 FieldType, quint32 FieldSize, quint8 *pData);
+	bool readGroupField(StdGroup* group,QList<quint32>& Levels,quint16 FieldType, quint8 *pData);
 	bool createGroupTree(QList<quint32>& Levels);
 	void createHandles();
 	void invalidateHandle(StdEntry* entry);
 	bool convHexToBinaryKey(char* HexKey, char* dst);
 	quint32 getNewGroupId();
 	void serializeEntries(QList<StdEntry>& EntryList,char* buffer,unsigned int& pos);
-	void serializeGroups(QList<StdGroup>& GroupList,char* buffer,unsigned int& pos);
-	void appendChildsToGroupList(QList<StdGroup*>& list,StdGroup& group);
-	void appendChildsToGroupList(QList<IGroupHandle*>& list,StdGroup& group);
+	void serializeGroups(char* buffer,unsigned int& pos);
+	void appendChildrenToGroupList(QList<StdGroup*>& list,StdGroup& group);
+	void appendChildrenToGroupList(QList<IGroupHandle*>& list,StdGroup& group);
 	bool searchStringContains(const QString& search, const QString& string,bool Cs, bool RegExp);
 	void getEntriesRecursive(IGroupHandle* Group, QList<IEntryHandle*>& EntryList);
 	void rebuildIndices(QList<StdGroup*>& list);
 	void restoreGroupTreeState();
+	//void copyTree(Kdb3Database* db, GroupHandle* orgGroup, IGroupHandle* parent);
+	static bool EntryHandleLessThan(const IEntryHandle* This,const IEntryHandle* Other);
+	static bool EntryHandleLessThanStd(const IEntryHandle* This,const IEntryHandle* Other);
+	static bool StdEntryLessThan(const Kdb3Database::StdEntry& This,const Kdb3Database::StdEntry& Other);
 
 	StdEntry* getEntry(const KpxUuid& uuid);
 	StdEntry* getEntry(EntryHandle* handle);
@@ -233,24 +230,27 @@ private:
 
 	QList<EntryHandle> EntryHandles;
 	QList<GroupHandle> GroupHandles;
-	QList<EntryHandle> TrashHandles;
 	QList<StdEntry> Entries;
 	QList<StdGroup> Groups;
-	QList<TrashEntry> TrashEntries;
 	StdGroup RootGroup;
 	QList<QPixmap>CustomIcons;
 	QFile* File;
 	QString error;
 	bool KeyError;
-	bool PotentialEncodingIssue;
+	bool PotentialEncodingIssueLatin1;
+	bool PotentialEncodingIssueUTF8;
 	QList<StdEntry> UnknownMetaStreams;
 	QMap<quint32,bool> TreeStateMetaStream;
 	unsigned int KeyTransfRounds;
 	CryptAlgorithm Algorithm;
-	quint8 RawMasterKey[32];
-	quint8 RawMasterKey_Latin1[32];
-	quint8 MasterKey[32];
+	SecData RawMasterKey;
+	SecData RawMasterKey_CP1252;
+	SecData RawMasterKey_Latin1;
+	SecData RawMasterKey_UTF8;
+	SecData MasterKey;
+	quint8 TransfRandomSeed[32];
 	bool hasV4IconMetaStream;
+	bool passwordEncodingChanged;
 };
 
 class KeyTransform : public QThread{

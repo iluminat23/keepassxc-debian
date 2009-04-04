@@ -9,24 +9,6 @@
     <height>305</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize" >
-   <size>
-    <width>419</width>
-    <height>305</height>
-   </size>
-  </property>
-  <property name="maximumSize" >
-   <size>
-    <width>419</width>
-    <height>305</height>
-   </size>
-  </property>
   <property name="windowTitle" >
    <string>About</string>
   </property>
@@ -42,7 +24,7 @@
      <property name="sizeType" >
       <enum>QSizePolicy::Fixed</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>20</width>
        <height>50</height>
@@ -56,6 +38,14 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>397</width>
+        <height>171</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>About</string>
       </attribute>
@@ -121,7 +111,7 @@
            <property name="sizeType" >
             <enum>QSizePolicy::Fixed</enum>
            </property>
-           <property name="sizeHint" >
+           <property name="sizeHint" stdset="0" >
             <size>
              <width>10</width>
              <height>20</height>
@@ -148,8 +138,8 @@
            <item>
             <widget class="QLabel" name="label_4" >
              <property name="text" >
-              <string>Copyright (C) 2005 - 2008 KeePassX Team 
-KeePassX is distributed under the terms of the 
+              <string>Copyright (C) 2005 - 2009 KeePassX Team
+KeePassX is distributed under the terms of the
 General Public License (GPL) version 2.</string>
              </property>
             </widget>
@@ -161,6 +151,14 @@ General Public License (GPL) version 2.</string>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>397</width>
+        <height>171</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>Credits</string>
       </attribute>
@@ -178,6 +176,14 @@ General Public License (GPL) version 2.</string>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_4" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>397</width>
+        <height>171</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>Translation</string>
       </attribute>
@@ -195,6 +201,14 @@ General Public License (GPL) version 2.</string>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_3" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>397</width>
+        <height>171</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>License</string>
       </attribute>
@@ -230,6 +244,13 @@ General Public License (GPL) version 2.</string>
    <header>../../src/lib/UrlLabel.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>Edit_Thanks</tabstop>
+  <tabstop>Edit_Translation</tabstop>
+  <tabstop>Edit_License</tabstop>
+  <tabstop>ButtonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

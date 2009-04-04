@@ -194,7 +194,7 @@ yarrow_fast_reseed(struct yarrow256_ctx *ctx)
   /* Iterate */
   yarrow_iterate(digest);
 
-  aes_encrypt_key(digest,sizeof(digest),&ctx->key); 
+  aes_encrypt_key256(digest,&ctx->key);
 
   /* Derive new counter value */
   memset(ctx->counter, 0, sizeof(ctx->counter));
@@ -332,7 +332,7 @@ yarrow_gate(struct yarrow256_ctx *ctx)
   for (i = 0; i < sizeof(key); i+= AES_BLOCK_SIZE)
     yarrow_generate_block(ctx, key + i);
 
-  aes_encrypt_key(key,sizeof(key),&ctx->key);
+  aes_encrypt_key256(key,&ctx->key);
 }
 
 void
@@ -403,7 +403,7 @@ void initYarrow(){
 	
 	quint8 buffer[100];
 	for (int i=0; i<2; i++){
-		Random::getEntropy(buffer,100);
+		getEntropy(buffer,100);
 		yarrowUpdateWeak(i,100*8,100,buffer);
 	}
 }
@@ -425,7 +425,7 @@ void randomize(void* buffer, unsigned int length){
 
 void strongRandomize(void* buffer, unsigned int length){
 	Q_ASSERT(yarrow256_is_seeded(&StrongCtx));
-	for(int i=0; i<length;i++)
+	for(uint i=0; i<length;i++)
 		yarrow256_random(&StrongCtx,1,(quint8*)buffer+i);	
 }
 

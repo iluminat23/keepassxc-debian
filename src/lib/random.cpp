@@ -25,42 +25,64 @@
 	#include <QFile>
 #elif defined(Q_WS_WIN)
 	#include <windows.h>
+	#include <wincrypt.h>
 	#include <QSysInfo>
 #endif
 
+#include <QCryptographicHash>
 #include <QCursor>
+#include <QDataStream>
 #include <QDateTime>
 #include <QTime>
 
-void Random::getEntropy(quint8* buffer, int length){
-#if defined(Q_WS_X11) || defined(Q_WS_MAC)
-	QFile dev_urandom("/dev/urandom");
-	if (dev_urandom.open(QIODevice::ReadOnly|QIODevice::Unbuffered) && dev_urandom.read((char*)buffer,length)==length)
-		return;
-#elif defined(Q_WS_WIN)
-	// RtlGenRandom
-	if (QSysInfo::WindowsVersion>=QSysInfo::WV_XP){
-		bool success=false;
-		HMODULE hLib=LoadLibraryA("ADVAPI32.DLL");
-		if (hLib) {
-			BOOLEAN (APIENTRY *pfn)(void*, ULONG) = (BOOLEAN (APIENTRY *)(void*,ULONG))GetProcAddress(hLib,"SystemFunction036");
-			if (pfn && pfn(buffer,length)) {
-				success=true;
-			}
-			FreeLibrary(hLib);
+void initStdRand();
+bool getNativeEntropy(quint8* buffer, int length);
+
+void getEntropy(quint8* buffer, int length){
+	if (!getNativeEntropy(buffer, length)) {
+		qWarning("Entropy collection failed, using fallback");
+		initStdRand();
+		for(int i=0;i<length;i++){
+			((quint8*)buffer)[i] = (quint8) (qrand()%256);
 		}
-		if (success)
-			return;
-	}
-#endif
-	
-	initStdRand();
-	for(int i=0;i<length;i++){
-		((quint8*)buffer)[i] = (quint8) (qrand()%256);
 	}
 }
 
-void Random::initStdRand(){
+quint32 randint(quint32 limit){
+	quint32 rand;
+	randomize(&rand, 4);
+	return (rand % limit);
+}
+
+quint32 randintRange(quint32 min, quint32 max){
+	return min + randint(max-min+1);
+}
+
+#if defined(Q_WS_X11) || defined(Q_WS_MAC)
+
+extern bool getNativeEntropy(quint8* buffer, int length) {
+	QFile dev_urandom("/dev/urandom");
+	if (!dev_urandom.open(QIODevice::ReadOnly|QIODevice::Unbuffered))
+		return false;
+	return (dev_urandom.read((char*)buffer,length) == length);
+}
+
+#elif defined(Q_WS_WIN)
+
+extern bool getNativeEntropy(quint8* buffer, int length) {
+	HCRYPTPROV handle;
+	if (!CryptAcquireContext(&handle, 0, 0,  PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+		return false;
+	
+	CryptGenRandom(handle, length, buffer);
+	CryptReleaseContext(handle, 0);
+	
+	return true;
+}
+
+#endif
+
+extern void initStdRand(){
 	static bool initalized = false;
 	if (initalized)
 		return;
@@ -71,10 +93,18 @@ void Random::initStdRand(){
 	stream << QCursor::pos();
 	stream << QDateTime::currentDateTime().toTime_t();
 	stream << QTime::currentTime().msec();
+#ifdef Q_WS_WIN
+	stream << (quint32) GetCurrentProcessId();
+#else
+	stream << getpid();
+#endif
+	/* On a modern OS code, stack and heap base are randomized */
+	quint64 code_value = (quint64)initStdRand;
+	stream << code_value;
+	stream << (quint64)&code_value;
 	
-	quint8 hash[32];
-	SHA256::hashBuffer(buffer.data(), hash, buffer.size());
+	QByteArray hash = QCryptographicHash::hash(buffer, QCryptographicHash::Sha1);
 	
-	qsrand( (uint) *hash );
+	qsrand( *((uint*) hash.data()) );
 	initalized = true;
 }

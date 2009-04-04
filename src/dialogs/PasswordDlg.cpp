@@ -23,6 +23,7 @@
 PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const QString& filename)
 : QDialog(parent)
 {
+	Q_UNUSED(flags);
 	setupUi(this);
 	Mode=mode;
 	Filename=filename;
@@ -61,30 +62,36 @@ PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const
 			Check_Password->setChecked(true);
 			Check_KeyFile->setChecked(false);
 			Combo_KeyFile->setEditText("");
+			Edit_Password->setFocus(Qt::OtherFocusReason);
 			break;
 			
 		case KEYFILE:
 			Check_Password->setChecked(false);
 			Check_KeyFile->setChecked(true);
 			Combo_KeyFile->setEditText(QDir::cleanPath(QDir::current().absoluteFilePath(config->lastKeyLocation())));
+			Combo_KeyFile->setFocus(Qt::OtherFocusReason);
 			break;
 
 		case BOTH:
 			Check_Password->setChecked(true);
 			Check_KeyFile->setChecked(true);
 			Combo_KeyFile->setEditText(QDir::cleanPath(QDir::current().absoluteFilePath(config->lastKeyLocation())));
+			Edit_Password->setFocus(Qt::OtherFocusReason);
 			break;
 		}
+	}
+	else{
+		Edit_Password->setFocus(Qt::OtherFocusReason);
 	}
 
 	if(Mode!=Mode_Set && Mode!=Mode_Change){
 		Button_GenKeyFile->hide();
 	}
-	if(flags & Flag_Auto){
-		/*
+	/*if(flags & Flag_Auto){
+		/ *
 		QPushButton* Button_Quit = buttonBox->addButton(tr("Quit"),QDialogButtonBox::DestructiveRole);
 		connect(Button_Quit,SIGNAL(clicked()),this,SLOT(OnButtonQuit()));
-		*/
+		* /
 		if(config->rememberLastKey()){
 			switch(config->lastKeyType()){
 			case PASSWORD:
@@ -100,10 +107,10 @@ PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const
 				Check_Password->setChecked(true);
 				Check_KeyFile->setChecked(true);
 				Combo_KeyFile->setEditText(config->lastKeyLocation());
-				break;				
+				break;
 			}
 		}
-	}
+	}*/
 	
 	// Setting up the bookmark button
 	if(Mode==Mode_Ask && config->featureBookmarks()){
@@ -149,8 +156,8 @@ PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const
 	connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL( clicked() ), this, SLOT( OnOK() ) );
 	connect(Button_Browse, SIGNAL( clicked() ), this, SLOT( OnButtonBrowse() ) );
 	connect(Button_GenKeyFile,SIGNAL(clicked()),this,SLOT(OnGenKeyFile()));
-	connect(Check_Password,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxesChanged(int)));
-	connect(Check_KeyFile,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxesChanged(int)));
+	connect(Check_Password,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxesChanged()));
+	connect(Check_KeyFile,SIGNAL(stateChanged(int)),this,SLOT(OnCheckBoxesChanged()));
 	connect(Button_Back,SIGNAL(clicked()),this,SLOT(OnButtonBack()));
 	if(!config->showPasswordsPasswordDlg())
 		ChangeEchoModeDatabaseKey();
@@ -162,7 +169,7 @@ PasswordDialog::PasswordDialog(QWidget* parent,DlgMode mode,DlgFlags flags,const
 	setMinimumSize(size());
 	createBanner(&BannerPixmap,getPixmap("key"),BannerTitle,width());
 	Button_Bookmarks->setIcon(getIcon("bookmark"));
-	OnCheckBoxesChanged(0);
+	OnCheckBoxesChanged();
 }
 
 
@@ -210,7 +217,7 @@ void PasswordDialog::OnOK(){
 		return;
 	}
 
-	if(Check_KeyFile->isChecked()){		
+	if(Check_KeyFile->isChecked()){
 		/* Check wether key path exists and is readable */
 		QFileInfo fileinfo(KeyFile);
 		if(!fileinfo.exists()){
@@ -278,10 +285,10 @@ void PasswordDialog::OnOK(){
 		}
 		else if(Check_Password->isChecked()){
 			config->setLastKeyType(PASSWORD);
-			config->setLastKeyLocation(QString());	
+			config->setLastKeyLocation(QString());
 		}
 		else if(Check_KeyFile->isChecked()){
-			config->setLastKeyType(PASSWORD);
+			config->setLastKeyType(KEYFILE);
 			config->setLastKeyLocation(Combo_KeyFile->currentText());
 		}		
 	}
@@ -289,7 +296,7 @@ void PasswordDialog::OnOK(){
 	done(Exit_Ok);
 }
 
-void PasswordDialog::OnCheckBoxesChanged(int state){
+void PasswordDialog::OnCheckBoxesChanged(){
 	Edit_Password->setEnabled(Check_Password->isChecked());
 	Combo_KeyFile->setEnabled(Check_KeyFile->isChecked());
 	Button_Browse->setEnabled(Check_KeyFile->isChecked());
@@ -349,7 +356,7 @@ void PasswordDialog::OnGenKeyFile(){
 
 QString PasswordDialog::password(){
 	if(Check_Password->isChecked())
-		return Edit_Password->text();
+		return Password;
 	else
 		return QString();
 }
@@ -368,6 +375,16 @@ QString PasswordDialog::selectedBookmark(){
 
 void PasswordDialog::OnButtonBack(){
 	stackedWidget->setCurrentIndex(0);
-	Edit_PwRepeat->clear();	
+	Edit_PwRepeat->clear();
 }
 
+void PasswordDialog::done(int r){
+	// workaround for a Qt crash bug
+	Password = Edit_Password->text();
+	Edit_Password->clear();
+	Edit_Password->setEchoMode(QLineEdit::Normal);
+	Edit_PwRepeat->clear();
+	Edit_PwRepeat->setEchoMode(QLineEdit::Normal);
+	
+	QDialog::done(r);
+}

@@ -19,7 +19,7 @@
 #include <QDesktopWidget>
 #include "AutoTypeDlg.h"
 
-AutoTypeDlg::AutoTypeDlg(QList<IEntryHandle*> entries, QList<int> numbers){
+AutoTypeDlg::AutoTypeDlg(QList<IEntryHandle*> entries, QList<int> numbers, bool wasLocked) : pWasLocked(wasLocked){
 	setupUi(this);
 	
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -86,13 +86,14 @@ void AutoTypeDlg::paintEvent(QPaintEvent* event){
 }
 
 void AutoTypeDlg::resizeEvent(QResizeEvent* event){
+	Q_UNUSED(event);
 	createBanner(&BannerPixmap,getPixmap("keepassx_large"),tr("Auto-Type"),width());
 }
 
 bool AutoTypeDlg::event(QEvent* event){
 	if (!EventOccurred){
 		int t = event->type();
-		if ( t>=QEvent::MouseButtonPress&&t<=QEvent::KeyRelease || t>=QEvent::HoverEnter&&t<=QEvent::HoverMove )
+		if ( (t>=QEvent::MouseButtonPress && t<=QEvent::KeyRelease) || (t>=QEvent::HoverEnter && t<=QEvent::HoverMove) )
 			EventOccurred = true;
 	}
 	return QWidget::event(event);
@@ -100,6 +101,5 @@ bool AutoTypeDlg::event(QEvent* event){
 
 void AutoTypeDlg::itemSelected(QTreeWidgetItem* item){
 	close();
-	QString err;
-	AutoType::perform(itemToEntry[item].dbHandle,err,false,itemToEntry[item].nr);
+	autoType->perform(itemToEntry[item].dbHandle, pWasLocked, itemToEntry[item].nr, pWasLocked);
 }

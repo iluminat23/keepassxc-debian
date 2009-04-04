@@ -21,6 +21,7 @@
 #include <QHeaderView>
 #include <QClipboard>
 #include <QFileDialog>
+#include <QProcess>
 #include "lib/AutoType.h"
 #include "lib/EntryView.h"
 #include "dialogs/EditEntryDlg.h"
@@ -43,11 +44,11 @@ KeepassEntryView::KeepassEntryView(QWidget* parent):QTreeWidget(parent){
 	updateColumns();
 	header()->setSortIndicator(config->columnSort(), config->columnSortOrder());
 
-	connect(header(),SIGNAL(sectionResized(int,int,int)),this,SLOT(OnColumnResized(int,int,int)));
+	connect(header(),SIGNAL(sectionResized(int,int,int)),this,SLOT(OnColumnResized()));
 	connect(this,SIGNAL(itemSelectionChanged()),this,SLOT(OnItemsChanged()));
 	connect(&ClipboardTimer, SIGNAL(timeout()), this, SLOT(OnClipboardTimeOut()));
 	connect(header(),SIGNAL(sectionClicked(int)),this,SLOT(OnHeaderSectionClicked(int)));
-	connect(header(),SIGNAL(sectionMoved(int,int,int)),this,SLOT(OnColumnMoved(int,int,int)));
+	connect(header(),SIGNAL(sectionMoved(int,int,int)),this,SLOT(OnColumnMoved()));
 	Clipboard=QApplication::clipboard();
 	ContextMenu=new QMenu(this);
 	setAlternatingRowColors(config->alternatingRowColors());
@@ -132,6 +133,8 @@ void KeepassEntryView::OnCloneEntry(){
 			db->cloneEntry(((EntryViewItem*)entries[i])->EntryHandle);
 		updateEntry(Items.back());
 	}
+	if (header()->isSortIndicatorShown())
+		sortByColumn(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 	emit fileModified();
 }
 
@@ -145,11 +148,28 @@ void KeepassEntryView::OnDeleteEntry(){
 		else
 			text=tr("Are you sure you want to delete these %1 entries?").arg(entries.size());
 		if(QMessageBox::question(this,tr("Delete?"),text,QMessageBox::Yes | QMessageBox::No,QMessageBox::No)==QMessageBox::No)
-			return;			
+			return;
 	}
 	
+	bool backup = false;
+	IGroupHandle* bGroup;
+	if (config->backup() && ((EntryViewItem*)entries[0])->EntryHandle->group() != (bGroup=db->backupGroup()))
+		backup = true;
+	if (backup && !bGroup) {
+		emit requestCreateGroup("Backup", 4, NULL);
+		bGroup = db->backupGroup();
+	}
 	for(int i=0; i<entries.size();i++){
-		db->deleteEntry(((EntryViewItem*)entries[i])->EntryHandle);
+		IEntryHandle* entryHandle = ((EntryViewItem*)entries[i])->EntryHandle;
+		if (backup && bGroup){
+			db->moveEntry(entryHandle, bGroup);
+			QDateTime now = QDateTime::currentDateTime();
+			entryHandle->setLastAccess(now);
+			entryHandle->setLastMod(now);
+		}
+		else{
+			db->deleteEntry(entryHandle);
+		}
 		Items.removeAt(Items.indexOf((EntryViewItem*)entries[i]));
 		delete entries[i];
 	}
@@ -169,17 +189,18 @@ void KeepassEntryView::updateEntry(EntryViewItem* item){
 		if(config->hideUsernames())
 			item->setText(j++,"******");
 		else
-			item->setText(j++,entry->username());}
-		if (Columns.at(2)){item->setText(j++,entry->url());}
-		if (Columns.at(3)){
-			if(config->hidePasswords())
-				item->setText(j++,"******");
-			else{
-				SecString password=entry->password();
-				password.unlock();
-				item->setText(j++,password.string());
-			}
+			item->setText(j++,entry->username());
+	}
+	if (Columns.at(2)){item->setText(j++,entry->url());}
+	if (Columns.at(3)){
+		if(config->hidePasswords())
+			item->setText(j++,"******");
+		else{
+			SecString password=entry->password();
+			password.unlock();
+			item->setText(j++,password.string());
 		}
+	}
 	if (Columns.at(4)){
 		item->setText(j++,entry->comment().section('\n',0,0));}
 	if (Columns.at(5)){
@@ -194,31 +215,47 @@ void KeepassEntryView::updateEntry(EntryViewItem* item){
 		item->setText(j++,entry->binaryDesc());}
 	if(Columns.at(10) && ViewMode==ShowSearchResults){
 		item->setText(j,entry->group()->title());
-		item->setIcon(j++,db->icon(entry->group()->image()));}
+		item->setIcon(j++,db->icon(entry->group()->image()));
+	}
 }
 
 void KeepassEntryView::editEntry(EntryViewItem* item){
-	CEditEntryDlg dlg(db,item->EntryHandle,this,true);
-	switch(dlg.exec()){
+	IEntryHandle* handle = item->EntryHandle;
+	CEntry old = handle->data();
+	
+	CEditEntryDlg dlg(db,handle,this,true);
+	int result = dlg.exec();
+	switch(result){
 		case 0: //canceled or no changes
 			break;
 		case 1: //modifications but same group
 			updateEntry(item);
 			emit fileModified();
 			break;
-		case 2: //entry moved to another group
+		//entry moved to another group
+		case 2: //modified
+		case 3: //not modified
+			Items.removeAll(item);
 			delete item;
-			Items.removeAt(Items.indexOf(item));
 			emit fileModified();
 			break;
 	}
-
+	
+	IGroupHandle* bGroup;
+	if ((result==1 || result==2) && config->backup() && handle->group() != (bGroup=db->backupGroup())){
+		old.LastAccess = QDateTime::currentDateTime();
+		old.LastMod = old.LastAccess;
+		if (bGroup==NULL)
+			emit requestCreateGroup("Backup", 4, NULL);
+		if ((bGroup = db->backupGroup())!=NULL)
+			db->addEntry(&old, bGroup);
+	}
 }
 
 
 void KeepassEntryView::OnNewEntry(){
 	IEntryHandle* NewEntry = NULL;
-	if (!CurrentGroup){// We must be viewing search results. Add the new entry to the first group.		
+	if (!CurrentGroup){ // We must be viewing search results. Add the new entry to the first group.
 		if (db->groups().size() > 0)
 			NewEntry=db->newEntry(db->sortedGroups()[0]);
 		else{
@@ -227,7 +264,7 @@ void KeepassEntryView::OnNewEntry(){
 	}
 	else
 		NewEntry=db->newEntry(CurrentGroup);
-	CEditEntryDlg dlg(db,NewEntry,this,true,true);
+	CEditEntryDlg dlg(db,NewEntry,this,true);
 	if(!dlg.exec()){
 		db->deleteLastEntry();
 	}
@@ -243,17 +280,24 @@ void KeepassEntryView::OnNewEntry(){
 }
 
 void KeepassEntryView::OnEntryActivated(QTreeWidgetItem* item,int Column){
-	switch(columnListIndex(Column)){
-		case 0:	editEntry((EntryViewItem*)item);
-		break;
-		case 1: OnUsernameToClipboard();
-		break;
-		case 2: OnEditOpenUrl();
-		break;
-		case 3:	OnPasswordToClipboard();
-		break;
+	Q_UNUSED(item);
+	
+	switch (columnListIndex(Column)){
+		case 1:
+			OnUsernameToClipboard();
+			break;
+		case 2:
+			OnEditOpenUrl();
+			break;
+		case 3:
+			OnPasswordToClipboard();
+			break;
 	}
+}
 
+void KeepassEntryView::OnEntryDblClicked(QTreeWidgetItem* item,int Column){
+	if (columnListIndex(Column) == 0)
+		editEntry((EntryViewItem*)item);
 }
 
 void KeepassEntryView::OnEditEntry(){
@@ -266,14 +310,32 @@ void KeepassEntryView::OnEditOpenUrl(){
 	openBrowser( ((EntryViewItem*)selectedItems().first())->EntryHandle );
 }
 
+void KeepassEntryView::OnEditCopyUrl(){
+	if (selectedItems().size() == 0) return;
+	QString url = ((EntryViewItem*)selectedItems().first())->EntryHandle->url();
+	if (url.trimmed().isEmpty()) return;
+	if (url.startsWith("cmd://") && url.length()>6)
+		url = url.right(url.length()-6);
+	
+	Clipboard->setText(url,  QClipboard::Clipboard);
+	if(Clipboard->supportsSelection()){
+		Clipboard->setText(url, QClipboard::Selection);
+	}
+}
+
 void KeepassEntryView::OnUsernameToClipboard(){
 	if (selectedItems().size() == 0) return;
-	Clipboard->setText(((EntryViewItem*)selectedItems().first())->EntryHandle->username(),  QClipboard::Clipboard);
+	QString username = ((EntryViewItem*)selectedItems().first())->EntryHandle->username();
+	if (username.trimmed().isEmpty()) return;
+	Clipboard->setText(username,  QClipboard::Clipboard);
 	if(Clipboard->supportsSelection()){
-		Clipboard->setText(((EntryViewItem*)selectedItems().first())->EntryHandle->username(),QClipboard::Selection);
+		Clipboard->setText(username, QClipboard::Selection);
 	}
-	ClipboardTimer.setSingleShot(true);
-	ClipboardTimer.start(config->clipboardTimeOut()*1000);
+	
+	if (config->clipboardTimeOut()!=0) {
+		ClipboardTimer.setSingleShot(true);
+		ClipboardTimer.start(config->clipboardTimeOut()*1000);
+	}
 }
 
 void KeepassEntryView::OnPasswordToClipboard(){
@@ -281,12 +343,16 @@ void KeepassEntryView::OnPasswordToClipboard(){
 	SecString password;
 	password=((EntryViewItem*)selectedItems().first())->EntryHandle->password();
 	password.unlock();
-	Clipboard->setText(password.string(),QClipboard::Clipboard);
+	if (password.string().isEmpty()) return;
+	Clipboard->setText(password.string(), QClipboard::Clipboard);
 	if(Clipboard->supportsSelection()){
-		Clipboard->setText(password.string(),QClipboard::Selection);
+		Clipboard->setText(password.string(), QClipboard::Selection);
 	}
-	ClipboardTimer.setSingleShot(true);
-	ClipboardTimer.start(config->clipboardTimeOut()*1000);
+	
+	if (config->clipboardTimeOut()!=0) {
+		ClipboardTimer.setSingleShot(true);
+		ClipboardTimer.start(config->clipboardTimeOut()*1000);
+	}
 }
 
 void KeepassEntryView::OnClipboardTimeOut(){
@@ -294,6 +360,10 @@ void KeepassEntryView::OnClipboardTimeOut(){
 	if(Clipboard->supportsSelection()){
 		Clipboard->clear(QClipboard::Selection);
 	}
+#ifdef Q_WS_X11
+	QProcess::execute("dcop klipper klipper clearClipboardHistory");
+	QProcess::execute("dbus-send --type=method_call --dest=org.kde.klipper /klipper org.kde.klipper.klipper.clearClipboardHistory");
+#endif
 }
 
 
@@ -312,9 +382,9 @@ void KeepassEntryView::contextMenuEvent(QContextMenuEvent* e){
 				}
 			}
 	}
-	else
-	{while(selectedItems().size()){
-		setItemSelected(selectedItems().first(),false);}
+	else{
+		while (selectedItems().size())
+			setItemSelected(selectedItems().first(),false);
 	}
 	e->accept();
 	ContextMenu->popup(e->globalPos());
@@ -400,9 +470,9 @@ void KeepassEntryView::updateIcons(){
 }
 
 
-void KeepassEntryView::setEntry(IEntryHandle* entry){
+/*void KeepassEntryView::setEntry(IEntryHandle* entry){
 
-}
+}*/
 
 void KeepassEntryView::updateColumns(){
 	setColumnCount(0);
@@ -456,18 +526,22 @@ void KeepassEntryView::refreshItems(){
 		updateEntry(Items.at(i));
 }
 
-void KeepassEntryView::OnColumnMoved(int LogIndex,int OldVisIndex,int NewVisIndex){
+void KeepassEntryView::OnColumnMoved(){
 	for(int i=0;i<header()->count();i++){
 		ColumnOrder[columnListIndex(header()->logicalIndex(i))]=i;
 	}
+	sortByColumn(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 }
 
 int KeepassEntryView::logicalColIndex(int LstIndex){
 	int c=-1;
 	for(int i=0;i<NUM_COLUMNS;i++){
-		if(Columns.at(i))c++;
-		if(i==10 && Columns.at(10) && ViewMode!=ShowSearchResults)c--;
-		if(i==LstIndex)return c;
+		if(Columns.at(i))
+			c++;
+		if(i==10 && Columns.at(10) && ViewMode!=ShowSearchResults)
+			c--;
+		if(i==LstIndex)
+			return c;
 	}
 	Q_ASSERT(false);
 	return -1;
@@ -507,15 +581,18 @@ void KeepassEntryView::resizeColumns(){
 int KeepassEntryView::columnListIndex(int LogicalIndex){
 	int c=-1; int i;
 	for(i=0;i<NUM_COLUMNS;i++){
-		if(Columns.at(i))c++;
-		if(i==10 && Columns.at(10) && ViewMode!=ShowSearchResults)c--;
-		if(c==LogicalIndex)break;
+		if(Columns.at(i))
+			c++;
+		if(i==10 && Columns.at(10) && ViewMode!=ShowSearchResults)
+			c--;
+		if(c==LogicalIndex)
+			break;
 	}
 	return i;
 }
 
 
-void KeepassEntryView::OnColumnResized(int lindex,int Old, int New){
+void KeepassEntryView::OnColumnResized(){
 	if(!AutoResizeColumns)return;
 	for(int i=0;i<header()->count();i++){
 		ColumnSizes[columnListIndex(i)]=header()->sectionSize(i);
@@ -540,15 +617,20 @@ void KeepassEntryView::mouseMoveEvent(QMouseEvent *event){
 	EntryViewItem* DragStartItem=(EntryViewItem*)itemAt(DragStartPos);
 	if(!DragStartItem){
 		while(selectedItems().size()){
-			setItemSelected(selectedItems().first(),false);}
+			setItemSelected(selectedItems().first(),false);
+		}
 		return;
 	}
 	if(selectedItems().isEmpty()){
-			setItemSelected(DragStartItem,true);}
+			setItemSelected(DragStartItem,true);
+	}
 	else{
 		bool AlreadySelected=false;
 		for(int i=0;i<selectedItems().size();i++){
-			if(selectedItems()[i]==DragStartItem){AlreadySelected=true; break;}
+			if(selectedItems()[i]==DragStartItem){
+				AlreadySelected=true;
+				break;
+			}
 		}
 		if(!AlreadySelected){
 			while(selectedItems().size()){
@@ -585,8 +667,7 @@ void KeepassEntryView::removeDragItems(){
 #ifdef AUTOTYPE
 void KeepassEntryView::OnAutoType(){
 	if (selectedItems().size() == 0) return;
-	QString error;
-	AutoType::perform(((EntryViewItem*)selectedItems().first())->EntryHandle,error);
+	autoType->perform(((EntryViewItem*)selectedItems().first())->EntryHandle);
 }
 #endif
 
@@ -612,33 +693,66 @@ EntryViewItem::EntryViewItem(QTreeWidgetItem *parent, QTreeWidgetItem *preceding
 }
 
 
-bool EntryViewItem::operator<(const QTreeWidgetItem& other)const{
-	int SortCol=treeWidget()->header()->sortIndicatorSection();
-	int ListIndex=((KeepassEntryView*)treeWidget())->columnListIndex(SortCol);
-	if(ListIndex < 5 || ListIndex > 8){ //columns with string values (Title, Username, Password, URL, Comment, Group)
-		return (QString::localeAwareCompare(text(SortCol),other.text(SortCol)) < 0);
+bool EntryViewItem::operator<(const QTreeWidgetItem& other) const{
+	int SortCol = treeWidget()->header()->sortIndicatorSection();
+	int ListIndex = ((KeepassEntryView*)treeWidget())->columnListIndex(SortCol);
+	
+	int comp = compare(other, SortCol, ListIndex);
+	if (comp!=0)
+		return (comp<0);
+	else {
+		int visibleCols = treeWidget()->header()->count() - treeWidget()->header()->hiddenSectionCount();
+		int ListIndexOrg = ListIndex;
+		for (int i=0; i<visibleCols; i++){
+			SortCol = treeWidget()->header()->logicalIndex(i);
+			ListIndex = ((KeepassEntryView*)treeWidget())->columnListIndex(SortCol);
+			if (ListIndex==ListIndexOrg || ListIndex==3) // sort or password column
+				continue;
+			
+			comp = compare(other, SortCol, ListIndex);
+			if (comp!=0)
+				return (comp<0);
+		}
+		return true; // entries are equal
 	}
+}
+
+int EntryViewItem::compare(const QTreeWidgetItem& other, int col, int index) const{
+	if (index < 5 || index > 8){ //columns with string values (Title, Username, Password, URL, Comment, Group)
+		return QString::localeAwareCompare(text(col),other.text(col));
+	}
+	
 	KpxDateTime DateThis;
 	KpxDateTime DateOther;
 
-	switch(ListIndex){
-		case 5: DateThis=EntryHandle->expire();
-				DateOther=((EntryViewItem&)other).EntryHandle->expire();
-				break;
-		case 6: DateThis=EntryHandle->creation();
-				DateOther=((EntryViewItem&)other).EntryHandle->creation();
-				break;
-		case 7: DateThis=EntryHandle->lastMod();
-				DateOther=((EntryViewItem&)other).EntryHandle->lastMod();
-				break;
-		case 8: DateThis=EntryHandle->lastAccess();
-				DateOther=((EntryViewItem&)other).EntryHandle->lastAccess();
-				break;
-		default:Q_ASSERT(false);
+	switch (index){
+		case 5:
+			DateThis=EntryHandle->expire();
+			DateOther=((EntryViewItem&)other).EntryHandle->expire();
+			break;
+		case 6:
+			DateThis=EntryHandle->creation();
+			DateOther=((EntryViewItem&)other).EntryHandle->creation();
+			break;
+		case 7:
+			DateThis=EntryHandle->lastMod();
+			DateOther=((EntryViewItem&)other).EntryHandle->lastMod();
+			break;
+		case 8:
+			DateThis=EntryHandle->lastAccess();
+			DateOther=((EntryViewItem&)other).EntryHandle->lastAccess();
+			break;
+		default:
+			Q_ASSERT(false);
 	}
-	return DateThis < DateOther;
+	
+	if (DateThis==DateOther)
+		return 0;
+	else if (DateThis < DateOther)
+		return -1;
+	else
+		return 1;
 }
-
 
 void KeepassEntryView::setCurrentEntry(IEntryHandle* entry){
 	bool found=false;

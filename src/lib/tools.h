@@ -19,13 +19,24 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#define CSTR(x)(x.toLocal8Bit().constData())
 class IEntryHandle;
-typedef enum tKeyType {PASSWORD=0,KEYFILE=1,BOTH=2};
+
+enum tKeyType {PASSWORD=0,KEYFILE=1,BOTH=2};
+struct Translation {
+	QString nameCode;
+	QString nameLong;
+	QString nameEnglish;
+	QString author;
+};
+bool operator<(const Translation& t1, const Translation& t2);
+
+#define CSTR(x)(QTextCodec::codecForLocale()->fromUnicode(x).constData())
+
 const QIcon& getIcon(const QString& name);
 const QPixmap* getPixmap(const QString& name);
 void createBanner(QPixmap* Pixmap, const QPixmap* IconAlpha,const QString& Text,int Width);
-void createBanner(QPixmap* Pixmap, const QPixmap* IconAlpha,const QString& Text,int Width, QColor Color1, QColor Color2, QColor TextColor);
+void createBanner(QPixmap* Pixmap, const QPixmap* IconAlpha,const QString& Text,int Width,
+				  QColor Color1, QColor Color2, QColor TextColor);
 void openBrowser(const QString& UrlString);
 void openBrowser(IEntryHandle* entry);
 void showErrMsg(const QString& msg,QWidget* parent=NULL);
@@ -33,5 +44,17 @@ QString decodeFileError(QFile::FileError Code);
 QString makePathRelative(const QString& Abs,const QString& Cur);
 QString getImageFile(const QString& name);
 bool createKeyFile(const QString& filename,QString* err, int length=32, bool Hex=true);
+bool lockPage(void* addr, int len);
+bool unlockPage(void* addr, int len);
+bool syncFile(QFile* file);
+void installTranslator();
+bool isTranslationActive();
+QList<Translation> getAllTranslations();
+#ifdef Q_OS_WIN
+	#ifndef CSIDL_APPDATA
+		#define CSIDL_APPDATA 0x001a // <username>\Application Data
+	#endif
+	QString qtWindowsConfigPath(int type);
+#endif
 
 #endif //TOOLS_H

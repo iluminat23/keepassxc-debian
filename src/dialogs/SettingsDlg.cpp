@@ -22,12 +22,14 @@
 #include "dialogs/SettingsDlg.h"
 #include "dialogs/CustomizeDetailViewDlg.h"
 
-bool CSettingsDlg::PluginsModified=false;
+//bool CSettingsDlg::PluginsModified=false;
 
 
 CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 {
 	setupUi(this);
+	connect(listWidget, SIGNAL( currentRowChanged(int) ), stackedWidget, SLOT( setCurrentIndex(int) ) );
+	
 	connect(DialogButtons, SIGNAL( accepted() ), this, SLOT( OnOK() ) );
 	connect(DialogButtons, SIGNAL( rejected() ), this, SLOT( OnCancel() ) );
 	connect(DialogButtons, SIGNAL( clicked(QAbstractButton*)), this, SLOT(OnOtherButton(QAbstractButton*)));
@@ -38,6 +40,8 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	connect(CheckBox_OpenLast, SIGNAL( toggled(bool) ), CheckBox_StartMinimized, SLOT( setEnabled(bool) ) );
 	connect(CheckBox_OpenLast, SIGNAL( toggled(bool) ), CheckBox_StartLocked, SLOT( setEnabled(bool) ) );
 	
+	connect(listSelectLanguage, SIGNAL( currentRowChanged(int) ), SLOT( OnSelectLanguage(int) ) );
+	
 	connect(Button_ClearFileDlgHistory, SIGNAL(clicked()), &fileDlgHistory, SLOT(clear()));
 	connect(ButtonColor1, SIGNAL( clicked() ), this, SLOT( OnColor1() ) );
 	connect(ButtonColor2, SIGNAL( clicked() ), this, SLOT( OnColor2() ) );
@@ -45,12 +49,18 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	connect(Button_MountDirBrowse,SIGNAL(clicked()),this,SLOT(OnMountDirBrowse()));
 	connect(Button_BrowserCmdBrowse,SIGNAL(clicked()),this,SLOT(OnBrowserCmdBrowse()));
 
-	connect(Radio_IntPlugin_None,SIGNAL(toggled(bool)),this,SLOT(OnIntPluginNone()));
-	connect(Radio_IntPlugin_Gnome,SIGNAL(toggled(bool)),this,SLOT(OnIntPluginGnome()));
-	connect(Radio_IntPlugin_Kde,SIGNAL(toggled(bool)),this,SLOT(OnIntPluginKde()));
+	//connect(Radio_IntPlugin_None,SIGNAL(toggled(bool)),this,SLOT(OnIntPluginNone()));
+	//connect(Radio_IntPlugin_Gnome,SIGNAL(toggled(bool)),this,SLOT(OnIntPluginGnome()));
+	//connect(Radio_IntPlugin_Kde,SIGNAL(toggled(bool)),this,SLOT(OnIntPluginKde()));
 
 	connect(Button_CustomizeEntryDetails,SIGNAL(clicked()),this,SLOT(OnCustomizeEntryDetails()));
 	connect(CheckBox_InactivityLock, SIGNAL(toggled(bool)), SLOT(OnInactivityLockChange(bool)));
+	
+	connect(CheckBox_Backup, SIGNAL( toggled(bool) ), CheckBox_BackupDelete, SLOT( setEnabled(bool) ) );
+	connect(CheckBox_Backup, SIGNAL( toggled(bool) ), SLOT( OnBackupDeleteChange() ) );
+	connect(CheckBox_BackupDelete, SIGNAL( toggled(bool) ), SLOT( OnBackupDeleteChange() ) );
+	connect(CheckBox_AutoSave, SIGNAL(toggled(bool)), SLOT(OnAutoSaveToggle(bool)));
+	connect(CheckBox_AutoSaveChange, SIGNAL(toggled(bool)), SLOT(OnAutoSaveChangeToggle(bool)));
 	
 #if !defined(AUTOTYPE)
 	Box_AutoType->setVisible(false);
@@ -62,11 +72,13 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 #endif
 	
 #ifdef GLOBAL_AUTOTYPE
-	pShortcut = AutoType::shortcut;
+	pShortcut = autoType->getShortcut();
 	connect(this,SIGNAL(rejected()),SLOT(resetGlobalShortcut()));
 #endif
+	
+	listWidget->setCurrentRow(0);
 
-	//General
+	//General (1)
 	CheckBox_OpenLast->setChecked(config->openLastFile());
 	CheckBox_RememberLastKey->setChecked(config->rememberLastKey());
 	CheckBox_ShowSysTrayIcon->setChecked(config->showSysTrayIcon());
@@ -75,8 +87,14 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	CheckBox_StartMinimized->setChecked(config->startMinimized());
 	CheckBox_StartLocked->setChecked(config->startLocked());
 	checkBox_SaveFileDlgHistory->setChecked(config->saveFileDlgHistory());
-	CheckBox_AutoSave->setChecked(config->autoSave());
 	checkBox_AskBeforeDelete->setChecked(config->askBeforeDelete());
+	
+	//General (2)
+	CheckBox_Backup->setChecked(config->backup());
+	CheckBox_BackupDelete->setChecked(config->backupDelete());
+	SpinBox_BackupDeleteAfter->setValue(config->backupDeleteAfter());
+	CheckBox_AutoSave->setChecked(config->autoSave());
+	CheckBox_AutoSaveChange->setChecked(config->autoSaveChange());
 
 	switch(config->groupTreeState()){
 		case KpxConfig::RestoreLast:
@@ -109,8 +127,25 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	color2=config->bannerColor2();
 	textcolor=config->bannerTextColor();
 	CheckBox_AlternatingRowColors->setChecked(config->alternatingRowColors());
-
-
+	
+	//Language
+	translations = getAllTranslations();
+	initLanguageList();
+	QString currentLang = config->language();
+	bool foundCurrent = false;
+	for (int i=0; i<translations.size(); i++){
+		if (translations[i].nameCode==currentLang){
+			listSelectLanguage->setCurrentRow(i+2);
+			foundCurrent = true;
+		}
+	}
+	if (!foundCurrent){
+		if (currentLang=="en_US")
+			listSelectLanguage->setCurrentRow(1);
+		else
+			listSelectLanguage->setCurrentRow(0);
+	}
+	
 	//Security
 	SpinBox_ClipboardTime->setValue(config->clipboardTimeOut());
 	CheckBox_ShowPasswords->setChecked(config->showPasswords());
@@ -120,11 +155,12 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	SpinBox_InacitivtyTime->setValue(config->lockAfterSec());
 	
 	//Features
-	CheckBox_FeatureBookmarks->setChecked(config->featureBookmarks());
+	stackedWidget->removeWidget(pageFeatures);
+	//CheckBox_FeatureBookmarks->setChecked(config->featureBookmarks());
 
 
 	// TODO Desktop Integration
-	tabWidgetSettings->removeTab(tabWidgetSettings->indexOf(tabIntegration));
+	stackedWidget->removeWidget(pageDesktop);
 	/*if(PluginLoadError==QString())
 		Label_IntPlugin_Error->hide();
 	else
@@ -161,11 +197,10 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 #endif
 	
 	adjustSize();
-	resize( size() + QSize(50,20) );
+	resize( size() + QSize(20,20) );
 }
 
-CSettingsDlg::~CSettingsDlg()
-{
+CSettingsDlg::~CSettingsDlg(){
 }
 
 void CSettingsDlg::paintEvent(QPaintEvent *event){
@@ -198,7 +233,7 @@ void CSettingsDlg::OnOtherButton(QAbstractButton* button){
 
 void CSettingsDlg::apply(){
 	
-	//General
+	//General (1)
 	config->setShowSysTrayIcon(CheckBox_ShowSysTrayIcon->isChecked());
 	config->setMinimizeToTray(CheckBox_CloseToTray->isChecked());
 	config->setMinimizeTray(CheckBox_MinimizeTray->isChecked());
@@ -210,14 +245,36 @@ void CSettingsDlg::apply(){
 	else config->setGroupTreeState(KpxConfig::DoNothing);
 	config->setOpenLastFile(CheckBox_OpenLast->isChecked());
 	config->setRememberLastKey(CheckBox_RememberLastKey->isChecked());
-	config->setAutoSave(CheckBox_AutoSave->isChecked());
 	config->setAskBeforeDelete(checkBox_AskBeforeDelete->isChecked());
+	
+	//General (2)
+	config->setBackup(CheckBox_Backup->isChecked());
+	config->setBackupDelete(CheckBox_BackupDelete->isChecked());
+	config->setBackupDeleteAfter(SpinBox_BackupDeleteAfter->value());
+	config->setAutoSave(CheckBox_AutoSave->isChecked());
+	config->setAutoSaveChange(CheckBox_AutoSaveChange->isChecked());
 
 	//Appearence
 	config->setBannerColor1(color1);
 	config->setBannerColor2(color2);
 	config->setBannerTextColor(textcolor);
 	config->setAlternatingRowColors(CheckBox_AlternatingRowColors->isChecked());
+
+	//Language
+	int langIndex = listSelectLanguage->currentRow();
+	QString oldLang = config->language();
+	if (langIndex==0)
+		config->setLanguage("auto");
+	else if (langIndex==1)
+		config->setLanguage("en_US");
+	else
+		config->setLanguage(translations[langIndex-2].nameCode);
+	if (config->language() != oldLang){
+		installTranslator();
+		retranslateUi(this);
+		initLanguageList();
+		listSelectLanguage->setCurrentRow(langIndex);
+	}
 
 	//Security
 	config->setClipboardTimeOut(SpinBox_ClipboardTime->value());
@@ -226,9 +283,9 @@ void CSettingsDlg::apply(){
 	config->setLockOnMinimize(CheckBox_LockMinimize->isChecked());
 	config->setLockOnInactivity(CheckBox_InactivityLock->isChecked());
 	config->setLockAfterSec(SpinBox_InacitivtyTime->value());
-	
+
 	//Features
-	config->setFeatureBookmarks(CheckBox_FeatureBookmarks->isChecked());
+	//config->setFeatureBookmarks(CheckBox_FeatureBookmarks->isChecked());
 
 	//TODO Desktop Integration
 	/*PluginsModified=Label_IntPlugin_Info->isVisible();
@@ -308,7 +365,7 @@ void CSettingsDlg::OnBrowserCmdBrowse(){
 	}
 }
 
-void CSettingsDlg::OnIntPluginNone(){
+/*void CSettingsDlg::OnIntPluginNone(){
 	Label_IntPlugin_Info->show();
 }
 
@@ -318,8 +375,7 @@ void CSettingsDlg::OnIntPluginGnome(){
 
 void CSettingsDlg::OnIntPluginKde(){
 	Label_IntPlugin_Info->show();
-}
-
+}*/
 
 void CSettingsDlg::OnCustomizeEntryDetails(){
 	CustomizeDetailViewDialog dlg(this);
@@ -330,9 +386,50 @@ void CSettingsDlg::OnInactivityLockChange(bool checked){
 	SpinBox_InacitivtyTime->setEnabled(checked);
 }
 
+void CSettingsDlg::OnAutoSaveToggle(bool checked){
+	CheckBox_AutoSaveChange->setEnabled(!checked);
+}
+
+void CSettingsDlg::OnAutoSaveChangeToggle(bool checked){
+	CheckBox_AutoSave->setEnabled(!checked);
+}
+
+void CSettingsDlg::OnBackupDeleteChange(){
+	SpinBox_BackupDeleteAfter->setEnabled(CheckBox_Backup->isChecked() && CheckBox_BackupDelete->isChecked());
+}
+
+void CSettingsDlg::OnSelectLanguage(int index){
+	if (index == -1)
+		return;
+	
+	if (index==0){
+		labelLang->clear();
+		labelAuthor->clear();
+	}
+	else if (index==1){
+		labelLang->setText("English (United States)");
+		labelAuthor->setText("KeePassX Development Team");
+	}
+	else{
+		if (translations[index-2].nameLong != translations[index-2].nameEnglish)
+			labelLang->setText(QString("%1 / %2").arg(translations[index-2].nameLong).arg(translations[index-2].nameEnglish));
+		else
+			labelLang->setText(translations[index-2].nameEnglish);
+		labelAuthor->setText(translations[index-2].author);
+	}
+}
+
+void CSettingsDlg::initLanguageList() {
+	listSelectLanguage->clear(); // completely rebuild the list because of a bug in Qt 4.3
+	listSelectLanguage->addItem(tr("System Language"));
+	listSelectLanguage->addItem("English (United States)"); // Don't translate this string
+	for (int i=0; i<translations.size(); i++)
+		listSelectLanguage->addItem(translations[i].nameLong);
+}
+
 #ifdef GLOBAL_AUTOTYPE
 void CSettingsDlg::resetGlobalShortcut(){
-	AutoType::unregisterGlobalShortcut();
-	AutoType::registerGlobalShortcut(pShortcut);
+	autoType->unregisterGlobalShortcut();
+	autoType->registerGlobalShortcut(pShortcut);
 }
 #endif

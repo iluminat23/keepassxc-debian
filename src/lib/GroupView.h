@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifndef _GROUP_VIEW_H_
 #define _GROUP_VIEW_H_
 
@@ -36,20 +37,22 @@ class KeepassGroupView:public QTreeWidget{
 		void createItems();
 		void showSearchResults();
 		void setCurrentGroup(IGroupHandle* group);
-		void createGroup(const QString& title, quint32 image);
+	
+	public slots:
+		void createGroup(const QString& title, quint32 image, GroupViewItem* group=NULL);
 		
 	private:
 		virtual void dragEnterEvent(QDragEnterEvent* event);
 		virtual void dragMoveEvent(QDragMoveEvent* event);
 		void entryDragMoveEvent(QDragMoveEvent* event);
-		virtual void dragLeaveEvent ( QDragLeaveEvent * event );
-		virtual void dropEvent ( QDropEvent * event );
+		virtual void dragLeaveEvent(QDragLeaveEvent* event);
+		virtual void dropEvent(QDropEvent* event);
 		void entryDropEvent(QDropEvent* event);
 		virtual void mousePressEvent(QMouseEvent *event);
 		virtual void mouseMoveEvent(QMouseEvent *event);
-		virtual void paintEvent ( QPaintEvent * event );
-		virtual void contextMenuEvent(QContextMenuEvent *event);
-		void addChilds(GroupViewItem* item);
+		virtual void paintEvent (QPaintEvent* event);
+		virtual void contextMenuEvent(QContextMenuEvent* event);
+		void addChildren(GroupViewItem* item);
 		QPoint DragStartPos;
 		GroupViewItem* DragItem;
 		GroupViewItem* LastHoverItem;
@@ -63,11 +66,13 @@ class KeepassGroupView:public QTreeWidget{
 		void OnCurrentGroupChanged(QTreeWidgetItem*);
 		void OnDeleteGroup();
 		void OnNewGroup();
+		void OnNewSubgroup();
 		void OnEditGroup();
 		void updateIcons();
 		void OnHideSearchResults();
 		void OnItemExpanded(QTreeWidgetItem*);
 		void OnItemCollapsed(QTreeWidgetItem*);
+		void OnSort();
 		
 	signals:
 		void groupChanged(IGroupHandle* NewGroup);
@@ -84,6 +89,7 @@ class GroupViewItem:public QTreeWidgetItem{
 		GroupViewItem(QTreeWidget *parent, QTreeWidgetItem * preceding);
 		GroupViewItem(QTreeWidgetItem *parent);
 		GroupViewItem(QTreeWidgetItem *parent, QTreeWidgetItem * preceding);
+		bool operator<(const QTreeWidgetItem& other) const;
 		IGroupHandle* GroupHandle;
 };
 
