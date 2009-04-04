@@ -6,7 +6,7 @@ Uploaders: David Valot <ptitdav69@gmail.com>
 Build-Depends: debhelper (>= 5.0.0), libqt4-dev (>= 4.3.0), libxtst-dev, quilt
 Standards-Version: 3.8.0
 Homepage: http://keepassx.sourceforge.net
-Vcs-Bzr: http://code.launchpad.net/~siretart/keepassx/ubuntu
+Vcs-Bzr: http://code.launchpad.net/~siretart/keepassx/debian
 
 Package: keepassx
 Architecture: any
