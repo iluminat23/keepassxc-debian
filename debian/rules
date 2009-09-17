@@ -4,8 +4,6 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-include /usr/share/quilt/quilt.make
-
 CFLAGS = -Wall -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
@@ -13,54 +11,19 @@ else
 	CFLAGS += -O2
 endif
 
-build: build-stamp
-build-stamp: $(QUILT_STAMPFN)
-	dh_testdir
+%:
+	dh --with quilt $@
+
+override_dh_auto_configure:
 	qmake-qt4 PREFIX=/usr DEBUG=1 QMAKE_CFLAGS_DEBUG="$(CFLAGS)" \
-	     QMAKE_CXXFLAGS_DEBUG="$(CFLAGS)"
-	make
+		QMAKE_CXXFLAGS_DEBUG="$(CFLAGS)"
+
+override_dh_auto_install:
+	$(MAKE) INSTALL_ROOT="$(CURDIR)/debian/keepassx" install
 	lrelease-qt4 src/src.pro
-	touch build-stamp
+	rm -f src/translations/keepassx-xx_XX.qm
+	mv src/translations/*.qm debian/keepassx/usr/share/keepassx/i18n
 
-clean: unpatch
-	dh_testdir
-	dh_testroot
-	[ ! -f Makefile ] || $(MAKE) distclean
+override_dh_auto_clean:
+	dh_auto_clean
 	rm -rf bin build
-	dh_clean build-stamp configure-stamp
-	dh_clean src/Makefile Makefile src/translations/*.qm
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k
-	dh_installdirs
-	make INSTALL_ROOT=$(CURDIR)/debian/keepassx install
-	dh_install
-        # Remove the executable attribut on png files
-	chmod 644 $(CURDIR)/debian/keepassx/usr/share/keepassx/icons/*.png
-
-binary-indep: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs changelog
-	dh_installdocs
-	dh_installexamples
-	dh_installman debian/keepassx.1
-	dh_desktop
-	dh_link
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure

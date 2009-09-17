@@ -1,8 +1,12 @@
-keepassx (0.4.1-1) UNRELEASED; urgency=low
+keepassx (0.4.1-1) unstable; urgency=low
 
   * New upstream release.
+  * Bump debhelper to dh 7.
+    - increase debian/compat to 7.
+    - simplify debian/rules.
+  * Bump Standards-Version to 3.8.3, no changes needed.
 
- -- Felix <felix@felix-laptop>  Thu, 17 Sep 2009 15:14:03 +0200
+ -- Felix Geyer <debfx-pkg@fobos.de>  Thu, 17 Sep 2009 15:21:00 +0200
 
 keepassx (0.4.0-1) unstable; urgency=low
 

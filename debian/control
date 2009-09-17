@@ -2,15 +2,15 @@ Source: keepassx
 Section: utils
 Priority: optional
 Maintainer: Reinhard Tartler <siretart@tauware.de>
-Uploaders: David Valot <ptitdav69@gmail.com>
-Build-Depends: debhelper (>= 5.0.0), libqt4-dev (>= 4.3.0), libxtst-dev, quilt
-Standards-Version: 3.8.0
-Homepage: http://keepassx.sourceforge.net
-Vcs-Bzr: http://code.launchpad.net/~siretart/keepassx/debian
+Uploaders: David Valot <ptitdav69@gmail.com>, Felix Geyer <debfx-pkg@fobos.de>
+Build-Depends: debhelper (>= 7.0.50~), quilt (>= 0.46-7~), libqt4-dev (>= 4.3.0), libxtst-dev
+Standards-Version: 3.8.3
+Homepage: http://www.keepassx.org/
+Vcs-Bzr: https://code.launchpad.net/~keepassx/keepassx/debian
 
 Package: keepassx
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Cross Platform Password Manager
  KeePassX is a free/open-source password manager or safe which helps you
  to manage your passwords in a secure way. You can put all your

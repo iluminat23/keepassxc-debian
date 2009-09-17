@@ -26,8 +26,8 @@ License:
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL-2'.
 
-The Debian packaging is (C) 2006, David Valot <ptitdav69@gmail.com> and
-(C) 2007, Reinhard Tartler <siretart@tauware.de>. It is licensed under
+The Debian packaging is Copyright 2006, David Valot <ptitdav69@gmail.com> and
+Copyright 2007, Reinhard Tartler <siretart@tauware.de>. It is licensed under
 the GPL, see above.
 
 The directory src/crypto contains implementations of several crypto
