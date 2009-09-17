@@ -36,7 +36,6 @@ KeepassGroupView::KeepassGroupView(QWidget* parent):QTreeWidget(parent){
 	connect(this,SIGNAL(itemCollapsed(QTreeWidgetItem*)),this,SLOT(OnItemCollapsed(QTreeWidgetItem*)));
 }
 
-
 void KeepassGroupView::createItems(){
 	clear();
 	Items.clear();
@@ -55,6 +54,10 @@ void KeepassGroupView::createItems(){
 		Items[i]->setExpanded(Items[i]->GroupHandle->expanded());
 	}
 	SearchResultItem=new GroupViewItem();
+	retranslateUi();
+}
+
+void KeepassGroupView::retranslateUi() {
 	SearchResultItem->setText(0,tr("Search Results"));
 }
 
@@ -162,7 +165,8 @@ void KeepassGroupView::OnEditGroup(){
 
 void KeepassGroupView::contextMenuEvent(QContextMenuEvent* e){
 	if(!(GroupViewItem*)itemAt(e->pos()))
-		setCurrentItem(NULL);
+		return;
+	
 	e->accept();
 	if(currentItem()==SearchResultItem)
 		ContextMenuSearchGroup->popup(e->globalPos());
@@ -189,6 +193,13 @@ void KeepassGroupView::setCurrentGroup(IGroupHandle* group){
 		if(Items[i]->GroupHandle==group){found=true; break;}
 	if(!found)return;
 	setCurrentItem(Items[i]);
+}
+
+void KeepassGroupView::selectFirstGroup(){
+	if (Items.isEmpty())
+		return;
+	
+	setCurrentItem(Items[0]);
 }
 
 void KeepassGroupView::dragEnterEvent ( QDragEnterEvent * event ){
@@ -486,7 +497,6 @@ void KeepassGroupView::mouseMoveEvent(QMouseEvent *event){
 	QDrag *drag = new QDrag(this);
 	QMimeData *mimeData = new QMimeData;
 
-	mimeData->setData("text/plain;charset=UTF-8",DragItem->text(0).toUtf8());
 	mimeData->setData("application/x-keepassx-group",QByteArray());
 	drag->setMimeData(mimeData);
 

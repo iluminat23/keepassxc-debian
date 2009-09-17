@@ -21,6 +21,7 @@
 
 #include "crypto/twoclass.h"
 #include <QBuffer>
+#include <algorithm>
 
 #define UNEXP_ERROR error=QString("Unexpected error in: %1, Line:%2").arg(__FILE__).arg(__LINE__);
 
@@ -595,11 +596,15 @@ bool Kdb3Database::loadReal(QString filename, bool readOnly, bool differentEncod
 	else if(Algorithm == Twofish_Cipher){
 		CTwofish twofish;
 		if (twofish.init(FinalKey, 32, EncryptionIV) != true){
-			error=tr("Unable to initalize the twofish algorithm.");
+			error=tr("Unable to initialize the twofish algorithm.");
 			LOAD_RETURN_CLEANUP
 		}
 		crypto_size = (unsigned long)twofish.padDecrypt((quint8 *)buffer + DB_HEADER_SIZE,
 		total_size - DB_HEADER_SIZE, (quint8 *)buffer + DB_HEADER_SIZE);
+	}
+	else{
+		error=tr("Unknown encryption algorithm.");
+		LOAD_RETURN_CLEANUP
 	}
 	
 	if ((crypto_size > 2147483446) || (!crypto_size && NumGroups)){
@@ -1450,13 +1455,19 @@ bool Kdb3Database::save(){
 	
 	int size = EncryptedPartSize+DB_HEADER_SIZE;
 	
-	if(!File->resize(size)){
-		delete [] buffer;
-		error=decodeFileError(File->error());
-		return false;
+	if (!File->resize(size)){
+		// only recreate file if the new database is smaller
+		if (File->size() > size) {
+			qDebug("Unable to resize, trying to recreate file");
+			if (!File->remove() || !File->open(QIODevice::ReadWrite)) {
+				delete [] buffer;
+				error=decodeFileError(File->error());
+				return false;
+			}
+		}
 	}
 	File->seek(0);
-	if(File->write(buffer,size)!=size){
+	if (File->write(buffer,size)!=size){
 		delete [] buffer;
 		error=decodeFileError(File->error());
 		return false;
@@ -1882,19 +1893,18 @@ void Kdb3Database::moveGroup(IGroupHandle* groupHandle,IGroupHandle* NewParent,i
 }
 
 bool Kdb3Database::changeFile(const QString& filename){
-	if(File)
+	QFile* tmpFile = new QFile(filename);
+	if(!tmpFile->open(QIODevice::ReadWrite)){
+		error = decodeFileError(File->error());
+		delete tmpFile;
+		return false;
+	}
+	
+	if (File)
 		delete File;
-	if(filename==QString()){
-		File=NULL;
-		return true;
-	}
-	File=new QFile(filename);
-	if(!File->open(QIODevice::ReadWrite)){
-		if(!File->open(QIODevice::ReadOnly)){
-			error=decodeFileError(File->error());
-			return false;
-		}
-	}
+	
+	File = tmpFile;
+
 	return true;
 }
 
@@ -1972,7 +1982,7 @@ int KeyTransformBenchmark::benchmark(int pMSecs){
 	ktbRight->start();
 	ktbLeft->wait();
 	ktbRight->wait();
-	int num = ktbLeft->rounds + ktbRight->rounds;
+	int num = std::min(ktbLeft->rounds, ktbRight->rounds);
 	delete ktbLeft;
 	delete ktbRight;
 	

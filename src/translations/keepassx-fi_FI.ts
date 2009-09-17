@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="fi_FI">
+<!DOCTYPE TS>
+<TS version="2.0" language="fi_FI">
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../dialogs/AboutDlg.cpp" line="42"/>
+        <location filename="../dialogs/AboutDlg.cpp" line="41"/>
         <source>Information on how to translate KeePassX can be found under:</source>
         <translation>Tietoja KeePassX:n kääntämisestä voit löytää linkistä:</translation>
     </message>
@@ -13,6 +14,7 @@
         <translation>Tiimi</translation>
     </message>
     <message>
+        <location filename="../dialogs/AboutDlg.cpp" line="46"/>
         <location filename="../dialogs/AboutDlg.cpp" line="48"/>
         <source>Developer, Project Admin</source>
         <translation>Kehittäjä, projektin ylläpitäjä</translation>
@@ -23,6 +25,7 @@
         <translation>WWW-kehittäjä</translation>
     </message>
     <message>
+        <location filename="../dialogs/AboutDlg.cpp" line="50"/>
         <location filename="../dialogs/AboutDlg.cpp" line="54"/>
         <source>Developer</source>
         <translation>Kehittäjä</translation>
@@ -53,12 +56,12 @@
         <translation>Virhe</translation>
     </message>
     <message>
-        <location filename="../dialogs/AboutDlg.cpp" line="68"/>
+        <location filename="../dialogs/AboutDlg.cpp" line="67"/>
         <source>File &apos;%1&apos; could not be found.</source>
         <translation>Tiedostoa &quot;%1&quot; ei löydy.</translation>
     </message>
     <message>
-        <location filename="../dialogs/AboutDlg.cpp" line="69"/>
+        <location filename="../dialogs/AboutDlg.cpp" line="68"/>
         <source>Make sure that the program is installed correctly.</source>
         <translation>Varmista, että ohjelma on asennettu oikein.</translation>
     </message>
@@ -87,47 +90,48 @@
 <context>
     <name>AboutDlg</name>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="50"/>
+        <location filename="../forms/AboutDlg.ui" line="14"/>
+        <location filename="../forms/AboutDlg.ui" line="43"/>
         <source>About</source>
         <translation>Tietoja</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="74"/>
+        <location filename="../forms/AboutDlg.ui" line="67"/>
         <source>AppName</source>
         <translation>OhjelmanNimi</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="92"/>
+        <location filename="../forms/AboutDlg.ui" line="85"/>
         <source>AppFunc</source>
         <translation>OhjelmanFuktio</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="127"/>
+        <location filename="../forms/AboutDlg.ui" line="120"/>
         <source>http://keepassx.sourceforge.net</source>
         <translation>http://keepassx.sourceforge.net</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="134"/>
+        <location filename="../forms/AboutDlg.ui" line="127"/>
         <source>keepassx@gmail.com</source>
         <translation>keepassx@gmail.com</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="163"/>
+        <location filename="../forms/AboutDlg.ui" line="148"/>
         <source>Credits</source>
         <translation>Kiitokset</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="188"/>
+        <location filename="../forms/AboutDlg.ui" line="165"/>
         <source>Translation</source>
         <translation>Käännös</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="213"/>
+        <location filename="../forms/AboutDlg.ui" line="182"/>
         <source>License</source>
         <translation>Lisenssi</translation>
     </message>
     <message>
-        <location filename="../forms/AboutDlg.ui" line="141"/>
+        <location filename="../forms/AboutDlg.ui" line="134"/>
         <source>Copyright (C) 2005 - 2009 KeePassX Team
 KeePassX is distributed under the terms of the
 General Public License (GPL) version 2.</source>
@@ -139,6 +143,8 @@ lisenssin version 2 mukaisesti.</translation>
 <context>
     <name>AddBookmarkDlg</name>
     <message>
+        <location filename="../dialogs/AddBookmarkDlg.cpp" line="32"/>
+        <location filename="../dialogs/AddBookmarkDlg.cpp" line="56"/>
         <location filename="../forms/AddBookmarkDlg.ui" line="32"/>
         <source>Add Bookmark</source>
         <translation>Lisää kirjanmerkki</translation>
@@ -159,6 +165,7 @@ lisenssin version 2 mukaisesti.</translation>
         <translation>Selaa...</translation>
     </message>
     <message>
+        <location filename="../dialogs/AddBookmarkDlg.cpp" line="40"/>
         <location filename="../dialogs/AddBookmarkDlg.cpp" line="44"/>
         <source>Edit Bookmark</source>
         <translation>Muokkaa kirjanmerkkiä</translation>
@@ -187,22 +194,24 @@ lisenssin version 2 mukaisesti.</translation>
         <translation>Kirjoita tietue automaattisesti kaksoisnapsauttamalla.</translation>
     </message>
     <message>
-        <location filename="../dialogs/AutoTypeDlg.cpp" line="35"/>
+        <location filename="../dialogs/AutoTypeDlg.cpp" line="37"/>
+        <location filename="../dialogs/AutoTypeDlg.cpp" line="39"/>
         <source>Group</source>
         <translation>Ryhmä</translation>
     </message>
     <message>
-        <location filename="../dialogs/AutoTypeDlg.cpp" line="35"/>
+        <location filename="../dialogs/AutoTypeDlg.cpp" line="37"/>
+        <location filename="../dialogs/AutoTypeDlg.cpp" line="39"/>
         <source>Title</source>
         <translation>Otsikko</translation>
     </message>
     <message>
-        <location filename="../dialogs/AutoTypeDlg.cpp" line="35"/>
+        <location filename="../dialogs/AutoTypeDlg.cpp" line="39"/>
         <source>Username</source>
         <translation>Käyttäjätunnus</translation>
     </message>
     <message>
-        <location filename="../dialogs/AutoTypeDlg.cpp" line="90"/>
+        <location filename="../dialogs/AutoTypeDlg.cpp" line="93"/>
         <source>Auto-Type</source>
         <translation>Automaattikirjoitus</translation>
     </message>
@@ -235,11 +244,14 @@ lisenssin version 2 mukaisesti.</translation>
         <translation>Anna salauskierrosten lukumäärä.</translation>
     </message>
     <message>
+        <location filename="../dialogs/DatabaseSettingsDlg.cpp" line="64"/>
+        <location filename="../dialogs/DatabaseSettingsDlg.cpp" line="70"/>
         <location filename="../dialogs/DatabaseSettingsDlg.cpp" line="74"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
+        <location filename="../dialogs/DatabaseSettingsDlg.cpp" line="70"/>
         <location filename="../dialogs/DatabaseSettingsDlg.cpp" line="74"/>
         <source>Error</source>
         <translation>Virhe</translation>
@@ -325,6 +337,11 @@ Please check your input.</source>
 Tarkista syötteesi.</translation>
     </message>
     <message>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="177"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="299"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="321"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="331"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="338"/>
         <location filename="../dialogs/EditEntryDlg.cpp" line="343"/>
         <source>OK</source>
         <translation>OK</translation>
@@ -340,11 +357,16 @@ Tarkista syötteesi.</translation>
         <translation>Lisää liite...</translation>
     </message>
     <message>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="299"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="321"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="331"/>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="338"/>
         <location filename="../dialogs/EditEntryDlg.cpp" line="343"/>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
     <message>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="299"/>
         <location filename="../dialogs/EditEntryDlg.cpp" line="331"/>
         <source>Could not open file.</source>
         <translation>Tiedostoa ei voitu avata.</translation>
@@ -360,6 +382,7 @@ Tarkista syötteesi.</translation>
         <translation>Tallenna liite...</translation>
     </message>
     <message>
+        <location filename="../dialogs/EditEntryDlg.cpp" line="338"/>
         <location filename="../dialogs/EditEntryDlg.cpp" line="343"/>
         <source>Error while writing the file.</source>
         <translation>Virhe kirjoitettaessa tiedostoa.</translation>
@@ -395,12 +418,12 @@ Haluatko varmasti poistaa sen?</translation>
 <context>
     <name>CGenPwDialog</name>
     <message>
-        <location filename="../dialogs/PasswordGenDlg.cpp" line="121"/>
+        <location filename="../dialogs/PasswordGenDlg.cpp" line="115"/>
         <source>Password Generator</source>
         <translation>Salasanageneraattori</translation>
     </message>
     <message>
-        <location filename="../dialogs/PasswordGenDlg.cpp" line="278"/>
+        <location filename="../dialogs/PasswordGenDlg.cpp" line="244"/>
         <source>%1 Bits</source>
         <translation>%1 bittiä</translation>
     </message>
@@ -428,32 +451,35 @@ Haluatko varmasti poistaa sen?</translation>
         <translation>Poimi</translation>
     </message>
     <message>
-        <location filename="../dialogs/SelectIconDlg.cpp" line="93"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="60"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="97"/>
         <source>Add Icons...</source>
         <translation>Lisää kuvakkeita...</translation>
     </message>
     <message>
-        <location filename="../dialogs/SelectIconDlg.cpp" line="94"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="60"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="97"/>
         <source>Images (%1)</source>
         <translation>Kuvat (%1)</translation>
     </message>
     <message>
-        <location filename="../dialogs/SelectIconDlg.cpp" line="62"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="66"/>
         <source>%1: File could not be loaded.</source>
         <translation>%1: Tiedostoa ei voitu ladata.</translation>
     </message>
     <message>
-        <location filename="../dialogs/SelectIconDlg.cpp" line="98"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="72"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="102"/>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
     <message>
-        <location filename="../dialogs/SelectIconDlg.cpp" line="68"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="72"/>
         <source>An error occured while loading the icon(s):</source>
         <translation>Tapahtui virhe ladattaessa kuvakkeita:</translation>
     </message>
     <message>
-        <location filename="../dialogs/SelectIconDlg.cpp" line="98"/>
+        <location filename="../dialogs/SelectIconDlg.cpp" line="102"/>
         <source>An error occured while loading the icon.</source>
         <translation>Tapahtui virhe ladattaessa kuvaketta.</translation>
     </message>
@@ -461,22 +487,25 @@ Haluatko varmasti poistaa sen?</translation>
 <context>
     <name>CSettingsDlg</name>
     <message>
-        <location filename="../dialogs/SettingsDlg.cpp" line="350"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="213"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="321"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="335"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="349"/>
         <source>Settings</source>
         <translation>Asetukset</translation>
     </message>
     <message>
-        <location filename="../dialogs/SettingsDlg.cpp" line="355"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="354"/>
         <source>Select a directory...</source>
         <translation>Valitse kansio...</translation>
     </message>
     <message>
-        <location filename="../dialogs/SettingsDlg.cpp" line="362"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="361"/>
         <source>Select an executable...</source>
         <translation>Valitse suoritettava ohjelma...</translation>
     </message>
     <message>
-        <location filename="../dialogs/SettingsDlg.cpp" line="424"/>
+        <location filename="../dialogs/SettingsDlg.cpp" line="423"/>
         <source>System Language</source>
         <translation type="unfinished">Järjestelmäkieli</translation>
     </message>
@@ -535,6 +564,7 @@ p, li { white-space: pre-wrap; }
         <translation>Korostettu</translation>
     </message>
     <message>
+        <location filename="../forms/CustomizeDetailViewDlg.ui" line="51"/>
         <location filename="../forms/CustomizeDetailViewDlg.ui" line="135"/>
         <source>B</source>
         <translation>B</translation>
@@ -575,6 +605,7 @@ p, li { white-space: pre-wrap; }
         <translation>Keskitetty</translation>
     </message>
     <message>
+        <location filename="../forms/CustomizeDetailViewDlg.ui" line="109"/>
         <location filename="../forms/CustomizeDetailViewDlg.ui" line="148"/>
         <source>C</source>
         <translation>C</translation>
@@ -773,6 +804,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Database</name>
     <message>
+        <location filename="../Database.cpp" line="78"/>
         <location filename="../Database.cpp" line="96"/>
         <source>Never</source>
         <translation>Ei koskaan</translation>
@@ -862,82 +894,86 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>EditEntryDialog</name>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="14"/>
+        <location filename="../forms/EditEntryDlg.ui" line="15"/>
         <source>Edit Entry</source>
         <translation>Muokkaa tietuetta</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="52"/>
+        <location filename="../forms/EditEntryDlg.ui" line="53"/>
         <source>Ge&amp;n.</source>
         <translation>L&amp;uo.</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="113"/>
+        <location filename="../forms/EditEntryDlg.ui" line="114"/>
         <source>Quality:</source>
         <translation>Laatu:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="126"/>
+        <location filename="../forms/EditEntryDlg.ui" line="127"/>
         <source>Attachment:</source>
         <translation>Liite:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="139"/>
+        <location filename="../forms/EditEntryDlg.ui" line="140"/>
         <source>Title:</source>
         <translation>Otsikko:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="152"/>
+        <location filename="../forms/EditEntryDlg.ui" line="153"/>
         <source>Username:</source>
         <translation>Käyttäjätunnus:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="165"/>
+        <location filename="../forms/EditEntryDlg.ui" line="166"/>
         <source>Comment:</source>
         <translation>Kommentti:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="350"/>
+        <location filename="../forms/EditEntryDlg.ui" line="211"/>
+        <source>Repeat:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/EditEntryDlg.ui" line="351"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="178"/>
+        <location filename="../forms/EditEntryDlg.ui" line="179"/>
         <source>URL:</source>
         <translation>URL:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="191"/>
+        <location filename="../forms/EditEntryDlg.ui" line="192"/>
         <source>Group:</source>
         <translation>Ryhmä:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="210"/>
         <source>Password Repet.:</source>
-        <translation>Varmistus:</translation>
+        <translation type="obsolete">Varmistus:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="223"/>
+        <location filename="../forms/EditEntryDlg.ui" line="224"/>
         <source>Password:</source>
         <translation>Salasana:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="236"/>
+        <location filename="../forms/EditEntryDlg.ui" line="237"/>
         <source>Expires:</source>
         <translation>Vanhenee:</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="383"/>
+        <location filename="../forms/EditEntryDlg.ui" line="384"/>
         <source>Never</source>
         <translation>Ei koskaan</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="419"/>
+        <location filename="../forms/EditEntryDlg.ui" line="420"/>
         <source>%1 Bit</source>
         <translation>%1 bittiä</translation>
     </message>
     <message>
-        <location filename="../forms/EditEntryDlg.ui" line="462"/>
+        <location filename="../forms/EditEntryDlg.ui" line="463"/>
         <source>Icon:</source>
         <translation>Kuvake:</translation>
     </message>
@@ -1133,164 +1169,196 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>GenPwDlg</name>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="13"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="14"/>
         <source>Password Generator</source>
         <translation>Salasanageneraattori</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="303"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="227"/>
+        <source>Custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/PasswordGenDlg.ui" line="246"/>
+        <source>Use the following characters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/PasswordGenDlg.ui" line="298"/>
         <source>Options</source>
         <translation>Valinnat</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="56"/>
         <source>Use follo&amp;wing character groups:</source>
-        <translation>Käytä s&amp;euraavia merkkiryhmiä:</translation>
+        <translation type="obsolete">Käytä s&amp;euraavia merkkiryhmiä:</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="59"/>
         <source>Alt+W</source>
         <translation type="obsolete">Alt+E</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="89"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="82"/>
         <source>&amp;Lower Letters</source>
         <translation>&amp;Pienet kirjaimet</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="95"/>
         <source>Alt+L</source>
         <translation type="obsolete">ALT-P</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="118"/>
         <source>Alt+N</source>
         <translation type="obsolete">ALT-N</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="106"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="99"/>
         <source>&amp;Numbers</source>
         <translation>&amp;Numerot</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="131"/>
         <source>Alt+S</source>
         <translation type="obsolete">ALT+E</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="123"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="116"/>
         <source>&amp;Upper Letters</source>
         <translation>S&amp;uuret kirjaimet</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="141"/>
         <source>Alt+U</source>
         <translation type="obsolete">ALT+U</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="140"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="133"/>
         <source>&amp;Special Characters</source>
         <translation>&amp;Erikoismerkit</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="151"/>
         <source>Use &amp;only following characters:</source>
-        <translation>Käy&amp;tä vain seuraavia merkkejä:</translation>
+        <translation type="obsolete">Käy&amp;tä vain seuraavia merkkejä:</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="172"/>
         <source>Alt+O</source>
         <translation type="obsolete">ALT+T</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="317"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="312"/>
         <source>Length:</source>
         <translation>Pituus:</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="353"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="348"/>
         <source>Quality:</source>
         <translation>Laatu:</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="380"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="375"/>
         <source>Enable entropy collection</source>
         <translation>Käytä entropian keräystä</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="404"/>
         <source>Alt+M</source>
         <translation type="obsolete">ALT-M</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="406"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="401"/>
         <source>Collect only once per session</source>
         <translation>Kerää vain kerran istunnossa</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="436"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="431"/>
         <source>New Password:</source>
         <translation>Uusi salasana:</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="459"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="454"/>
         <source>Generate</source>
         <translation>Luo</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="50"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="43"/>
         <source>Random</source>
         <translation>Satunnainen</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="99"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="49"/>
+        <source>Use following character groups:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/PasswordGenDlg.ui" line="92"/>
         <source>&amp;Underline</source>
         <translation>&amp;Alleviivaus</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="116"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="109"/>
         <source>&amp;White Spaces</source>
         <translation>&amp;Tyhjeet</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="133"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="126"/>
         <source>&amp;Minus</source>
         <translation>&amp;Miinusmerkki</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="193"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="144"/>
         <source>Exclude look-alike characters</source>
         <translation>Poista samannäköiset merkit</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="200"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="151"/>
         <source>Ensure that password contains characters from every group</source>
         <translation>Varmista, että salasana sisältää merkkejä joka ryhmästä</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="216"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="159"/>
         <source>Pronounceable</source>
         <translation>Äänettävissä oleva</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="240"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="183"/>
         <source>Lower Letters</source>
         <translation>Pienet kirjaimet</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="247"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="190"/>
         <source>Upper Letters</source>
         <translation>Isot kirjaimet</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="254"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="197"/>
         <source>Numbers</source>
         <translation>Numerot</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordGenDlg.ui" line="261"/>
+        <location filename="../forms/PasswordGenDlg.ui" line="204"/>
         <source>Special Characters</source>
         <translation>Erikoismerkit</translation>
+    </message>
+</context>
+<context>
+    <name>HelpDlg</name>
+    <message>
+        <location filename="../forms/HelpDlg.ui" line="14"/>
+        <source>Help Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/HelpDlg.ui" line="22"/>
+        <location filename="../forms/HelpDlg.ui" line="25"/>
+        <source>Previous Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/HelpDlg.ui" line="32"/>
+        <location filename="../forms/HelpDlg.ui" line="35"/>
+        <source>Next Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/HelpDlg.ui" line="42"/>
+        <location filename="../forms/HelpDlg.ui" line="45"/>
+        <source>First Page</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1306,6 +1374,12 @@ p, li { white-space: pre-wrap; }
         <translation>Kaikki tiedostot</translation>
     </message>
     <message>
+        <location filename="../import/Import_KWalletXml.cpp" line="38"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="43"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="45"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="47"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="49"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="55"/>
         <location filename="../import/Import_KWalletXml.cpp" line="57"/>
         <source>Import Failed</source>
         <translation>Tuonti epäonnistui</translation>
@@ -1316,6 +1390,10 @@ p, li { white-space: pre-wrap; }
         <translation>Virheellistä XML-tietoa (katso oletustulosteesta lisätietoja).</translation>
     </message>
     <message>
+        <location filename="../import/Import_KWalletXml.cpp" line="43"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="47"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="49"/>
+        <location filename="../import/Import_KWalletXml.cpp" line="55"/>
         <location filename="../import/Import_KWalletXml.cpp" line="57"/>
         <source>Invalid XML file.</source>
         <translation>Virheellinen XML-tiedosto.</translation>
@@ -1339,6 +1417,9 @@ p, li { white-space: pre-wrap; }
         <translation>Kaikki tiedostot</translation>
     </message>
     <message>
+        <location filename="../import/Import_KeePassX_Xml.cpp" line="34"/>
+        <location filename="../import/Import_KeePassX_Xml.cpp" line="41"/>
+        <location filename="../import/Import_KeePassX_Xml.cpp" line="49"/>
         <location filename="../import/Import_KeePassX_Xml.cpp" line="53"/>
         <source>Import Failed</source>
         <translation>Tuonti epäonnistui</translation>
@@ -1351,6 +1432,8 @@ p, li { white-space: pre-wrap; }
 %3</translation>
     </message>
     <message>
+        <location filename="../import/Import_KeePassX_Xml.cpp" line="41"/>
+        <location filename="../import/Import_KeePassX_Xml.cpp" line="49"/>
         <location filename="../import/Import_KeePassX_Xml.cpp" line="53"/>
         <source>Parsing error: File is no valid KeePassX XML file.</source>
         <translation>Jäsennysvirhe: Tiedosto ei ole kelvollinen KeePassX XML-tiedosto.</translation>
@@ -1369,6 +1452,15 @@ p, li { white-space: pre-wrap; }
         <translation>Kaikki tiedostot (*)</translation>
     </message>
     <message>
+        <location filename="../import/Import_PwManager.cpp" line="40"/>
+        <location filename="../import/Import_PwManager.cpp" line="48"/>
+        <location filename="../import/Import_PwManager.cpp" line="51"/>
+        <location filename="../import/Import_PwManager.cpp" line="54"/>
+        <location filename="../import/Import_PwManager.cpp" line="57"/>
+        <location filename="../import/Import_PwManager.cpp" line="60"/>
+        <location filename="../import/Import_PwManager.cpp" line="67"/>
+        <location filename="../import/Import_PwManager.cpp" line="91"/>
+        <location filename="../import/Import_PwManager.cpp" line="103"/>
         <location filename="../import/Import_PwManager.cpp" line="109"/>
         <source>Import Failed</source>
         <translation>Tuonti epäonnistui</translation>
@@ -1389,6 +1481,7 @@ p, li { white-space: pre-wrap; }
         <translation>Tiedoston versio ei ole tuettu.</translation>
     </message>
     <message>
+        <location filename="../import/Import_PwManager.cpp" line="54"/>
         <location filename="../import/Import_PwManager.cpp" line="57"/>
         <source>Unsupported hash algorithm.</source>
         <translation>Tiivistealgoritmi ei ole tuettu.</translation>
@@ -1435,76 +1528,90 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Kdb3Database</name>
     <message>
-        <location filename="../Kdb3Database.cpp" line="524"/>
+        <location filename="../Kdb3Database.cpp" line="516"/>
+        <location filename="../Kdb3Database.cpp" line="525"/>
         <source>Could not open file.</source>
         <translation>Tiedostoa ei voitu avata.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="540"/>
+        <location filename="../Kdb3Database.cpp" line="541"/>
         <source>Unexpected file size (DB_TOTAL_SIZE &lt; DB_HEADER_SIZE)</source>
         <translation>Odottamaton tiedostokoko (DB_TOTAL_SIZE &lt; DB_HEADER_SIZE)</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="557"/>
+        <location filename="../Kdb3Database.cpp" line="558"/>
         <source>Wrong Signature</source>
         <translation>Virheellinen allekirjoitus</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="562"/>
+        <location filename="../Kdb3Database.cpp" line="563"/>
         <source>Unsupported File Version.</source>
         <translation>Tiedoston versio ei ole tuettu.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="571"/>
+        <location filename="../Kdb3Database.cpp" line="572"/>
         <source>Unknown Encryption Algorithm.</source>
         <translation>Tuntematon salausalgoritmi.</translation>
     </message>
     <message>
+        <location filename="../Kdb3Database.cpp" line="599"/>
+        <source>Unable to initialize the twofish algorithm.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../Kdb3Database.cpp" line="606"/>
+        <source>Unknown encryption algorithm.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Kdb3Database.cpp" line="611"/>
         <source>Decryption failed.
 The key is wrong or the file is damaged.</source>
         <translation>Salauksen purku epäonnstui.
 Avain on väärä tai tiedosto on vioittunut.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="632"/>
+        <location filename="../Kdb3Database.cpp" line="637"/>
         <source>Hash test failed.
 The key is wrong or the file is damaged.</source>
         <translation>Tiivisteen laskenta epäonnistui.
 Avain on väärä tai tiedosto on vioittunut.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="711"/>
+        <location filename="../Kdb3Database.cpp" line="660"/>
+        <location filename="../Kdb3Database.cpp" line="667"/>
+        <location filename="../Kdb3Database.cpp" line="679"/>
+        <location filename="../Kdb3Database.cpp" line="693"/>
+        <location filename="../Kdb3Database.cpp" line="700"/>
+        <location filename="../Kdb3Database.cpp" line="716"/>
         <source>Unexpected error: Offset is out of range.</source>
         <translation>Odottamaton virhe: siirtymä on alueen ulkopuolella.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="717"/>
+        <location filename="../Kdb3Database.cpp" line="722"/>
         <source>Invalid group tree.</source>
         <translation>Virheellinen ryhmäpuu.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="933"/>
+        <location filename="../Kdb3Database.cpp" line="938"/>
         <source>Key file is empty.</source>
         <translation>Avaintiedosto on tyhjä.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1313"/>
+        <location filename="../Kdb3Database.cpp" line="1318"/>
         <source>The database must contain at least one group.</source>
         <translation>Tietokannan täytyy sisältää ainakin yksi ryhmä.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1325"/>
         <source>Could not open file for writing.</source>
         <translation type="obsolete">Tiedostoa ei voitu avata kirjoitettavaksi.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="598"/>
         <source>Unable to initalize the twofish algorithm.</source>
-        <translation>Twofish-algoritmia ei voitu alustaa.</translation>
+        <translation type="obsolete">Twofish-algoritmia ei voitu alustaa.</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1333"/>
+        <location filename="../Kdb3Database.cpp" line="1338"/>
         <source>The database has been opened read-only.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1512,22 +1619,22 @@ Avain on väärä tai tiedosto on vioittunut.</translation>
 <context>
     <name>Kdb3Database::EntryHandle</name>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1177"/>
+        <location filename="../Kdb3Database.cpp" line="1182"/>
         <source>Bytes</source>
         <translation>Tavua</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1185"/>
+        <location filename="../Kdb3Database.cpp" line="1190"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1191"/>
+        <location filename="../Kdb3Database.cpp" line="1196"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Kdb3Database.cpp" line="1196"/>
+        <location filename="../Kdb3Database.cpp" line="1201"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1535,87 +1642,87 @@ Avain on väärä tai tiedosto on vioittunut.</translation>
 <context>
     <name>KeepassEntryView</name>
     <message>
-        <location filename="../lib/EntryView.cpp" line="150"/>
+        <location filename="../lib/EntryView.cpp" line="240"/>
         <source>Delete?</source>
         <translation>Poista?</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="258"/>
+        <location filename="../lib/EntryView.cpp" line="376"/>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="258"/>
+        <location filename="../lib/EntryView.cpp" line="376"/>
         <source>At least one group must exist before adding an entry.</source>
         <translation>Ainakin yksi ryhmä täytyy olla määritelty ennen tietueiden lisäämistä.</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="258"/>
+        <location filename="../lib/EntryView.cpp" line="376"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="477"/>
+        <location filename="../lib/EntryView.cpp" line="64"/>
         <source>Title</source>
         <translation>Nimi</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="479"/>
+        <location filename="../lib/EntryView.cpp" line="64"/>
         <source>Username</source>
         <translation>Käyttäjätunnus</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="481"/>
+        <location filename="../lib/EntryView.cpp" line="64"/>
         <source>URL</source>
         <translation>URL</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="483"/>
+        <location filename="../lib/EntryView.cpp" line="64"/>
         <source>Password</source>
         <translation>Salasana</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="485"/>
+        <location filename="../lib/EntryView.cpp" line="64"/>
         <source>Comments</source>
         <translation>Kommentit</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="487"/>
+        <location filename="../lib/EntryView.cpp" line="65"/>
         <source>Expires</source>
         <translation>Vanhenee</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="489"/>
+        <location filename="../lib/EntryView.cpp" line="65"/>
         <source>Creation</source>
         <translation>Luontipäivä</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="491"/>
+        <location filename="../lib/EntryView.cpp" line="65"/>
         <source>Last Change</source>
         <translation>Viimeksi muutettu</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="493"/>
+        <location filename="../lib/EntryView.cpp" line="65"/>
         <source>Last Access</source>
         <translation>Viimeksi käytetty</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="495"/>
+        <location filename="../lib/EntryView.cpp" line="65"/>
         <source>Attachment</source>
         <translation>Liite</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="497"/>
+        <location filename="../lib/EntryView.cpp" line="65"/>
         <source>Group</source>
         <translation>Ryhmä</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="147"/>
+        <location filename="../lib/EntryView.cpp" line="237"/>
         <source>Are you sure you want to delete this entry?</source>
         <translation>Haluatko varmasti poistaa tämän tietueen?</translation>
     </message>
     <message>
-        <location filename="../lib/EntryView.cpp" line="149"/>
+        <location filename="../lib/EntryView.cpp" line="239"/>
         <source>Are you sure you want to delete these %1 entries?</source>
         <translation>Haluatko poistaa nämä %1 tietuetta?</translation>
     </message>
@@ -1623,17 +1730,17 @@ Avain on väärä tai tiedosto on vioittunut.</translation>
 <context>
     <name>KeepassGroupView</name>
     <message>
-        <location filename="../lib/GroupView.cpp" line="58"/>
+        <location filename="../lib/GroupView.cpp" line="61"/>
         <source>Search Results</source>
         <translation>Haun tulokset</translation>
     </message>
     <message>
-        <location filename="../lib/GroupView.cpp" line="89"/>
+        <location filename="../lib/GroupView.cpp" line="92"/>
         <source>Delete?</source>
         <translation>Poista?</translation>
     </message>
     <message>
-        <location filename="../lib/GroupView.cpp" line="90"/>
+        <location filename="../lib/GroupView.cpp" line="93"/>
         <source>Are you sure you want to delete this group, all its child groups and all their entries?</source>
         <translation>Haluatko varmasti poistaa tämän ryhmän ja sen sisältämät tietueet?</translation>
     </message>
@@ -1641,272 +1748,295 @@ Avain on väärä tai tiedosto on vioittunut.</translation>
 <context>
     <name>KeepassMainWindow</name>
     <message>
-        <location filename="../mainwindow.cpp" line="1420"/>
+        <location filename="../mainwindow.cpp" line="1449"/>
         <source>Ready</source>
         <translation>Valmis</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1323"/>
         <source>Locked</source>
-        <translation>Lukittu</translation>
+        <translation type="obsolete">Lukittu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1338"/>
         <source>Unlocked</source>
-        <translation>Lukitus avattu</translation>
+        <translation type="obsolete">Lukitus avattu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="357"/>
+        <location filename="../mainwindow.cpp" line="350"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="359"/>
+        <location filename="../mainwindow.cpp" line="352"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="360"/>
+        <location filename="../mainwindow.cpp" line="353"/>
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="361"/>
+        <location filename="../mainwindow.cpp" line="354"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="362"/>
+        <location filename="../mainwindow.cpp" line="355"/>
         <source>Ctrl+G</source>
         <translation>Ctrl+G</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="363"/>
+        <location filename="../mainwindow.cpp" line="356"/>
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="364"/>
+        <location filename="../mainwindow.cpp" line="357"/>
         <source>Ctrl+B</source>
         <translation>Ctrl+B</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="365"/>
+        <location filename="../mainwindow.cpp" line="358"/>
         <source>Ctrl+U</source>
         <translation>Ctrl+U</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="367"/>
+        <location filename="../mainwindow.cpp" line="360"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="368"/>
+        <location filename="../mainwindow.cpp" line="361"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="369"/>
+        <location filename="../mainwindow.cpp" line="362"/>
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="370"/>
+        <location filename="../mainwindow.cpp" line="363"/>
         <source>Ctrl+K</source>
         <translation>Ctrl+K</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="371"/>
+        <location filename="../mainwindow.cpp" line="364"/>
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="368"/>
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="358"/>
+        <location filename="../mainwindow.cpp" line="351"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="378"/>
+        <location filename="../mainwindow.cpp" line="371"/>
         <source>Shift+Ctrl+S</source>
         <translation>Shift+Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="379"/>
+        <location filename="../mainwindow.cpp" line="372"/>
         <source>Shift+Ctrl+F</source>
         <translation>Shift+Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="535"/>
+        <location filename="../mainwindow.cpp" line="405"/>
+        <location filename="../mainwindow.cpp" line="485"/>
+        <location filename="../mainwindow.cpp" line="508"/>
+        <location filename="../mainwindow.cpp" line="544"/>
+        <location filename="../mainwindow.cpp" line="927"/>
+        <location filename="../mainwindow.cpp" line="939"/>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="499"/>
+        <location filename="../mainwindow.cpp" line="405"/>
+        <location filename="../mainwindow.cpp" line="508"/>
         <source>The database file does not exist.</source>
         <translation>Tietokantatiedosta ei ole olemassa.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1423"/>
+        <location filename="../mainwindow.cpp" line="1452"/>
         <source>Loading Database...</source>
         <translation>Ladataan tietokantaa...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1426"/>
+        <location filename="../mainwindow.cpp" line="1455"/>
         <source>Loading Failed</source>
         <translation>Lataus epäonnistui</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="477"/>
+        <location filename="../mainwindow.cpp" line="484"/>
         <source>Unknown error while loading database.</source>
         <translation>Tuntematon virhe ladattaessa tietokantaa.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="479"/>
+        <location filename="../mainwindow.cpp" line="486"/>
         <source>The following error occured while opening the database:</source>
         <translation>Seuraavat virheet havaittiin ladattaessa tietokantaa:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="516"/>
+        <location filename="../mainwindow.cpp" line="525"/>
         <source>Save modified file?</source>
         <translation>Tallennetaanko muokattu tiedosto?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1111"/>
+        <location filename="../mainwindow.cpp" line="1470"/>
+        <location filename="../mainwindow.cpp" line="1484"/>
         <source>new</source>
         <translation>uusi</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="603"/>
+        <location filename="../mainwindow.cpp" line="611"/>
         <source>Open Database...</source>
         <translation>Avaa tietokanta...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="908"/>
+        <location filename="../mainwindow.cpp" line="611"/>
+        <location filename="../mainwindow.cpp" line="921"/>
         <source>KeePass Databases (*.kdb)</source>
         <translation>KeePass-tietokannat (*.kdb)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="908"/>
+        <location filename="../mainwindow.cpp" line="611"/>
+        <location filename="../mainwindow.cpp" line="921"/>
         <source>All Files (*)</source>
         <translation>Kaikki tiedostot (*)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="729"/>
+        <location filename="../mainwindow.cpp" line="742"/>
         <source>Expired</source>
         <translation>Vanhentunut</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="743"/>
+        <location filename="../mainwindow.cpp" line="756"/>
         <source>1 Month</source>
         <translation>1 kuukausi</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="745"/>
+        <location filename="../mainwindow.cpp" line="758"/>
         <source>%1 Months</source>
         <translation>%1 kuukautta</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="751"/>
+        <location filename="../mainwindow.cpp" line="764"/>
         <source>1 Year</source>
         <translation>1 vuosi</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="753"/>
+        <location filename="../mainwindow.cpp" line="766"/>
         <source>%1 Years</source>
         <translation>%1 vuotta</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="759"/>
+        <location filename="../mainwindow.cpp" line="772"/>
         <source>1 Day</source>
         <translation>1 päivä</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="761"/>
+        <location filename="../mainwindow.cpp" line="774"/>
         <source>%1 Days</source>
         <translation>%1 päivää</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="765"/>
+        <location filename="../mainwindow.cpp" line="778"/>
         <source>less than 1 day</source>
         <translation>Vähemmän kuin 1 päivä</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="855"/>
+        <location filename="../mainwindow.cpp" line="802"/>
+        <location filename="../mainwindow.cpp" line="817"/>
+        <location filename="../mainwindow.cpp" line="853"/>
+        <location filename="../mainwindow.cpp" line="868"/>
         <source>Clone Entry</source>
         <translation>Kloonaa tietue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="857"/>
+        <location filename="../mainwindow.cpp" line="804"/>
+        <location filename="../mainwindow.cpp" line="819"/>
+        <location filename="../mainwindow.cpp" line="855"/>
+        <location filename="../mainwindow.cpp" line="870"/>
         <source>Delete Entry</source>
         <translation>Poista tietue</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="870"/>
+        <location filename="../mainwindow.cpp" line="832"/>
+        <location filename="../mainwindow.cpp" line="883"/>
         <source>Clone Entries</source>
         <translation>Kloonaa tietueita</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="872"/>
+        <location filename="../mainwindow.cpp" line="834"/>
+        <location filename="../mainwindow.cpp" line="885"/>
         <source>Delete Entries</source>
         <translation>Poista tietueita</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="912"/>
+        <location filename="../mainwindow.cpp" line="914"/>
+        <location filename="../mainwindow.cpp" line="932"/>
         <source>File could not be saved.</source>
         <translation>Tiedostoa ei voitu tallentaa.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="908"/>
+        <location filename="../mainwindow.cpp" line="921"/>
         <source>Save Database...</source>
         <translation>Tallenna tietokanta...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1324"/>
+        <location filename="../mainwindow.cpp" line="1344"/>
         <source>Un&amp;lock Workspace</source>
         <translation>&amp;Avaa työtilan lukitus</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1339"/>
+        <location filename="../mainwindow.cpp" line="1359"/>
         <source>&amp;Lock Workspace</source>
         <translation>&amp;Lukitse työtila</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1105"/>
+        <location filename="../mainwindow.cpp" line="1472"/>
+        <location filename="../mainwindow.cpp" line="1486"/>
+        <source>locked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="309"/>
+        <location filename="../mainwindow.cpp" line="1125"/>
         <source>Show &amp;Toolbar</source>
         <translation>Näytä &amp;työkalupalkki</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="356"/>
+        <location filename="../mainwindow.cpp" line="349"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="372"/>
+        <location filename="../mainwindow.cpp" line="365"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="373"/>
+        <location filename="../mainwindow.cpp" line="366"/>
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="366"/>
+        <location filename="../mainwindow.cpp" line="359"/>
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="407"/>
+        <location filename="../mainwindow.cpp" line="414"/>
         <source>Database locked</source>
         <translation>Tietokanta lukittu</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="411"/>
+        <location filename="../mainwindow.cpp" line="415"/>
         <source>The database you are trying to open is locked.
 This means that either someone else has opened the file or KeePassX crashed last time it opened the database.
 
@@ -1916,29 +2046,30 @@ Tämä tarkoittaa, että joku muu on avannut sen jo tai että KeePassX kaatui vi
 Haluatko avata tietokannan joka tapauksessa?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="448"/>
+        <location filename="../mainwindow.cpp" line="927"/>
         <source>Couldn&apos;t create database lock file.</source>
-        <translation type="obsolete">Tietokannan lukkotiedostoa ei voitu luoda.</translation>
+        <translation type="unfinished">Tietokannan lukkotiedostoa ei voitu luoda.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="517"/>
+        <location filename="../mainwindow.cpp" line="526"/>
         <source>The current file was modified.
 Do you want to save the changes?</source>
         <translation>Tämänhetkistä tiedostoa on muokattu.
 Haluatko tallentaa muutokset?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="535"/>
+        <location filename="../mainwindow.cpp" line="544"/>
+        <location filename="../mainwindow.cpp" line="939"/>
         <source>Couldn&apos;t remove database lock file.</source>
         <translation>Tietokannan lukkotiedostoa ei voitu poistaa.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="414"/>
+        <location filename="../mainwindow.cpp" line="421"/>
         <source>Open read-only</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1429"/>
+        <location filename="../mainwindow.cpp" line="1458"/>
         <source>Couldn&apos;t create lock file. Opening the database read-only.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1956,7 +2087,6 @@ Haluatko tallentaa muutokset?</translation>
         <translation>Tiedostoa &quot;%1&quot; ei löytynyt.</translation>
     </message>
     <message>
-        <location filename="../lib/tools.cpp" line="146"/>
         <source>OK</source>
         <translation type="obsolete">OK</translation>
     </message>
@@ -1964,352 +2094,353 @@ Haluatko tallentaa muutokset?</translation>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../forms/MainWindow.ui" line="17"/>
+        <location filename="../forms/MainWindow.ui" line="18"/>
         <source>KeePassX</source>
         <translation>KeePassX</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="55"/>
+        <location filename="../forms/MainWindow.ui" line="48"/>
         <source>Groups</source>
         <translation>Ryhmät</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="128"/>
+        <location filename="../forms/MainWindow.ui" line="121"/>
         <source>&amp;Help</source>
         <translation>O&amp;hje</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="136"/>
+        <location filename="../forms/MainWindow.ui" line="129"/>
         <source>&amp;File</source>
         <translation>&amp;Tiedosto</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="140"/>
+        <location filename="../forms/MainWindow.ui" line="133"/>
         <source>&amp;Export to...</source>
         <translation>&amp;Vie muodossa...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="145"/>
+        <location filename="../forms/MainWindow.ui" line="138"/>
         <source>&amp;Import from...</source>
         <translation>&amp;Tuo tiedostosta...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="172"/>
         <source>&amp;Edit</source>
         <translation type="obsolete">&amp;Muokkaa</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="191"/>
+        <location filename="../forms/MainWindow.ui" line="184"/>
         <source>&amp;View</source>
         <translation>&amp;Näytä</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="230"/>
+        <location filename="../forms/MainWindow.ui" line="222"/>
         <source>E&amp;xtras</source>
         <translation>&amp;Lisäosat</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="262"/>
+        <location filename="../forms/MainWindow.ui" line="254"/>
         <source>&amp;Open Database...</source>
         <translation>&amp;Avaa tietokanta...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="267"/>
+        <location filename="../forms/MainWindow.ui" line="259"/>
         <source>&amp;Close Database</source>
         <translation>&amp;Sulje tietokanta</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="272"/>
+        <location filename="../forms/MainWindow.ui" line="264"/>
         <source>&amp;Save Database</source>
         <translation>&amp;Tallenna tietokanta</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="277"/>
+        <location filename="../forms/MainWindow.ui" line="269"/>
         <source>Save Database &amp;As...</source>
         <translation>Tallenna tietokanta &amp;nimellä...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="282"/>
+        <location filename="../forms/MainWindow.ui" line="274"/>
         <source>&amp;Database Settings...</source>
         <translation>&amp;Tietokannan asetukset...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="287"/>
+        <location filename="../forms/MainWindow.ui" line="279"/>
         <source>Change &amp;Master Key...</source>
         <translation>Muuta &amp;pääavainta...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="292"/>
+        <location filename="../forms/MainWindow.ui" line="284"/>
         <source>&amp;Lock Workspace</source>
         <translation>&amp;Lukitse työtila</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="474"/>
+        <location filename="../forms/MainWindow.ui" line="466"/>
         <source>&amp;Settings...</source>
         <translation>&amp;Asetukset...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="482"/>
+        <location filename="../forms/MainWindow.ui" line="474"/>
         <source>&amp;About...</source>
         <translation>&amp;Tietoja...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="498"/>
+        <location filename="../forms/MainWindow.ui" line="490"/>
         <source>&amp;KeePassX Handbook...</source>
         <translation>&amp;KeePassX-ohjekirja</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="506"/>
+        <location filename="../forms/MainWindow.ui" line="495"/>
         <source>Hide</source>
         <translation>Piilota</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="534"/>
         <source>Standard KeePass Single User Database (*.kdb)</source>
         <translation type="obsolete">Tavallinen yhden käyttäjän KeePass-tietokanta (*.kdb)</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="539"/>
         <source>Advanced KeePassX Database (*.kxdb)</source>
         <translation type="obsolete">Edistynyt KeePassX-tietokanta (*.kxdb)</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="566"/>
+        <location filename="../forms/MainWindow.ui" line="555"/>
         <source>Recycle Bin...</source>
         <translation>Roskakori...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="150"/>
+        <location filename="../forms/MainWindow.ui" line="143"/>
         <source>&amp;Bookmarks</source>
         <translation>&amp;Kirjanmerkit</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="195"/>
+        <location filename="../forms/MainWindow.ui" line="188"/>
         <source>Toolbar &amp;Icon Size</source>
         <translation>Työkalupalkin &amp;kuvakkeiden koko</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="203"/>
+        <location filename="../forms/MainWindow.ui" line="196"/>
         <source>&amp;Columns</source>
         <translation>&amp;Sarakkeet</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="257"/>
+        <location filename="../forms/MainWindow.ui" line="249"/>
         <source>&amp;Manage Bookmarks...</source>
         <translation>&amp;Hallitse kirjanmerkkejä</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="297"/>
+        <location filename="../forms/MainWindow.ui" line="289"/>
         <source>&amp;Quit</source>
         <translation>&amp;Lopeta</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="310"/>
+        <location filename="../forms/MainWindow.ui" line="302"/>
         <source>&amp;Edit Group...</source>
         <translation>&amp;Muokkaa ryhmää...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="315"/>
+        <location filename="../forms/MainWindow.ui" line="307"/>
         <source>&amp;Delete Group</source>
         <translation>&amp;Poista ryhmä</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="320"/>
+        <location filename="../forms/MainWindow.ui" line="312"/>
         <source>Copy Password &amp;to Clipboard</source>
         <translation>Kopioi salasana &amp;leikepöydälle</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="325"/>
+        <location filename="../forms/MainWindow.ui" line="317"/>
         <source>Copy &amp;Username to Clipboard</source>
         <translation>Kopioi &amp;käyttäjätunnus leikepöydälle</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="330"/>
+        <location filename="../forms/MainWindow.ui" line="322"/>
         <source>&amp;Open URL</source>
         <translation>&amp;Avaa URL</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="335"/>
+        <location filename="../forms/MainWindow.ui" line="327"/>
         <source>&amp;Save Attachment As...</source>
         <translation>&amp;Tallenna liite nimellä...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="340"/>
+        <location filename="../forms/MainWindow.ui" line="332"/>
         <source>Add &amp;New Entry...</source>
         <translation>Lisää &amp;uusi tietue...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="345"/>
+        <location filename="../forms/MainWindow.ui" line="337"/>
         <source>&amp;View/Edit Entry...</source>
         <translation>&amp;Näytä tai muokkaa tietuetta...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="350"/>
+        <location filename="../forms/MainWindow.ui" line="342"/>
         <source>De&amp;lete Entry</source>
         <translation>P&amp;oista tietue</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="355"/>
+        <location filename="../forms/MainWindow.ui" line="347"/>
         <source>&amp;Clone Entry</source>
         <translation>&amp;Kloonaa tietue</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="360"/>
+        <location filename="../forms/MainWindow.ui" line="352"/>
         <source>Search &amp;in Database...</source>
         <translation>Etsi &amp;tietokannasta...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="365"/>
+        <location filename="../forms/MainWindow.ui" line="357"/>
         <source>Search in this &amp;Group...</source>
         <translation>Etsi tästä &amp;ryhmästä...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="373"/>
+        <location filename="../forms/MainWindow.ui" line="365"/>
         <source>Show &amp;Entry Details</source>
         <translation>Näytä tietueen &amp;yksityiskohdat</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="381"/>
+        <location filename="../forms/MainWindow.ui" line="373"/>
         <source>Hide &amp;Usernames</source>
         <translation>Piilota &amp;käyttäjätunnukset</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="389"/>
+        <location filename="../forms/MainWindow.ui" line="381"/>
         <source>Hide &amp;Passwords</source>
         <translation>Piilota &amp;salasanat</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="397"/>
+        <location filename="../forms/MainWindow.ui" line="389"/>
         <source>&amp;Title</source>
         <translation>&amp;Otsikko</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="405"/>
+        <location filename="../forms/MainWindow.ui" line="397"/>
         <source>User&amp;name</source>
         <translation>&amp;Käyttäjätunnus</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="413"/>
+        <location filename="../forms/MainWindow.ui" line="405"/>
         <source>&amp;URL</source>
         <translation>&amp;URL</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="421"/>
+        <location filename="../forms/MainWindow.ui" line="413"/>
         <source>&amp;Password</source>
         <translation>&amp;Salasana</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="429"/>
+        <location filename="../forms/MainWindow.ui" line="421"/>
         <source>&amp;Comment</source>
         <translation>&amp;Kommentti</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="437"/>
+        <location filename="../forms/MainWindow.ui" line="429"/>
         <source>E&amp;xpires</source>
         <translation>&amp;Vanhenee</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="445"/>
+        <location filename="../forms/MainWindow.ui" line="437"/>
         <source>C&amp;reation</source>
         <translation>&amp;Luotu</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="453"/>
+        <location filename="../forms/MainWindow.ui" line="445"/>
         <source>&amp;Last Change</source>
         <translation>&amp;Viimeksi muutettu</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="461"/>
+        <location filename="../forms/MainWindow.ui" line="453"/>
         <source>Last &amp;Access</source>
         <translation>&amp;Viimeksi käytetty</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="469"/>
+        <location filename="../forms/MainWindow.ui" line="461"/>
         <source>A&amp;ttachment</source>
         <translation>&amp;Liite</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="493"/>
+        <location filename="../forms/MainWindow.ui" line="485"/>
         <source>Show &amp;Statusbar</source>
         <translation>Näytä &amp;tilarivi</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="511"/>
+        <location filename="../forms/MainWindow.ui" line="500"/>
         <source>&amp;Perform AutoType</source>
         <translation>&amp;Käynnistä automaattikirjoitus</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="519"/>
+        <location filename="../forms/MainWindow.ui" line="508"/>
         <source>&amp;16x16</source>
         <translation>&amp;16x16</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="527"/>
+        <location filename="../forms/MainWindow.ui" line="516"/>
         <source>&amp;22x22</source>
         <translation>&amp;22x22</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="535"/>
+        <location filename="../forms/MainWindow.ui" line="524"/>
         <source>2&amp;8x28</source>
         <translation>2&amp;8x28</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="540"/>
+        <location filename="../forms/MainWindow.ui" line="529"/>
         <source>&amp;New Database...</source>
         <translation>&amp;Uusi tietokanta...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="545"/>
+        <location filename="../forms/MainWindow.ui" line="534"/>
         <source>&amp;Password Generator...</source>
         <translation>Salasana&amp;generaattori...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="556"/>
         <source>&amp;Group (search results only)</source>
-        <translation>&amp;Ryhmä (vain hakutulokset)</translation>
+        <translation type="obsolete">&amp;Ryhmä (vain hakutulokset)</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="561"/>
+        <location filename="../forms/MainWindow.ui" line="550"/>
         <source>Show &amp;Expired Entries...</source>
         <translation>Näytä &amp;vanhentuneet tietueet...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="574"/>
+        <location filename="../forms/MainWindow.ui" line="563"/>
         <source>&amp;Add Bookmark...</source>
         <translation>&amp;Lisää kirjanmerkki...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="579"/>
+        <location filename="../forms/MainWindow.ui" line="568"/>
         <source>Bookmark &amp;this Database...</source>
         <translation>Lisää kirjanmerkki tietokantaan...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="305"/>
+        <location filename="../forms/MainWindow.ui" line="297"/>
         <source>&amp;Add New Subgroup...</source>
         <translation>&amp;Lisää uusi aliryhmä...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="584"/>
+        <location filename="../forms/MainWindow.ui" line="542"/>
+        <source>&amp;Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/MainWindow.ui" line="573"/>
         <source>Copy URL to Clipboard</source>
         <translation>Kopioi URL leikepöydälle</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="589"/>
+        <location filename="../forms/MainWindow.ui" line="578"/>
         <source>Add New Group...</source>
         <translation>Lisää uusi ryhmä...</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="172"/>
+        <location filename="../forms/MainWindow.ui" line="165"/>
         <source>&amp;Entries</source>
         <translation>Tietueet</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="240"/>
+        <location filename="../forms/MainWindow.ui" line="232"/>
         <source>&amp;Groups</source>
         <translation>Ryhmät</translation>
     </message>
     <message>
-        <location filename="../forms/MainWindow.ui" line="594"/>
+        <location filename="../forms/MainWindow.ui" line="583"/>
         <source>Sort groups</source>
         <translation>Järjestä ryhmät</translation>
     </message>
@@ -2317,6 +2448,7 @@ Haluatko tallentaa muutokset?</translation>
 <context>
     <name>ManageBookmarksDlg</name>
     <message>
+        <location filename="../dialogs/ManageBookmarksDlg.cpp" line="56"/>
         <location filename="../forms/ManageBookmarksDlg.ui" line="19"/>
         <source>Manage Bookmarks</source>
         <translation>Hallitse kirjanmerkkejä</translation>
@@ -2355,11 +2487,13 @@ Haluatko tallentaa muutokset?</translation>
         <translation>Valitse avaintiedosto</translation>
     </message>
     <message>
-        <location filename="../dialogs/PasswordDlg.cpp" line="342"/>
+        <location filename="../dialogs/PasswordDlg.cpp" line="179"/>
+        <location filename="../dialogs/PasswordDlg.cpp" line="341"/>
         <source>All Files (*)</source>
         <translation>Kaikki tiedostot (*)</translation>
     </message>
     <message>
+        <location filename="../dialogs/PasswordDlg.cpp" line="180"/>
         <location filename="../dialogs/PasswordDlg.cpp" line="342"/>
         <source>Key Files (*.key)</source>
         <translation>Avaintiedostot (*.key)</translation>
@@ -2380,6 +2514,7 @@ Haluatko tallentaa muutokset?</translation>
         <translation>Syötä avaintiedosto.</translation>
     </message>
     <message>
+        <location filename="../dialogs/PasswordDlg.cpp" line="224"/>
         <location filename="../dialogs/PasswordDlg.cpp" line="262"/>
         <source>%1:
 No such file or directory.</source>
@@ -2396,7 +2531,7 @@ No such file or directory.</source>
         <translation>Annetussa kansiossa ei ole avaintiedostoja.</translation>
     </message>
     <message>
-        <location filename="../dialogs/PasswordDlg.cpp" line="253"/>
+        <location filename="../dialogs/PasswordDlg.cpp" line="252"/>
         <source>The given directory contains more then one key files.
 Please specify the key file directly.</source>
         <translation>Annetussa kansiossa on useampi kuin yksi avaintiedosto.
@@ -2442,7 +2577,6 @@ File is not readable.</source>
         <translation>S&amp;elaa...</translation>
     </message>
     <message>
-        <location filename="../forms/PasswordDlg.ui" line="194"/>
         <source>Alt+B</source>
         <translation type="obsolete">ALT-E</translation>
     </message>
@@ -2475,6 +2609,7 @@ File is not readable.</source>
 <context>
     <name>SearchDialog</name>
     <message>
+        <location filename="../dialogs/SearchDlg.cpp" line="28"/>
         <location filename="../dialogs/SearchDlg.cpp" line="51"/>
         <source>Search</source>
         <translation>Etsi</translation>
@@ -2498,7 +2633,6 @@ File is not readable.</source>
         <translation>&amp;Salasanat</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="83"/>
         <source>Alt+W</source>
         <translation type="obsolete">Alt+S</translation>
     </message>
@@ -2508,7 +2642,6 @@ File is not readable.</source>
         <translation>&amp;Liite</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="93"/>
         <source>Alt+N</source>
         <translation type="obsolete">Alt+L</translation>
     </message>
@@ -2518,7 +2651,6 @@ File is not readable.</source>
         <translation>U&amp;RL</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="103"/>
         <source>Alt+R</source>
         <translation type="obsolete">Alt+R</translation>
     </message>
@@ -2528,7 +2660,6 @@ File is not readable.</source>
         <translation>K&amp;ommentit</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="113"/>
         <source>Alt+O</source>
         <translation type="obsolete">Alt+O</translation>
     </message>
@@ -2538,7 +2669,6 @@ File is not readable.</source>
         <translation>&amp;Käyttäjätunnukset</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="123"/>
         <source>Alt+U</source>
         <translation type="obsolete">Alt+K</translation>
     </message>
@@ -2548,7 +2678,6 @@ File is not readable.</source>
         <translation>O&amp;tsikot</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="133"/>
         <source>Alt+T</source>
         <translation type="obsolete">Atl+T</translation>
     </message>
@@ -2558,7 +2687,6 @@ File is not readable.</source>
         <translation>&amp;Huomioi kirjainkoko</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="151"/>
         <source>Alt+C</source>
         <translation type="obsolete">Alt+H</translation>
     </message>
@@ -2568,7 +2696,6 @@ File is not readable.</source>
         <translation>Säännöllinen &amp;lauseke</translation>
     </message>
     <message>
-        <location filename="../forms/SearchDlg.ui" line="161"/>
         <source>Alt+X</source>
         <translation type="obsolete">Alt+X</translation>
     </message>
@@ -2594,357 +2721,359 @@ File is not readable.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="13"/>
+        <location filename="../forms/SettingsDlg.ui" line="14"/>
         <source>Settings</source>
         <translation>Asetukset</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="122"/>
+        <location filename="../forms/SettingsDlg.ui" line="115"/>
         <source>Show system tray icon</source>
         <translation>Näytä ilmoitusalueen kuvake</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="150"/>
+        <location filename="../forms/SettingsDlg.ui" line="143"/>
         <source>Minimize to tray instead of taskbar</source>
         <translation>Pienennä ilmoitusalueelle ikkunaluettelon sijasta</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="180"/>
         <source>Minimize to tray when clicking the main window&apos;s close button</source>
-        <translation>Pienennä ilmoitusalueelle painettaessa pääikkunan sulkemisnappia</translation>
+        <translation type="obsolete">Pienennä ilmoitusalueelle painettaessa pääikkunan sulkemisnappia</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="191"/>
+        <location filename="../forms/SettingsDlg.ui" line="154"/>
         <source>Remember last opened file</source>
         <translation>Muista viimeisin avattu tiedosto</translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../forms/SettingsDlg.ui" line="194"/>
+    <message utf8="true">
         <source>Alt+Ö</source>
         <translation type="obsolete">Alt-Ö</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="219"/>
+        <location filename="../forms/SettingsDlg.ui" line="182"/>
         <source>Remember last key type and location</source>
         <translation>Muista viimeisin avaimen tyyppi ja sijainti</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="249"/>
+        <location filename="../forms/SettingsDlg.ui" line="212"/>
         <source>Start minimized</source>
         <translation>Käynnistä pienennettynä</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="279"/>
+        <location filename="../forms/SettingsDlg.ui" line="242"/>
         <source>Start locked</source>
         <translation>Käynnistä lukittuna</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="295"/>
+        <location filename="../forms/SettingsDlg.ui" line="258"/>
         <source>Save recent directories of file dialogs</source>
         <translation>Tallenna kansioluettelo tiedostovalitsimissa</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="318"/>
+        <location filename="../forms/SettingsDlg.ui" line="281"/>
         <source>Clear History Now</source>
         <translation>Tyhjennä historia heti</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="340"/>
+        <location filename="../forms/SettingsDlg.ui" line="303"/>
         <source>Always ask before deleting entries or groups</source>
         <translation>Kysy aina ennen tietueiden tai ryhmien poistamista</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="474"/>
+        <location filename="../forms/SettingsDlg.ui" line="421"/>
         <source>Banner Color</source>
         <translation>Otsakkeen väri</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="488"/>
+        <location filename="../forms/SettingsDlg.ui" line="435"/>
         <source>Text Color:</source>
         <translation>Tekstin väri:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="617"/>
+        <location filename="../forms/SettingsDlg.ui" line="476"/>
+        <location filename="../forms/SettingsDlg.ui" line="564"/>
         <source>Change...</source>
         <translation>Muuta...</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="542"/>
+        <location filename="../forms/SettingsDlg.ui" line="489"/>
         <source>Color 2:</source>
         <translation>Väri 2:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="667"/>
+        <location filename="../forms/SettingsDlg.ui" line="614"/>
         <source>C&amp;hange...</source>
         <translation>&amp;Muuta...</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="679"/>
         <source>Alt+H</source>
         <translation type="obsolete">Alt+M</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="680"/>
+        <location filename="../forms/SettingsDlg.ui" line="627"/>
         <source>Color 1:</source>
         <translation>Väri 1:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="708"/>
+        <location filename="../forms/SettingsDlg.ui" line="662"/>
         <source>Alternating Row Colors</source>
         <translation>Vaihtelevat rivien värit</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="720"/>
+        <location filename="../forms/SettingsDlg.ui" line="674"/>
         <source>Customize Entry Detail View...</source>
         <translation>Muokkaa tietueen yksityiskohtien näkymää...</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="749"/>
+        <location filename="../forms/SettingsDlg.ui" line="703"/>
         <source>Group tree at start-up:</source>
         <translation>Ryhmäpuu käynnistettäessä:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="756"/>
+        <location filename="../forms/SettingsDlg.ui" line="710"/>
         <source>Restore last state</source>
         <translation>Palauta viimeisin tila</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="763"/>
+        <location filename="../forms/SettingsDlg.ui" line="717"/>
         <source>Expand all items</source>
         <translation>Laajenna kaikki</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="770"/>
+        <location filename="../forms/SettingsDlg.ui" line="724"/>
         <source>Do not expand any item</source>
         <translation>Älä laajenna mitään</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="94"/>
+        <location filename="../forms/SettingsDlg.ui" line="95"/>
         <source>Security</source>
         <translation>Turvallisuus</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="928"/>
+        <location filename="../forms/SettingsDlg.ui" line="866"/>
         <source>Edit Entry Dialog</source>
         <translation>Tietueen muokkausikkuna</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="943"/>
         <source>Alt+O</source>
         <translation type="obsolete">Alt+O</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="956"/>
+        <location filename="../forms/SettingsDlg.ui" line="894"/>
         <source>Clear clipboard after:</source>
         <translation>Tyhjennä leikepöytä viiveellä:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="994"/>
+        <location filename="../forms/SettingsDlg.ui" line="932"/>
         <source>Lock workspace when minimizing the main window</source>
         <translation>Lukitse työtila pienennettäessä pääikkuna</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1260"/>
+        <location filename="../forms/SettingsDlg.ui" line="1182"/>
         <source>You can disable several features of KeePassX here according to your needs in order to keep the user interface slim.</source>
         <translation>Voit poistaa monia ohjelman ominaisuuksia tarpeidesi mukaan ja pitääksesi käyttöliittymän selkeänä.</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1270"/>
+        <location filename="../forms/SettingsDlg.ui" line="1192"/>
         <source>Bookmarks</source>
         <translation>Kirjanmerkit</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1308"/>
+        <location filename="../forms/SettingsDlg.ui" line="1222"/>
         <source>Plug-Ins</source>
         <translation>Lisäosat</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1317"/>
+        <location filename="../forms/SettingsDlg.ui" line="1231"/>
         <source>None</source>
         <translation>Ei mitään</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1324"/>
+        <location filename="../forms/SettingsDlg.ui" line="1238"/>
         <source>Gnome Desktop Integration (Gtk 2.x)</source>
         <translation>Gnome-työpöydän integrointi (Gtk 2.x)</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1331"/>
+        <location filename="../forms/SettingsDlg.ui" line="1245"/>
         <source>KDE 4 Desktop Integration</source>
         <translation>KDE4-työpöydän integrointi</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1346"/>
+        <location filename="../forms/SettingsDlg.ui" line="1260"/>
         <source>You need to restart the program before the changes take effect.</source>
         <translation>Ohjelma täytyy käynnistää uudestaan, jotta muutokset tulevat voimaan.</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1366"/>
+        <location filename="../forms/SettingsDlg.ui" line="1280"/>
         <source>Configure...</source>
         <translation>Määrittele...</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="99"/>
+        <location filename="../forms/SettingsDlg.ui" line="100"/>
         <source>Advanced</source>
         <translation>Lisäasetukset</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1126"/>
+        <location filename="../forms/SettingsDlg.ui" line="1056"/>
         <source>Auto-Type Fine Tuning</source>
         <translation>Automaattikirjoituksen hienosäätö</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1135"/>
+        <location filename="../forms/SettingsDlg.ui" line="1065"/>
         <source>Time between the activation of an auto-type action by the user and the first simulated key stroke.</source>
         <translation>Aika automaattisen täydennyksen aktivoinnin ja ensimmäisen simuloidun näppäilyn välillä.</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1184"/>
+        <location filename="../forms/SettingsDlg.ui" line="1068"/>
+        <location filename="../forms/SettingsDlg.ui" line="1114"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1148"/>
+        <location filename="../forms/SettingsDlg.ui" line="1078"/>
         <source>Pre-Gap:</source>
         <translation>Esitauko:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1171"/>
+        <location filename="../forms/SettingsDlg.ui" line="1101"/>
         <source>Key Stroke Delay:</source>
         <translation>Näppäinpainallusten viive:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1181"/>
+        <location filename="../forms/SettingsDlg.ui" line="1111"/>
         <source>Delay between two simulated key strokes. Increase this if Auto-Type is randomly skipping characters.</source>
         <translation>Viive simuloitujen näppäinpainallusten välillä. Kasvata tätä, jos automaattikirjoitus hukkaa satunnaisesti merkkejä.</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1066"/>
+        <location filename="../forms/SettingsDlg.ui" line="996"/>
         <source>Custom Browser Command</source>
         <translation>Oma selainkomento</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1078"/>
+        <location filename="../forms/SettingsDlg.ui" line="655"/>
+        <source>Show window always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../forms/SettingsDlg.ui" line="1008"/>
         <source>Browse</source>
         <translation>Selaa</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1090"/>
+        <location filename="../forms/SettingsDlg.ui" line="1020"/>
         <source>Media Root:</source>
         <translation>Liitospisteiden juurikansio:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1100"/>
+        <location filename="../forms/SettingsDlg.ui" line="1030"/>
         <source>The directory where storage devices like CDs and memory sticks are normally mounted.</source>
         <translation>Kansio, jonne taltiot, kuten CD-levyt ja muistitikut normaalisti liitetään.</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1107"/>
+        <location filename="../forms/SettingsDlg.ui" line="1037"/>
         <source>Browse...</source>
         <translation>Selaa...</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1116"/>
+        <location filename="../forms/SettingsDlg.ui" line="1046"/>
         <source>Enable this if you want to use your bookmarks and the last opened file independet from their absolute paths. This is especially useful when using KeePassX portably and therefore with changing mount points in the file system.</source>
         <translation>Ota tämä käyttöön, os haluat käyttää kirjanmerkkejä ja viimeksi avattuja tiedostoja riippumatta niiden absoluuttisesta polusta. Tämä en erityisen hyödyllistä käytettäessä ohjelmaa eri tietokoneissa ja liitospisteen vaihtuessa eri paikkoihin.</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1119"/>
+        <location filename="../forms/SettingsDlg.ui" line="1049"/>
         <source>Save relative paths (bookmarks and last file)</source>
         <translation>Tallenna suhteelliset polut (kirjanmerkit ja viimeisin tiedosto)</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1199"/>
+        <location filename="../forms/SettingsDlg.ui" line="1129"/>
         <source>Global Auto-Type Shortcut:</source>
         <translation>Automaattikirjoituksen pikanäppäin:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="435"/>
+        <location filename="../forms/SettingsDlg.ui" line="390"/>
         <source>Automatically save database on exit and workspace locking</source>
         <translation>Tallenna tietokanta automaattisesti suljettaessa ja lukittaessa työtila</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="919"/>
+        <location filename="../forms/SettingsDlg.ui" line="857"/>
         <source>Show plain text passwords in:</source>
         <translation>Näytä selväkieliset salasanat:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="935"/>
+        <location filename="../forms/SettingsDlg.ui" line="873"/>
         <source>Database Key Dialog</source>
         <translation>Tietokanta-avaimen ikkuna</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1032"/>
+        <location filename="../forms/SettingsDlg.ui" line="923"/>
+        <location filename="../forms/SettingsDlg.ui" line="970"/>
         <source>seconds</source>
         <translation>sekuntia</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1003"/>
+        <location filename="../forms/SettingsDlg.ui" line="941"/>
         <source>Lock database after inactivity of</source>
         <translation>Lukitse tietokanta sen oltua jouten</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="1228"/>
+        <location filename="../forms/SettingsDlg.ui" line="1158"/>
         <source>Use entries&apos; title to match the window for Global Auto-Type</source>
         <translation>Käytä tietueen otsikkoa automaattitäydennyksen kohdeikkunan täsmäämiseen</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="74"/>
+        <location filename="../forms/SettingsDlg.ui" line="75"/>
         <source>General (1)</source>
         <translation>Yleisasetuset (1)</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="79"/>
+        <location filename="../forms/SettingsDlg.ui" line="80"/>
         <source>General (2)</source>
         <translation>Yleisasetuset (2)</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="84"/>
+        <location filename="../forms/SettingsDlg.ui" line="85"/>
         <source>Appearance</source>
         <translation>Ulkoasu</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="89"/>
+        <location filename="../forms/SettingsDlg.ui" line="90"/>
         <source>Language</source>
         <translation>Kieli</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="372"/>
+        <location filename="../forms/SettingsDlg.ui" line="327"/>
         <source>Save backups of modified entries into the &apos;Backup&apos; group</source>
         <translation>Tallenna varmuuskopio muokatuista tietueista &quot;Backup&quot;-ryhmään</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="400"/>
+        <location filename="../forms/SettingsDlg.ui" line="355"/>
         <source>Delete backup entries older than:</source>
         <translation>Poista varmuuskopiotietueet, jotka ovat vanhempia kuin:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="426"/>
+        <location filename="../forms/SettingsDlg.ui" line="381"/>
         <source>days</source>
         <translation>päivää</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="442"/>
+        <location filename="../forms/SettingsDlg.ui" line="397"/>
         <source>Automatically save database after every change</source>
         <translation>Tallenna tietokanta automaattisesti joka muutoksen jälkeen</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="837"/>
         <source>System Language</source>
         <translation type="obsolete">Järjestelmäkieli</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="842"/>
         <source>English</source>
         <translation type="obsolete">Englanti</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="845"/>
+        <location filename="../forms/SettingsDlg.ui" line="791"/>
         <source>Language:</source>
         <translation>Kieli:</translation>
     </message>
     <message>
-        <location filename="../forms/SettingsDlg.ui" line="852"/>
+        <location filename="../forms/SettingsDlg.ui" line="798"/>
         <source>Author:</source>
         <translation>Tekijä:</translation>
     </message>
@@ -3007,6 +3136,7 @@ from the drop-down list, or enter the window title manually:</source>
 <context>
     <name>Translation</name>
     <message>
+        <location filename="../dialogs/AboutDlg.cpp" line="34"/>
         <location filename="../lib/tools.cpp" line="352"/>
         <source>$TRANSLATION_AUTHOR</source>
         <translation>Ilkka Tuohela, Jussi Sainio</translation>

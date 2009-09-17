@@ -23,11 +23,20 @@
 
 #include "Kdb3Database.h"
 
-#define NUM_COLUMNS 11
-
-class EntryViewItem;
 class GroupViewItem;
 enum SelectionState{NONE,SINGLE,MULTIPLE,SEARCHGROUP};
+
+class EntryViewItem:public QTreeWidgetItem{
+	public:
+		EntryViewItem(QTreeWidget *parent);
+		EntryViewItem(QTreeWidget *parent, QTreeWidgetItem * preceding);
+		EntryViewItem(QTreeWidgetItem *parent);
+		EntryViewItem(QTreeWidgetItem *parent, QTreeWidgetItem * preceding);
+		IEntryHandle* EntryHandle;
+		bool operator<(const QTreeWidgetItem& other) const;
+	private:
+		int compare(const QTreeWidgetItem& other, int col, int index) const;
+};
 
 class KeepassEntryView:public QTreeWidget{
 	Q_OBJECT
@@ -36,36 +45,38 @@ class KeepassEntryView:public QTreeWidget{
 		~KeepassEntryView();
 		void showSearchResults();
 		void showGroup(IGroupHandle* group);
-		void updateColumns();
 		void refreshItems();
-		int columnListIndex(int LogicalIndex);
+		void retranslateColumns();
 		IDatabase* db;
 		QList<EntryViewItem*>Items;
 		QList<IEntryHandle*> SearchResults;
 		QMenu *ContextMenu;
-		QBitArray Columns;
 		void setCurrentEntry(IEntryHandle* entry);
 		inline IGroupHandle* getCurrentGroup() { return CurrentGroup; };
+		bool columnVisible(int col);
+		void setColumnVisible(int col, bool visible);
+		
 	private:
-		//void setEntry(IEntryHandle* entry);
-		void updateEntry(EntryViewItem*);
-		void editEntry(EntryViewItem*);
-		void createItems(QList<IEntryHandle*>& entries);
-		int logicalColIndex(int ListIndex);
-
 		QClipboard* Clipboard;
 		QTimer ClipboardTimer;
-		void resizeColumns();
-		bool AutoResizeColumns;
 		QPoint DragStartPos;
 		QList<QTreeWidgetItem*> DragItems;
 		IGroupHandle* CurrentGroup;
 		enum EntryViewMode {Normal, ShowSearchResults};
 		EntryViewMode ViewMode;
-		QList<int> ColumnSizes;
-		QList<int> ColumnOrder;
-		float GroupColumnSize;
-
+		bool AutoResizeColumns;
+		QList<int> columnSizes;
+		
+		QString columnString(IEntryHandle* entry, int col, bool forceClearText=false);
+		inline QString columnStringView(EntryViewItem* item, int col, bool forceClearText=false) {
+			return columnString(item->EntryHandle, col, forceClearText);
+		};
+		void updateEntry(EntryViewItem*);
+		void editEntry(EntryViewItem*);
+		void createItems(QList<IEntryHandle*>& entries);
+		void saveHeaderView();
+		void restoreHeaderView();
+		
 		void contextMenuEvent(QContextMenuEvent *event);
 		void paintEvent(QPaintEvent* event);
 		void resizeEvent(QResizeEvent* event);
@@ -73,8 +84,6 @@ class KeepassEntryView:public QTreeWidget{
 		void mouseMoveEvent(QMouseEvent *event);
 	
 	private slots:
-		void OnColumnResized();
-		void OnHeaderSectionClicked(int index);
 		void OnGroupChanged(IGroupHandle* group);
 		void OnShowSearchResults();
 		void OnEntryActivated(QTreeWidgetItem*,int);
@@ -93,28 +102,15 @@ class KeepassEntryView:public QTreeWidget{
 		void OnAutoType();
 #endif
 		void removeDragItems();
-		void OnColumnMoved();
 		void OnEditOpenUrl();
 		void OnEditCopyUrl();
+		void resizeColumns();
 	
 	signals:
 		void fileModified();
 		void selectionChanged(SelectionState);
 		void requestCreateGroup(QString title, quint32 image, GroupViewItem* parent);
+		void viewModeChanged(bool searchResultMode);
 };
-
-
-class EntryViewItem:public QTreeWidgetItem{
-	public:
-		EntryViewItem(QTreeWidget *parent);
-		EntryViewItem(QTreeWidget *parent, QTreeWidgetItem * preceding);
-		EntryViewItem(QTreeWidgetItem *parent);
-		EntryViewItem(QTreeWidgetItem *parent, QTreeWidgetItem * preceding);
-		IEntryHandle* EntryHandle;
-		bool operator<(const QTreeWidgetItem& other) const;
-	private:
-		int compare(const QTreeWidgetItem& other, int col, int index) const;
-};
-
 
 #endif

@@ -790,12 +790,12 @@ in
     <message>
         <location filename="../src/gui/dialogs/qcolordialog.cpp" line="1205"/>
         <source>&amp;Sat:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sat:</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qcolordialog.cpp" line="1206"/>
         <source>&amp;Val:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Val:</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qcolordialog.cpp" line="1207"/>
@@ -891,12 +891,12 @@ in
     <message>
         <location filename="../src/sql/drivers/db2/qsql_db2.cpp" line="1431"/>
         <source>Unable to rollback transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/db2/qsql_db2.cpp" line="1446"/>
         <source>Unable to set autocommit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile impostare l&apos;autocommit</translation>
     </message>
 </context>
 <context>
@@ -924,12 +924,12 @@ in
     <message>
         <location filename="../src/sql/drivers/db2/qsql_db2.cpp" line="866"/>
         <source>Unable to fetch next</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile recuperare il prossimo</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/db2/qsql_db2.cpp" line="885"/>
         <source>Unable to fetch first</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile recuperare il primo</translation>
     </message>
 </context>
 <context>
@@ -1124,12 +1124,12 @@ in
     <message>
         <location filename="../src/plugins/accessible/widgets/qaccessiblewidgets.cpp" line="1201"/>
         <source>Dock</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggancia</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/qaccessiblewidgets.cpp" line="1201"/>
         <source>Float</source>
-        <translation type="unfinished"></translation>
+        <translation>Mobile</translation>
     </message>
 </context>
 <context>
@@ -1662,7 +1662,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/qt3support/network/q3http.cpp" line="1760"/>
         <source>No server set to connect to</source>
-        <translation type="unfinished"></translation>
+        <translation>Nessun server impostato per la connessione</translation>
     </message>
     <message>
         <location filename="../src/qt3support/network/q3http.cpp" line="1816"/>
@@ -1758,7 +1758,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/ibase/qsql_ibase.cpp" line="1377"/>
         <source>Could not start transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile avviare la transazione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/ibase/qsql_ibase.cpp" line="1390"/>
@@ -1768,7 +1768,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/ibase/qsql_ibase.cpp" line="1403"/>
         <source>Unable to rollback transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
 </context>
 <context>
@@ -1851,7 +1851,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/ibase/qsql_ibase.cpp" line="1022"/>
         <source>Could not fetch next item</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile recuperare il prossimo elemento</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/ibase/qsql_ibase.cpp" line="1182"/>
@@ -1920,7 +1920,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/corelib/plugin/qlibrary_win.cpp" line="76"/>
         <source>QLibrary::unload_sys: Cannot unload %1 (%2)</source>
-        <translation type="unfinished">QLibrary::unload_sys: Impossibile  %1 (%2)</translation>
+        <translation>QLibrary::unload_sys: Impossibile rimuovere %1 (%2)</translation>
     </message>
     <message>
         <location filename="../src/corelib/plugin/qlibrary_win.cpp" line="91"/>
@@ -2031,12 +2031,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/mysql/qsql_mysql.cpp" line="1221"/>
         <source>Unable to commit transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il commit della transazione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/mysql/qsql_mysql.cpp" line="1238"/>
         <source>Unable to rollback transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
 </context>
 <context>
@@ -2251,7 +2251,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/gui/dialogs/qmessagebox.cpp" line="1635"/>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;%1&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across MS&amp;nbsp;Windows, Mac&amp;nbsp;OS&amp;nbsp;X, Linux, and all major commercial Unix variants. Qt is also available for embedded devices as Qtopia Core.&lt;/p&gt;&lt;p&gt;Qt is a Trolltech product. See &lt;a href=&quot;http://www.trolltech.com/qt/&quot;&gt;www.trolltech.com/qt/&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h3&gt;Informazioni su Qt&lt;/h3&gt;%1&lt;p&gt;Qt è un toolkit C++ per lo sviluppo multi-piattaforma di applicazione.&lt;/p&gt;&lt;p&gt;Qt fornisce la portabilità del codice sorgente tra MS&amp;nbsp;Windows, Mac&amp;nbsp;OS&amp;nbsp;X, Linux, e tutte le principali varianti commerciali di. Qt è anche disponibile per dispositivi integrati come Qtopia Core.&lt;/p&gt;&lt;p&gt;Qt è un prodotto Trolltech. Vedere &lt;a href=&quot;http://www.trolltech.com/qt/&quot;&gt;www.trolltech.com/qt/&lt;/a&gt; per ulteriori informazioni.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qmessagebox.cpp" line="83"/>
@@ -2266,7 +2266,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/gui/dialogs/qmessagebox.cpp" line="1644"/>
         <source>&lt;p&gt;This program uses Qt Open Source Edition version %1.&lt;/p&gt;&lt;p&gt;Qt Open Source Edition is intended for the development of Open Source applications. You need a commercial Qt license for development of proprietary (closed source) applications.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://www.trolltech.com/company/model/&quot;&gt;www.trolltech.com/company/model/&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Questo programma utilizza la versione Qt Open Source Edition %1.&lt;/p&gt;&lt;p&gt;Qt Open Source Edition è destinata allo sviluppo di applicazioni Open Source. Per lo sviluppo di applicazioni proprietarie (sorgente chiuso) è necessario disporre di una licenza Qt commerciale.&lt;/p&gt;&lt;p&gt;Vedere &lt;a href=&quot;http://www.trolltech.com/company/model/&quot;&gt;www.trolltech.com/company/model/&lt;/a&gt; per una panoramica del sistema di licenze Qt.&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -2467,7 +2467,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/oci/qsql_oci.cpp" line="1689"/>
         <source>Unable to execute select statement</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eseguire l&apos;istruzione di selezione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/oci/qsql_oci.cpp" line="1706"/>
@@ -2485,27 +2485,27 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1525"/>
         <source>Unable to connect - Driver doesn&apos;t support all needed functionality</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile connettersi - Il driver non supporta tutte le funzionalità richieste</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1708"/>
         <source>Unable to disable autocommit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile disabilitare l&apos;autocommit</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1725"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile applicare la transazione</translation>
+        <translation>Impossibile effettuare il commit della transazione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1742"/>
         <source>Unable to rollback transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1757"/>
         <source>Unable to enable autocommit</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile abilitare l&apos;autocommit</translation>
     </message>
 </context>
 <context>
@@ -2513,7 +2513,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1056"/>
         <source>QODBCResult::reset: Unable to set &apos;SQL_CURSOR_STATIC&apos; as statement attribute. Please check your ODBC driver configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>QODBCResult::reset: Impossibile impostare &apos;SQL_CURSOR_STATIC&apos; come attributo dell&apos;istruzione. Controlla la configurazione del driver ODBC</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1317"/>
@@ -2523,7 +2523,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="820"/>
         <source>Unable to fetch next</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile recuperare il prossimo</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/odbc/qsql_odbc.cpp" line="1073"/>
@@ -2564,7 +2564,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/sql/drivers/psql/qsql_psql.cpp" line="620"/>
         <source>Could not rollback transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
 </context>
 <context>
@@ -2608,12 +2608,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="947"/>
         <source>Portrait</source>
-        <translation type="unfinished"></translation>
+        <translation>Verticale</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="948"/>
         <source>Landscape</source>
-        <translation type="unfinished"></translation>
+        <translation>Orizzontale</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="776"/>
@@ -2733,37 +2733,37 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="799"/>
         <source>Executive (7.5 x 10 inches, 191 x 254 mm)</source>
-        <translation type="unfinished">Executive (7.5 x 10 pollici 191 x 254 mm)</translation>
+        <translation>Executive (7.5 x 10 pollici 191 x 254 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="800"/>
         <source>Folio (210 x 330 mm)</source>
-        <translation type="unfinished"></translation>
+        <translation>Foglio (210 x 330 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="801"/>
         <source>Ledger (432 x 279 mm)</source>
-        <translation type="unfinished"></translation>
+        <translation>Registro (432 x 279 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="802"/>
         <source>Legal (8.5 x 14 inches, 216 x 356 mm)</source>
-        <translation type="unfinished">Legal (8.5 x 14 pollici, 216 x 356 mm)</translation>
+        <translation>Legal (8.5 x 14 pollici, 216 x 356 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="803"/>
         <source>Letter (8.5 x 11 inches, 216 x 279 mm)</source>
-        <translation type="unfinished">Letter (8.5 x 11 pollici, 216 x 279 mm)</translation>
+        <translation>Letter (8.5 x 11 pollici, 216 x 279 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="804"/>
         <source>Tabloid (279 x 432 mm)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tabloid (279 x 432 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="805"/>
         <source>US Common #10 Envelope (105 x 241 mm)</source>
-        <translation type="unfinished"></translation>
+        <translation>Busta standard #10 USA (105 x 241 mm)</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qpagesetupdialog_unix.cpp" line="155"/>
@@ -2788,7 +2788,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/gui/dialogs/qpagesetupdialog_unix.cpp" line="141"/>
         <source>Paper source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Origine carta:</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog_unix.cpp" line="951"/>
@@ -2883,7 +2883,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog.ui" line="423"/>
         <source>Collate</source>
-        <translation type="unfinished"></translation>
+        <translation>Fascicola</translation>
     </message>
     <message>
         <location filename="../src/gui/dialogs/qprintdialog.ui" line="430"/>
@@ -3052,7 +3052,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/sql/drivers/sqlite2/qsql_sqlite2.cpp" line="421"/>
         <source>Unable to rollback Transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
 </context>
 <context>
@@ -3093,7 +3093,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/sql/drivers/sqlite/qsql_sqlite.cpp" line="522"/>
         <source>Unable to roll back transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile effettuare il rollback della transazione</translation>
     </message>
 </context>
 <context>
@@ -3111,7 +3111,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/sql/drivers/sqlite/qsql_sqlite.cpp" line="284"/>
         <source>Unable to reset statement</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile ripristinare l&apos;istruzione</translation>
     </message>
     <message>
         <location filename="../src/sql/drivers/sqlite/qsql_sqlite.cpp" line="328"/>
@@ -3121,7 +3121,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/sql/drivers/sqlite/qsql_sqlite.cpp" line="335"/>
         <source>Parameter count mismatch</source>
-        <translation type="unfinished"></translation>
+        <translation>Il numero dei parametri non corrisponde</translation>
     </message>
 </context>
 <context>
@@ -3129,7 +3129,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="396"/>
         <source>Scroll here</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorri qui</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="399"/>
@@ -3139,7 +3139,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="399"/>
         <source>Top</source>
-        <translation type="unfinished"></translation>
+        <translation>In alto</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="401"/>
@@ -3149,47 +3149,47 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="401"/>
         <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>In basso</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="404"/>
         <source>Page left</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina sinistra</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="532"/>
         <source>Page up</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina su</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="406"/>
         <source>Page right</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina destra</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="536"/>
         <source>Page down</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina giù</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="409"/>
         <source>Scroll left</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorrimento a sinistra</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="409"/>
         <source>Scroll up</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorrimento in alto</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="411"/>
         <source>Scroll right</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorrimento a destra</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qscrollbar.cpp" line="411"/>
         <source>Scroll down</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorrimento in basso</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="530"/>
@@ -3252,7 +3252,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="296"/>
         <source>Del</source>
-        <translation type="unfinished"></translation>
+        <translation>Canc</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="297"/>
@@ -3267,7 +3267,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="299"/>
         <source>SysReq</source>
-        <translation></translation>
+        <translation>R sist</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="300"/>
@@ -3312,17 +3312,17 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="308"/>
         <source>CapsLock</source>
-        <translation type="unfinished"></translation>
+        <translation>BlocMaiusc</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="309"/>
         <source>NumLock</source>
-        <translation type="unfinished"></translation>
+        <translation>BlocNum</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="310"/>
         <source>ScrollLock</source>
-        <translation type="unfinished"></translation>
+        <translation>BlocScorr</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="311"/>
@@ -3532,62 +3532,62 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="358"/>
         <source>Print Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Stampa schermo</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="359"/>
         <source>Page Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Pag Su</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="360"/>
         <source>Page Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Pag Giù</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="361"/>
         <source>Caps Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloc Maiusc</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="362"/>
         <source>Num Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Bllocc Num</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="363"/>
         <source>Number Lock</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Blocco tast numerico</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="364"/>
         <source>Scroll Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloc Scorr</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="365"/>
         <source>Insert</source>
-        <translation type="unfinished"></translation>
+        <translation>Ins</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="366"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Canc</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="367"/>
         <source>Escape</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="368"/>
         <source>System Request</source>
-        <translation type="unfinished"></translation>
+        <translation>R sist</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="372"/>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="373"/>
@@ -3622,12 +3622,12 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="382"/>
         <source>Call</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiama</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="383"/>
         <source>Hangup</source>
-        <translation type="unfinished"></translation>
+        <translation>Riaggancia</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="384"/>
@@ -3642,7 +3642,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="1024"/>
         <source>Shift</source>
-        <translation type="unfinished"></translation>
+        <translation>Maiusc</translation>
     </message>
     <message>
         <location filename="../src/gui/kernel/qkeysequence.cpp" line="1022"/>
@@ -3675,12 +3675,12 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="689"/>
         <source>Page left</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina sinistra</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="689"/>
         <source>Page up</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina su</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="691"/>
@@ -3690,12 +3690,12 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="694"/>
         <source>Page right</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina destra</translation>
     </message>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="694"/>
         <source>Page down</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina giù</translation>
     </message>
 </context>
 <context>
@@ -3797,22 +3797,22 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/network/qsslsocket_openssl.cpp" line="240"/>
         <source>Invalid or empty cipher list (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Lista di cifratura non valida o vuota (%1)</translation>
     </message>
     <message>
         <location filename="../src/network/qsslsocket_openssl.cpp" line="291"/>
         <source>Error creating SSL session, %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore durante la creazione della sessione SSL, %1</translation>
     </message>
     <message>
         <location filename="../src/network/qsslsocket_openssl.cpp" line="305"/>
         <source>Error creating SSL session: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore durante la creazione della sessione SSL: %1</translation>
     </message>
     <message>
         <location filename="../src/network/qsslsocket_openssl.cpp" line="256"/>
         <source>Cannot provide a certificate with no key, %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile fornire un certificato senza chiave, %1</translation>
     </message>
     <message>
         <location filename="../src/network/qsslsocket_openssl.cpp" line="263"/>
@@ -3827,7 +3827,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/network/qsslsocket_openssl.cpp" line="282"/>
         <source>Private key do not certificate public key, %1</source>
-        <translation type="unfinished"></translation>
+        <translation>La chiave privata non certifica la chiave pubblica, %1</translation>
     </message>
 </context>
 <context>
@@ -4094,27 +4094,27 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1061"/>
         <source>&amp;Restore</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ripristina</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1062"/>
         <source>&amp;Move</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sposta</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1063"/>
         <source>&amp;Size</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Dimensioni</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1065"/>
         <source>Mi&amp;nimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Mi&amp;nimizza</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1067"/>
         <source>Ma&amp;ximize</source>
-        <translation type="unfinished"></translation>
+        <translation>Ma&amp;ssimizza</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1070"/>
@@ -4124,12 +4124,12 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1075"/>
         <source>Stay on &amp;Top</source>
-        <translation type="unfinished"></translation>
+        <translation>Sempre in &amp;primo piano</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="2137"/>
         <source>Sh&amp;ade</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Arrotola</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="1919"/>
@@ -4144,7 +4144,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="87"/>
         <source>Restore Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripristina in basso</translation>
     </message>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="83"/>
@@ -4154,7 +4154,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/gui/widgets/qworkspace.cpp" line="2133"/>
         <source>&amp;Unshade</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Srotola</translation>
     </message>
 </context>
 <context>
@@ -4177,32 +4177,32 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxml.cpp" line="34"/>
         <source>more than one document type definition</source>
-        <translation type="unfinished"></translation>
+        <translation>più di una definizione del tipo di documento</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="35"/>
         <source>error occurred while parsing element</source>
-        <translation type="unfinished"></translation>
+        <translation>riscontrato errore durante l&apos;analisi dell&apos;elemento</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="36"/>
         <source>tag mismatch</source>
-        <translation type="unfinished"></translation>
+        <translation>tag non corrispondente</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="37"/>
         <source>error occurred while parsing content</source>
-        <translation type="unfinished"></translation>
+        <translation>riscontrato errore durante l&apos;analisi del contenuto</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="38"/>
         <source>unexpected character</source>
-        <translation type="unfinished"></translation>
+        <translation>carattere inatteso</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="39"/>
         <source>invalid name for processing instruction</source>
-        <translation type="unfinished"></translation>
+        <translation>nome dell&apos;istruzione di elaborazione non valido</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="40"/>
@@ -4227,7 +4227,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxml.cpp" line="44"/>
         <source>error occurred while parsing document type definition</source>
-        <translation type="unfinished"></translation>
+        <translation>riscontrato errore durante l&apos;analisi della definizione del tipo di documento</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="45"/>
@@ -4237,12 +4237,12 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxml.cpp" line="46"/>
         <source>error occurred while parsing comment</source>
-        <translation type="unfinished"></translation>
+        <translation>riscontrato errore durante l&apos;analisi del commento</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="47"/>
         <source>error occurred while parsing reference</source>
-        <translation type="unfinished"></translation>
+        <translation>riscontrato errore durante l&apos;analisi dei riferimenti</translation>
     </message>
     <message>
         <location filename="../src/xml/qxml.cpp" line="48"/>
@@ -4325,7 +4325,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1489"/>
         <source>%1 is an invalid encoding name.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 è un nome di codifica non valido.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1496"/>
@@ -4335,7 +4335,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1498"/>
         <source>Invalid XML encoding name.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome di codifica XML non valido.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1514"/>
@@ -4345,12 +4345,12 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1516"/>
         <source>Invalid attribute in XML declaration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Attributo non valido nella dichiarazione XML.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1532"/>
         <source>Premature end of document.</source>
-        <translation type="unfinished"></translation>
+        <translation>Fine imprevista del documento.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1534"/>
@@ -4360,17 +4360,17 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1574"/>
         <source>Expected </source>
-        <translation type="unfinished"></translation>
+        <translation>Atteso </translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1585"/>
         <source>, but got &apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>, ma ricevuto &apos;</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1589"/>
         <source>Unexpected &apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Inatteso &apos;</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1719"/>
@@ -4380,17 +4380,17 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="718"/>
         <source>Recursive entity detected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Rilevata entità ricorsiva.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="1223"/>
         <source>Start tag expected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Atteso tag iniziale.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="1434"/>
         <source>XML declaration not at start of document.</source>
-        <translation type="unfinished"></translation>
+        <translation>La dichiarazione XML non è all&apos;inizio del documento.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="1403"/>
@@ -4430,7 +4430,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="1774"/>
         <source>Entity &apos;%1&apos; not declared.</source>
-        <translation type="unfinished"></translation>
+        <translation>Entità &apos;%1&apos; non dichiarata.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="1760"/>
@@ -4445,7 +4445,7 @@ Scegli un nome diverso.</translation>
     <message>
         <location filename="../src/xml/qxmlstream_p.h" line="1011"/>
         <source>Encountered incorrectly encoded content.</source>
-        <translation type="unfinished"></translation>
+        <translation>Riscontrato contenuto non codificato correttamente.</translation>
     </message>
     <message>
         <location filename="../src/xml/qxmlstream.cpp" line="1487"/>

@@ -44,11 +44,24 @@ unix : !macx : !isEqual(QMAKE_WIN32,1){
 	}
 	TARGET = ../bin/keepassx
 	target.path = $${PREFIX}/bin
-	data.files += ../share/keepassx
-	data.path = $${PREFIX}/share
-	share.files = ../share/applications ../share/mime ../share/mimelnk ../share/pixmaps
-	share.path = $${PREFIX}/share
-	INSTALLS += share
+	datai18n.files = ../share/keepassx/i18n/*.qm
+	datai18n.path = $${PREFIX}/share/keepassx/i18n
+	dataicons.files = ../share/keepassx/icons/*.png
+	dataicons.path = $${PREFIX}/share/keepassx/icons
+	datalicense.files = ../share/keepassx/license.html
+	datalicense.path = $${PREFIX}/share/keepassx
+	
+	shareapp.files = ../share/applications/*.desktop
+	shareapp.path = $${PREFIX}/share/applications
+	shararemime.files = ../share/mime/packages/*.xml
+	shararemime.path = $${PREFIX}/share/mime/packages
+	sharemimelnk.files = ../share/mimelnk/application/*.desktop
+	sharemimelnk.path = $${PREFIX}/share/mimelnk/application
+	sharepixmaps.files = ../share/pixmaps/*.xpm
+	sharepixmaps.path = $${PREFIX}/share/pixmaps
+	INSTALLS += datai18n dataicons datalicense
+	INSTALLS += shareapp shararemime sharemimelnk sharepixmaps
+	
 	contains(DEFINES,AUTOTYPE){
 		LIBS += -lXtst
 		SOURCES += lib/HelperX11.cpp lib/AutoTypeX11.cpp
@@ -71,6 +84,7 @@ macx {
 	target.path = $${PREFIX}
 	data.files += ../share/keepassx
 	data.path = Contents/Resources
+	INSTALLS += data
 	LIBS += -framework CoreFoundation
 	isEqual(LINK,DYNAMIC){
 		isEmpty(QT_FRAMEWORK_DIR): QT_FRAMEWORK_DIR = /Library/Frameworks
@@ -105,6 +119,7 @@ isEqual(QMAKE_WIN32,1){
 	target.path = $${PREFIX}
 	data.files += ../share/keepassx/*
 	data.path = $${PREFIX}/share
+	INSTALLS += data
 	!isEqual(INSTALL_QTLIB,0){
 		qt_libs.files = $${QMAKE_LIBDIR_QT}/QtCore4.dll $${QMAKE_LIBDIR_QT}/QtGui4.dll $${QMAKE_LIBDIR_QT}/QtXml4.dll
 		qt_libs.path = $${PREFIX}
@@ -115,7 +130,7 @@ isEqual(QMAKE_WIN32,1){
 #	SOURCES += main_win32.cpp
 }
 
-INSTALLS += target data
+INSTALLS += target
 
 contains(DEFINES,GLOBAL_AUTOTYPE){
 	FORMS += forms/AutoTypeDlg.ui forms/TargetWindowDlg.ui
@@ -132,6 +147,7 @@ FORMS += forms/AboutDlg.ui \
          forms/EditEntryDlg.ui \
          forms/EditGroupDlg.ui \
          forms/ExpiredEntriesDlg.ui \
+         forms/HelpDlg.ui \
          forms/MainWindow.ui \
          forms/ManageBookmarksDlg.ui \
          forms/PasswordDlg.ui \
@@ -148,16 +164,23 @@ TRANSLATIONS_KX = translations/keepassx-de_DE.ts \
                   translations/keepassx-fi_FI.ts \
                   translations/keepassx-fr_FR.ts \
                   translations/keepassx-gl_ES.ts \
+                  translations/keepassx-hu_HU.ts \
                   translations/keepassx-it_IT.ts \
+                  translations/keepassx-ja_JP.ts \
                   translations/keepassx-nb_NO.ts \
+                  translations/keepassx-nl_NL.ts \
+                  translations/keepassx-pl_PL.ts \
                   translations/keepassx-ru_RU.ts \
-                  translations/keepassx-tr_TR.ts
+                  translations/keepassx-tr_TR.ts \
+                  translations/keepassx-uk_UA.ts \
+                  translations/keepassx-zh_CN.ts
 
-TRANSLATIONS_DISABLED = translations/keepassx-cs_CZ.ts \
-                        translations/keepassx-ja_JP.ts
+TRANSLATIONS_DISABLED = translations/keepassx-cs_CZ.ts
 
 TRANSLATIONS_QT = translations/qt_fi.ts \
+                  translations/qt_hu.ts \
                   translations/qt_it.ts \
+                  translations/qt_nl.ts \
                   translations/qt_tr.ts
 
 TRANSLATIONS = $$TRANSLATIONS_KX $$TRANSLATIONS_DISABLED translations/keepassx-xx_XX.ts
@@ -165,7 +188,6 @@ TRANSLATIONS = $$TRANSLATIONS_KX $$TRANSLATIONS_DISABLED translations/keepassx-x
 #TRANSLATIONS_COMPILE = $$TRANSLATIONS_KX $$TRANSLATIONS_QT
 
 HEADERS += main.h \
-           global.h \
            mainwindow.h \
            KpxConfig.h \
            Database.h \
@@ -207,6 +229,7 @@ HEADERS += main.h \
            dialogs/EditEntryDlg.h \
            dialogs/EditGroupDlg.h \
            dialogs/ExpiredEntriesDlg.h \
+           dialogs/HelpDlg.h \
            dialogs/ManageBookmarksDlg.h \
            dialogs/PasswordDlg.h \
            dialogs/PasswordGenDlg.h \
@@ -265,6 +288,7 @@ SOURCES += main.cpp \
            dialogs/EditEntryDlg.cpp \
            dialogs/EditGroupDlg.cpp \
            dialogs/ExpiredEntriesDlg.cpp \
+           dialogs/HelpDlg.cpp \
            dialogs/ManageBookmarksDlg.cpp \
            dialogs/PasswordDlg.cpp \
            dialogs/PasswordGenDlg.cpp \
