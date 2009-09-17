@@ -26,16 +26,18 @@
 #define APP_CODE_NAME       "keepassx"
 #define APP_SHORT_FUNC      "Password Manager"
 #define APP_LONG_FUNC       "Cross Platform Password Manager"
-#define APP_VERSION         "0.4.0"
+#define APP_VERSION         "0.4.1"
 
 #define BUILTIN_ICONS 69
+
+#define KEEPASS_LITTLE_ENDIAN
+//#define KEEPASS_BIG_ENDIAN
 
 // often used, stable header files for pch
 
 #ifdef __cplusplus
 
 #include <cstdlib>
-
 #include <cmath>
 
 #include <QApplication>

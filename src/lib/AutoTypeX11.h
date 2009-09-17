@@ -39,10 +39,11 @@ class AutoTypeX11 : public AutoType {
 	public:
 		AutoTypeX11(KeepassMainWindow* mainWin);
 		void perform(IEntryHandle* entry, bool hideWindow=true, int nr=0, bool wasLocked=false);
+		virtual void updateKeymap();
 	
 	protected:
 		void sleepTime(int msec);
-		inline void sleepKeyStrokeDelay(){ sleep(config->autoTypeKeyStrokeDelay()); };
+		inline void sleepKeyStrokeDelay(){ sleepTime(config->autoTypeKeyStrokeDelay()); };
 		void templateToKeysyms(const QString& Template, QList<AutoTypeAction>& KeySymList,IEntryHandle* entry);
 		void stringToKeysyms(const QString& string,QList<AutoTypeAction>& KeySymList);
 		
@@ -52,6 +53,7 @@ class AutoTypeX11 : public AutoType {
 		void SendKeyPressedEvent(KeySym keysym, unsigned int shift);
 		void SendEvent(XKeyEvent *event);
 		static int MyErrorHandler(Display *my_dpy, XErrorEvent *event);
+		Window getFocusWindow();
 		
 		KeepassMainWindow* mainWin;
 		Display* dpy;
@@ -63,6 +65,11 @@ class AutoTypeX11 : public AutoType {
 		int meta_mask;
 		int altgr_mask;
 		KeySym altgr_keysym;
+		bool reReadKeymap;
+		Window focusWindow;
+	
+	private:
+		bool inAutoType;
 };
 
 #endif // _AUTOTYPEX11_H_

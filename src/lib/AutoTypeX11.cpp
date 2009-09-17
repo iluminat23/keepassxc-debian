@@ -38,6 +38,7 @@ AutoTypeAction::AutoTypeAction(AutoTypeActionType t, KeySym d) : type(t), data(d
 AutoTypeX11::AutoTypeX11(KeepassMainWindow* mainWin) {
 	this->mainWin = mainWin;
 	dpy = QX11Info::display();
+	inAutoType = false;
 	
 	keysym_table = NULL;
 	alt_mask = 0;
@@ -45,12 +46,45 @@ AutoTypeX11::AutoTypeX11(KeepassMainWindow* mainWin) {
 	altgr_mask = 0;
 	altgr_keysym = NoSymbol;
 	
+	updateKeymap();
+	reReadKeymap = false;
+}
+
+void AutoTypeX11::updateKeymap() {
 	ReadKeymap();
 	if (!altgr_mask)
 		AddModifier(XK_Mode_switch);
+	if (!meta_mask)
+		meta_mask = Mod4Mask;
+}
+
+Window AutoTypeX11::getFocusWindow() {
+	Window w;
+	int revert_to_return;
+	XGetInputFocus(dpy, &w, &revert_to_return);
+	int tree;
+	do {
+		XTextProperty textProp;
+		if (XGetWMName(dpy, w, &textProp) != 0) {
+			break;
+		}
+		Window root = 0;
+		Window parent = 0;
+		Window* children = NULL;
+		unsigned int num_children;
+		tree = XQueryTree(dpy, w, &root, &parent, &children, &num_children);
+		w = parent;
+		if (children) XFree(children);
+	} while (tree && w);
+	
+	return w;
 }
 
 void AutoTypeX11::perform(IEntryHandle* entry, bool hideWindow, int nr, bool wasLocked){
+	if (inAutoType)
+		return;
+	inAutoType = true;
+	
 	QString indexStr;
 	if (nr==0)
 		indexStr = "Auto-Type:";
@@ -109,14 +143,30 @@ void AutoTypeX11::perform(IEntryHandle* entry, bool hideWindow, int nr, bool was
 		}
 	}
 	
+	/* Re-read keymap before first auto-type,
+	   seems to be necessary on X.Org Server 1.6,
+	   when KeePassX is in autostart */
+	if (!reReadKeymap) {
+		updateKeymap();
+		reReadKeymap = true;
+	}
+	
 	if (hideWindow)
 		mainWin->hide();
 	
 	QApplication::processEvents();
 	sleepTime(config->autoTypePreGap());
 	
+	if (!focusWindow)
+		focusWindow = getFocusWindow();
+	
 	QString type;
 	for(int i=0;i<Keys.size();i++){
+		if (focusWindow != getFocusWindow()) {
+			qWarning("Focus window changed, interrupting auto-type");
+			break;
+		}
+		
 		if (Keys[i].type==TypeKey){
 			SendKeyPressedEvent(Keys[i].data, 0);
 			sleepKeyStrokeDelay();
@@ -138,9 +188,10 @@ void AutoTypeX11::perform(IEntryHandle* entry, bool hideWindow, int nr, bool was
 	else{
 		if (hideWindow && !(config->showSysTrayIcon() && config->minimizeTray()) )
 			mainWin->showMinimized();
-		if (wasLocked)
-			mainWin->OnUnLockWorkspace();
 	}
+	
+	inAutoType = false;
+	focusWindow = NULL;
 }
 
 void AutoTypeX11::sleepTime(int msec){
@@ -557,7 +608,7 @@ void AutoTypeX11::ReadKeymap()
 	XDisplayKeycodes(dpy, &min_keycode, &max_keycode);
 	if (keysym_table != NULL) XFree(keysym_table);
 	keysym_table = XGetKeyboardMapping(dpy,
-									   min_keycode, max_keycode - min_keycode + 1,
+			min_keycode, max_keycode - min_keycode + 1,
 			&keysym_per_keycode);
 	for (keycode = min_keycode; keycode <= max_keycode; keycode++) {
     /* if the first keysym is alphabet and the second keysym is NoSymbol,

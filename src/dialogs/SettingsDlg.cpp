@@ -34,7 +34,6 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	connect(DialogButtons, SIGNAL( rejected() ), this, SLOT( OnCancel() ) );
 	connect(DialogButtons, SIGNAL( clicked(QAbstractButton*)), this, SLOT(OnOtherButton(QAbstractButton*)));
 	
-	connect(CheckBox_ShowSysTrayIcon, SIGNAL( toggled(bool) ), CheckBox_CloseToTray, SLOT( setEnabled(bool) ) );
 	connect(CheckBox_ShowSysTrayIcon, SIGNAL( toggled(bool) ), CheckBox_MinimizeTray, SLOT( setEnabled(bool) ) );
 	connect(CheckBox_OpenLast, SIGNAL( toggled(bool) ), CheckBox_RememberLastKey, SLOT( setEnabled(bool) ) );
 	connect(CheckBox_OpenLast, SIGNAL( toggled(bool) ), CheckBox_StartMinimized, SLOT( setEnabled(bool) ) );
@@ -70,6 +69,9 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	Edit_GlobalShortcut->setVisible(false);
 	CheckBox_EntryTitlesMatch->setVisible(false);
 #endif
+#ifdef Q_WS_MAC
+	CheckBox_AlwaysOnTop->setVisible(false);
+#endif
 	
 #ifdef GLOBAL_AUTOTYPE
 	pShortcut = autoType->getShortcut();
@@ -82,7 +84,6 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	CheckBox_OpenLast->setChecked(config->openLastFile());
 	CheckBox_RememberLastKey->setChecked(config->rememberLastKey());
 	CheckBox_ShowSysTrayIcon->setChecked(config->showSysTrayIcon());
-	CheckBox_CloseToTray->setChecked(config->minimizeToTray());
 	CheckBox_MinimizeTray->setChecked(config->minimizeTray());
 	CheckBox_StartMinimized->setChecked(config->startMinimized());
 	CheckBox_StartLocked->setChecked(config->startLocked());
@@ -108,6 +109,7 @@ CSettingsDlg::CSettingsDlg(QWidget* parent):QDialog(parent,Qt::Dialog)
 	}
 
 	//Appearance
+	CheckBox_AlwaysOnTop->setChecked(config->alwaysOnTop());
 	QPixmap *pxt=new QPixmap(pixmTextColor->width(),pixmTextColor->height());
 	pxt->fill(config->bannerTextColor());
 	pixmTextColor->clear();
@@ -235,7 +237,6 @@ void CSettingsDlg::apply(){
 	
 	//General (1)
 	config->setShowSysTrayIcon(CheckBox_ShowSysTrayIcon->isChecked());
-	config->setMinimizeToTray(CheckBox_CloseToTray->isChecked());
 	config->setMinimizeTray(CheckBox_MinimizeTray->isChecked());
 	config->setStartMinimized(CheckBox_StartMinimized->isChecked());
 	config->setStartLocked(CheckBox_StartLocked->isChecked());
@@ -255,6 +256,7 @@ void CSettingsDlg::apply(){
 	config->setAutoSaveChange(CheckBox_AutoSaveChange->isChecked());
 
 	//Appearence
+	config->setAlwaysOnTop(CheckBox_AlwaysOnTop->isChecked());
 	config->setBannerColor1(color1);
 	config->setBannerColor2(color2);
 	config->setBannerTextColor(textcolor);

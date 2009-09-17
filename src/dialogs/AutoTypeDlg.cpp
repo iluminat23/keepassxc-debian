@@ -19,13 +19,17 @@
 #include <QDesktopWidget>
 #include "AutoTypeDlg.h"
 
+bool AutoTypeDlg::dialogVisible = false;
+
 AutoTypeDlg::AutoTypeDlg(QList<IEntryHandle*> entries, QList<int> numbers, bool wasLocked) : pWasLocked(wasLocked){
+	Q_ASSERT(!dialogVisible);
+	dialogVisible = true;
 	setupUi(this);
 	
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowFlags(windowFlags()|Qt::WindowStaysOnTopHint);
 	setGeometry( QRect(QApplication::desktop()->screenGeometry(QCursor::pos()).center() - rect().center(), size()) );
-	setWindowIcon(getIcon("keepassx"));
+	setWindowIcon(getIcon("keepassx_small"));
 	entryList->setAlternatingRowColors(config->alternatingRowColors());
 	
 	bool hideUsernames = config->hideUsernames();
@@ -86,8 +90,14 @@ void AutoTypeDlg::paintEvent(QPaintEvent* event){
 }
 
 void AutoTypeDlg::resizeEvent(QResizeEvent* event){
-	Q_UNUSED(event);
-	createBanner(&BannerPixmap,getPixmap("keepassx_large"),tr("Auto-Type"),width());
+	createBanner(&BannerPixmap,getPixmap("keepassx"),tr("Auto-Type"),width());
+	QWidget::resizeEvent(event);
+}
+
+void AutoTypeDlg::closeEvent(QCloseEvent* event) {
+	Q_ASSERT(dialogVisible);
+	dialogVisible = false;
+	QWidget::closeEvent(event);
 }
 
 bool AutoTypeDlg::event(QEvent* event){

@@ -50,21 +50,26 @@ public:
 	QColor bannerTextColor(){return stringToColor(settings.value("Options/BannerTextColor","222,222,222").toString());}
 	int clipboardTimeOut(){return settings.value("Options/ClipboardTimeOut",20).toInt();}
 	QBitArray columns(){return stringToBitArray(settings.value("UI/Columns","11111000000").toString(),11);}
-	QList<int> columnOrder(){return stringToIntArray(settings.value("UI/ColumnOrder","100,100,100,100,100,100,100,100,100,100,100").toString(),11);}
+	QList<int> columnOrder(){return stringToIntArray(settings.value("UI/ColumnOrder","1,2,3,4,5,6,7,8,9,10,11").toString(),11);}
 	QList<int> columnSizes(){return stringToIntArray(settings.value("UI/ColumnSizes","15,10,10,10,10,10,10,10,10,10,10").toString(),11);}
 	int columnSort(){return settings.value("UI/ColumnSort",0).toInt();}
 	Qt::SortOrder columnSortOrder(){return static_cast<Qt::SortOrder>(settings.value("UI/ColumnSortOrder",Qt::AscendingOrder).toInt());}
+	QBitArray searchColumns(){return stringToBitArray(settings.value("UI/SearchColumns","11110000001").toString(),11);}
+	QList<int> searchColumnOrder(){return stringToIntArray(settings.value("UI/SearchColumnOrder","2,3,4,5,6,7,8,9,10,11,1").toString(),11);}
+	QList<int> searchColumnSizes(){return stringToIntArray(settings.value("UI/SearchColumnSizes","15,10,10,10,10,10,10,10,10,10,10").toString(),11);}
+	int searchColumnSort(){return settings.value("UI/SearchColumnSort",0).toInt();}
+	Qt::SortOrder searchColumnSortOrder(){return static_cast<Qt::SortOrder>(settings.value("UI/SearchColumnSortOrder",Qt::AscendingOrder).toInt());}
 	QStringList fileDlgHistory(unsigned index){return settings.value(QString("FileDlgHistory/ENTRY%1").arg(index)).toStringList();}
 	GrpTreeState groupTreeState(){return stringToGrpTreeState(settings.value("Options/GroupTreeState").toString());}
 	bool hidePasswords(){return settings.value("UI/HidePasswords",true).toBool();}
 	bool hideUsernames(){return settings.value("UI/HideUsernames",true).toBool();}
 	QByteArray hSplitterPos(){return settings.value("UI/HSplitterPos").toByteArray();}
+	bool alwaysOnTop(){return settings.value("UI/AlwaysOnTop",false).toBool();}
 	IntegrPluginType integrPlugin(){return stringToIntegrPluginType(settings.value("Options/IntegrPlugin").toString());}
 	QString lastFile(){return settings.value("Options/LastFile").toString();}
 	QString lastKeyLocation(){return settings.value("Options/LastKeyLocation").toString();}
 	tKeyType lastKeyType(){return stringToKeyType(settings.value("Options/LastKeyType").toString());}
 	QByteArray mainWindowGeometry();
-	bool minimizeToTray(){return settings.value("Options/MinimizeToTray",false).toBool();}
 	bool minimizeTray(){return settings.value("Options/MinimizeTray",false).toBool();}
 	bool startMinimized(){return settings.value("Options/StartMinimized",false).toBool();}
 	bool startLocked(){return settings.value("Options/StartLocked",false).toBool();}
@@ -101,7 +106,7 @@ public:
 	bool askBeforeDelete(){return settings.value("Options/AskBeforeDelete",true).toBool();}
 #ifdef AUTOTYPE
 	int autoTypePreGap(){return settings.value("Options/AutoTypePreGap",500).toInt();}
-	int autoTypeKeyStrokeDelay(){return settings.value("Options/AutoTypeKeyStrokeDelay",0).toInt();}
+	int autoTypeKeyStrokeDelay(){return settings.value("Options/AutoTypeKeyStrokeDelay",5).toInt();}
 #endif
 #ifdef GLOBAL_AUTOTYPE
 	Shortcut globalShortcut();
@@ -121,17 +126,22 @@ public:
 	void setColumnSizes(const QList<int>& value){settings.setValue("UI/ColumnSizes",intArrayToString(value));}
 	void setColumnSort(int value){settings.setValue("UI/ColumnSort",value);}
 	void setColumnSortOrder(int value){settings.setValue("UI/ColumnSortOrder",value);}
+	void setSearchColumns(const QBitArray& value){settings.setValue("UI/SearchColumns",bitArrayToString(value));}
+	void setSearchColumnOrder(const QList<int>& value){settings.setValue("UI/SearchColumnOrder",intArrayToString(value));}
+	void setSearchColumnSizes(const QList<int>& value){settings.setValue("UI/SearchColumnSizes",intArrayToString(value));}
+	void setSearchColumnSort(int value){settings.setValue("UI/SearchColumnSort",value);}
+	void setSearchColumnSortOrder(int value){settings.setValue("UI/SearchColumnSortOrder",value);}
 	void setFileDlgHistory(unsigned index,const QStringList& value){settings.setValue(QString("FileDlgHistory/ENTRY%1").arg(index), value);}
 	void setGroupTreeState(GrpTreeState value){settings.setValue("Options/GroupTreeState",grpTreeStateToString(value));}
 	void setHidePasswords(bool value){settings.setValue("UI/HidePasswords",value);}
 	void setHideUsernames(bool value){settings.setValue("UI/HideUsernames",value);}
 	void setHSplitterPos(const QByteArray& value){settings.setValue("UI/HSplitterPos",value);}
+	void setAlwaysOnTop(bool value){settings.setValue("UI/AlwaysOnTop",value);}
 	void setIntegrPlugin(IntegrPluginType value){settings.setValue("Options/IntegrPlugin",integrPluginTypeToString(value));}
 	void setLastFile(const QString& value){settings.setValue("Options/LastFile",value);}
 	void setLastKeyLocation(const QString& value){settings.setValue("Options/LastKeyLocation",value);}
 	void setLastKeyType(tKeyType value){settings.setValue("Options/LastKeyType",keyTypeToString(value));}
 	void setMainWindowGeometry(const QByteArray& value){settings.setValue("UI/MainWindowGeometry",value);}
-	void setMinimizeToTray(bool value){settings.setValue("Options/MinimizeToTray",value);}
 	void setMinimizeTray(bool value){settings.setValue("Options/MinimizeTray",value);}
 	void setStartMinimized(bool value){settings.setValue("Options/StartMinimized",value);}
 	void setStartLocked(bool value){settings.setValue("Options/StartLocked",value);}
