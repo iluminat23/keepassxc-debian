@@ -1,6 +1,6 @@
 keepassx (0.4.1-1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream release. (LP: #431798)
   * Bump debhelper to dh 7.
     - increase debian/compat to 7.
     - simplify debian/rules.
