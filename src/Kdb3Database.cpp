@@ -52,7 +52,7 @@ bool Kdb3Database::StdEntryLessThan(const Kdb3Database::StdEntry& This,const Kdb
 }
 
 
-Kdb3Database::Kdb3Database() : RawMasterKey(32), RawMasterKey_CP1252(32),
+Kdb3Database::Kdb3Database() : File(NULL), RawMasterKey(32), RawMasterKey_CP1252(32),
 	RawMasterKey_Latin1(32), RawMasterKey_UTF8(32), MasterKey(32){
 }
 
@@ -448,14 +448,28 @@ bool Kdb3Database::createGroupTree(QList<quint32>& Levels){
 	for(int i=0;i<Groups.size();i++)EntryIndexCounter << 0;
 
 	for(int e=0;e<Entries.size();e++){
+		int groupIndex = -1;
 		for(int g=0;g<Groups.size();g++){
 			if(Entries[e].GroupId==Groups[g].Id){
-				Groups[g].Entries.append(&Entries[e]);
-				Entries[e].Group=&Groups[g];
-				Entries[e].Index=EntryIndexCounter[g];
-				EntryIndexCounter[g]++;
+				groupIndex = g;
+				break;
 			}
 		}
+		
+		if (groupIndex == -1) {
+			qWarning("Orphaned entry found, assigning to first group");
+			for(int g=0;g<Groups.size();g++){
+				if(Groups[g].Id == RootGroup.Children[0]->Id){
+					groupIndex = g;
+					break;
+				}
+			}
+		}
+		
+		Groups[groupIndex].Entries.append(&Entries[e]);
+		Entries[e].Group=&Groups[groupIndex];
+		Entries[e].Index=EntryIndexCounter[groupIndex];
+		EntryIndexCounter[groupIndex]++;
 	}
 
 	return true;
@@ -504,12 +518,6 @@ bool Kdb3Database::load(QString identifier, bool readOnly){
 	return false;
 
 bool Kdb3Database::loadReal(QString filename, bool readOnly, bool differentEncoding) {
-	unsigned long total_size,crypto_size;
-	quint32 Signature1,Signature2,Version,NumGroups,NumEntries,Flags;
-	quint8 FinalRandomSeed[16];
-	quint8 ContentsHash[32];
-	quint8 EncryptionIV[16];
-	
 	File = new QFile(filename);
 	if (readOnly) {
 		if(!File->open(QIODevice::ReadOnly)){
@@ -532,6 +540,14 @@ bool Kdb3Database::loadReal(QString filename, bool readOnly, bool differentEncod
 			}
 		}
 	}
+	
+	openedReadOnly = readOnly;
+	
+	unsigned long total_size,crypto_size;
+	quint32 Signature1,Signature2,Version,NumGroups,NumEntries,Flags;
+	quint8 FinalRandomSeed[16];
+	quint8 ContentsHash[32];
+	quint8 EncryptionIV[16];
 	
 	total_size=File->size();
 	char* buffer = new char[total_size];
@@ -609,6 +625,7 @@ bool Kdb3Database::loadReal(QString filename, bool readOnly, bool differentEncod
 	
 	if ((crypto_size > 2147483446) || (!crypto_size && NumGroups)){
 		error=tr("Decryption failed.\nThe key is wrong or the file is damaged.");
+		KeyError=true;
 		LOAD_RETURN_CLEANUP
 	}
 	SHA256::hashBuffer(buffer+DB_HEADER_SIZE,FinalKey,crypto_size);
@@ -1104,13 +1121,16 @@ IGroupHandle* Kdb3Database::addGroup(const CGroup* group,IGroupHandle* ParentHan
 		Groups.back().Parent->Children.append(&Groups.back());
 	}
 	else{
+		// Insert to root group. Try to keep Backup group at the end.
 		Groups.back().Parent=&RootGroup;
 		Groups.back().Index=RootGroup.Children.size();
-		if (group->Title!="Backup" && RootGroup.Children.size() && RootGroup.Children.last()->Title=="Backup"){
+		int position = RootGroup.Children.size();
+		if (group->Title!="Backup" && !RootGroup.Children.isEmpty() && RootGroup.Children.last()->Title=="Backup"){
 			RootGroup.Children.last()->Index = Groups.back().Index;
 			Groups.back().Index--;
+			position--;
 		}
-		Groups.back().Parent->Children.append(&Groups.back());
+		RootGroup.Children.insert(position, &Groups.back());
 	}
 	return &GroupHandles.back();
 }
@@ -1135,11 +1155,25 @@ IGroupHandle* Kdb3Database::backupGroup(bool create){
 	return group;
 }
 
+Kdb3Database::StdEntry::StdEntry(){
+	Handle = NULL;
+	Group = NULL;
+}
+
+Kdb3Database::StdGroup::StdGroup(){
+	Index=0;
+	Id=0;
+	Parent=NULL;
+	Handle=NULL;
+}
+
 Kdb3Database::StdGroup::StdGroup(const CGroup& other){
 	Index=0;
 	Id=other.Id;
 	Image=other.Image;
 	Title=other.Title;
+	Parent=NULL;
+	Handle=NULL;
 }
 
 void Kdb3Database::EntryHandle::setTitle(const QString& Title){Entry->Title=Title; }
@@ -1225,6 +1259,7 @@ void Kdb3Database::EntryHandle::setVisualIndex(int index){
 Kdb3Database::EntryHandle::EntryHandle(Kdb3Database* db){
 	pDB=db;
 	valid=true;
+	Entry=NULL;
 }
 
 
@@ -1319,6 +1354,18 @@ bool Kdb3Database::save(){
 		return false;
 	}
 	
+	if (!File->isOpen()) {
+		if(!File->open(QIODevice::ReadWrite)){
+			error=tr("Could not open file.");
+			return false;
+		}
+	}
+	
+	if(!(File->openMode() & QIODevice::WriteOnly)){
+		error = tr("The database has been opened read-only.");
+		return false;
+	}
+	
 	//Delete old backup entries
 	if (config->backup() && config->backupDelete() && config->backupDeleteAfter()>0 && backupGroup()){
 		QDateTime time = QDateTime::currentDateTime().addDays(-config->backupDeleteAfter());
@@ -1333,11 +1380,6 @@ bool Kdb3Database::save(){
 	quint8 FinalRandomSeed[16];
 	quint8 ContentsHash[32];
 	quint8 EncryptionIV[16];
-
-	if(!(File->openMode() & QIODevice::WriteOnly)){
-		error = tr("The database has been opened read-only.");
-		return false;
-	}
 
 	unsigned int FileSize;
 
@@ -1455,28 +1497,50 @@ bool Kdb3Database::save(){
 	
 	int size = EncryptedPartSize+DB_HEADER_SIZE;
 	
-	if (!File->resize(size)){
-		// only recreate file if the new database is smaller
-		if (File->size() > size) {
-			qDebug("Unable to resize, trying to recreate file");
-			if (!File->remove() || !File->open(QIODevice::ReadWrite)) {
-				delete [] buffer;
-				error=decodeFileError(File->error());
-				return false;
-			}
-		}
-	}
-	File->seek(0);
-	if (File->write(buffer,size)!=size){
-		delete [] buffer;
+	if (!saveFileTransactional(buffer, size)) {
 		error=decodeFileError(File->error());
+		delete [] buffer;
 		return false;
 	}
-	if (!syncFile(File))
-		qWarning("Unable to flush file to disk");
 
 	delete [] buffer;
 	//if(SearchGroupID!=-1)Groups.push_back(SearchGroup);
+	return true;
+}
+
+bool Kdb3Database::saveFileTransactional(char* buffer, int size) {
+	QString orgFilename = File->fileName();
+	QFile* tmpFile = new QFile(orgFilename + ".tmp");
+	if (!tmpFile->open(QIODevice::WriteOnly|QIODevice::Truncate)) {
+		tmpFile->remove();
+		delete tmpFile;
+		return false;
+	}
+	if (tmpFile->write(buffer,size) != size) {
+		tmpFile->remove();
+		delete tmpFile;
+		return false;
+	}
+	if (!syncFile(tmpFile))
+		qWarning("Unable to flush file to disk");
+	tmpFile->close();
+	if (!File->remove()) {
+		delete tmpFile;
+		return false;
+	}
+	delete File;
+	File = NULL;
+	if (!tmpFile->rename(orgFilename)) {
+		delete tmpFile;
+		File = new QFile(orgFilename);
+		return false;
+	}
+	File = tmpFile;
+	if (!tmpFile->open(QIODevice::ReadWrite)) {
+		delete tmpFile;
+		return false;
+	}
+	
 	return true;
 }
 

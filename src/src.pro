@@ -63,7 +63,7 @@ unix : !macx : !isEqual(QMAKE_WIN32,1){
 	INSTALLS += shareapp shararemime sharemimelnk sharepixmaps
 	
 	contains(DEFINES,AUTOTYPE){
-		LIBS += -lXtst
+		LIBS += -lX11 -lXtst
 		SOURCES += lib/HelperX11.cpp lib/AutoTypeX11.cpp
 		HEADERS += lib/HelperX11.h lib/AutoTypeX11.h
 	}
@@ -120,6 +120,7 @@ isEqual(QMAKE_WIN32,1){
 	data.files += ../share/keepassx/*
 	data.path = $${PREFIX}/share
 	INSTALLS += data
+	win32-msvc*: LIBS += advapi32.lib
 	!isEqual(INSTALL_QTLIB,0){
 		qt_libs.files = $${QMAKE_LIBDIR_QT}/QtCore4.dll $${QMAKE_LIBDIR_QT}/QtGui4.dll $${QMAKE_LIBDIR_QT}/QtXml4.dll
 		qt_libs.path = $${PREFIX}
@@ -170,18 +171,26 @@ TRANSLATIONS_KX = translations/keepassx-de_DE.ts \
                   translations/keepassx-nb_NO.ts \
                   translations/keepassx-nl_NL.ts \
                   translations/keepassx-pl_PL.ts \
+                  translations/keepassx-pt_PT.ts \
                   translations/keepassx-ru_RU.ts \
+                  translations/keepassx-sk_SK.ts \
+                  translations/keepassx-sr_RS.ts \
                   translations/keepassx-tr_TR.ts \
                   translations/keepassx-uk_UA.ts \
                   translations/keepassx-zh_CN.ts
 
+# also update in translations_release.sh
 TRANSLATIONS_DISABLED = translations/keepassx-cs_CZ.ts
 
 TRANSLATIONS_QT = translations/qt_fi.ts \
+                  translations/qt_gl_ES.ts \
                   translations/qt_hu.ts \
                   translations/qt_it.ts \
                   translations/qt_nl.ts \
+                  translations/qt_sr.ts \
                   translations/qt_tr.ts
+
+# missing Qt translation: nb_NO
 
 TRANSLATIONS = $$TRANSLATIONS_KX $$TRANSLATIONS_DISABLED translations/keepassx-xx_XX.ts
 #TRANSLATIONS_UPDATE = $$TRANSLATIONS_KX $$TRANSLATIONS_DISABLED translations/keepassx-xx_XX.ts

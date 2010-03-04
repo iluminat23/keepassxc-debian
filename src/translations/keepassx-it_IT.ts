@@ -827,7 +827,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Repeat:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripeti:</translation>
     </message>
 </context>
 <context>
@@ -1132,34 +1132,34 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Use following character groups:</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilizza i seguenti gruppi di carattere:</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personalizza</translation>
     </message>
     <message>
         <source>Use the following characters:</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilizza i seguenti caratteri:</translation>
     </message>
 </context>
 <context>
     <name>HelpDlg</name>
     <message>
         <source>Previous Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina precedente</translation>
     </message>
     <message>
         <source>Next Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Pagina successiva</translation>
     </message>
     <message>
         <source>First Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Prima pagina</translation>
     </message>
     <message>
         <source>Help Contents</source>
-        <translation type="unfinished"></translation>
+        <translation>Contenuti guida</translation>
     </message>
 </context>
 <context>
@@ -1300,11 +1300,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Unable to initialize the twofish algorithm.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile inizializzare l&apos;algoritmo twofish.</translation>
     </message>
     <message>
         <source>Unknown encryption algorithm.</source>
-        <translation type="unfinished"></translation>
+        <translation>Algoritmo di cifratura sconosciuto.</translation>
     </message>
     <message>
         <source>Decryption failed.
@@ -1705,10 +1705,14 @@ Do you want to save the changes?</source>
     </message>
     <message>
         <source>Couldn&apos;t create database lock file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile creare il file di blocco del database.</translation>
     </message>
     <message>
         <source>locked</source>
+        <translation>bloccato</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2015,6 +2019,10 @@ Do you want to save the changes?</source>
     </message>
     <message>
         <source>&amp;Group</source>
+        <translation>&amp;Gruppo</translation>
+    </message>
+    <message>
+        <source>&amp;Minimize Window</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2277,7 +2285,7 @@ Il file non è leggibile.</translation>
     </message>
     <message>
         <source>Minimize to tray when clicking the main window&apos;s close button</source>
-        <translation type="obsolete">Riduci alla barra di sistema al click del pulsante chiudi della finestra principale</translation>
+        <translation type="unfinished">Riduci alla barra di sistema al click del pulsante chiudi della finestra principale</translation>
     </message>
     <message>
         <source>Remember last opened file</source>
@@ -2553,7 +2561,7 @@ Il file non è leggibile.</translation>
     </message>
     <message>
         <source>Show window always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra finestra sempre in primo piano</translation>
     </message>
 </context>
 <context>

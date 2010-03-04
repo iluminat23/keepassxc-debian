@@ -50,6 +50,7 @@ Export_Txt export_Txt;
 Export_KeePassX_Xml export_KeePassX_Xml;
 
 KeepassMainWindow::KeepassMainWindow(const QString& ArgFile,bool ArgMin,bool ArgLock,QWidget *parent, Qt::WFlags flags) :QMainWindow(parent,flags){
+	ShutingDown=false;
 	IsLocked=false;
 	EventOccurred=true;
 	inactivityCounter=0;
@@ -185,6 +186,9 @@ void KeepassMainWindow::setupConnections(){
 	connect(ViewToolButtonSize22Action,SIGNAL(toggled(bool)), this, SLOT(OnViewToolbarIconSize22(bool)));
 	connect(ViewToolButtonSize28Action,SIGNAL(toggled(bool)), this, SLOT(OnViewToolbarIconSize28(bool)));
 	connect(ViewShowStatusbarAction,SIGNAL(toggled(bool)),statusBar(),SLOT(setVisible(bool)));
+#ifdef Q_WS_MAC
+	connect(ViewMinimizeAction, SIGNAL(triggered()), SLOT(showMinimized()));
+#endif
 
 	connect(ExtrasSettingsAction,SIGNAL(triggered(bool)),this,SLOT(OnExtrasSettings()));
 	connect(ExtrasPasswordGenAction,SIGNAL(triggered(bool)),this,SLOT(OnExtrasPasswordGen()));
@@ -322,6 +326,11 @@ void KeepassMainWindow::setupMenus(){
 		case 22: ViewToolButtonSize22Action->setChecked(true); break;
 		case 28: ViewToolButtonSize28Action->setChecked(true); break;
 	}
+	
+#ifdef Q_WS_MAC
+	ViewMenu->addSeparator();
+	ViewMenu->addAction(ViewMinimizeAction);
+#endif
 
 	SysTrayMenu = new QMenu(APP_DISPLAY_NAME,this);
 	SysTrayMenu->addAction(FileUnLockWorkspaceAction);
@@ -372,6 +381,7 @@ void KeepassMainWindow::setupMenus(){
 #ifdef Q_WS_MAC
 	FileSaveAsAction->setShortcut(tr("Shift+Ctrl+S"));
 	EditGroupSearchAction->setShortcut(tr("Shift+Ctrl+F"));
+	ViewMinimizeAction->setShortcut(tr("Ctrl+M"));
 #endif
 
 	//ExtrasTrashCanAction->setVisible(false); //TODO For KP 2.x only
@@ -969,6 +979,7 @@ void KeepassMainWindow::OnFileChangeKey(){
 }
 
 void KeepassMainWindow::OnFileExit(){
+	ShutingDown = true;
 	close();
 }
 
@@ -1061,7 +1072,16 @@ void KeepassMainWindow::OnFileModified(){
 }
 
 void KeepassMainWindow::closeEvent(QCloseEvent* e){
+	if (!ShutingDown && config->showSysTrayIcon() && config->minimizeToTray()){
+		e->ignore();
+		if (config->lockOnMinimize() && !IsLocked && FileOpen)
+			OnUnLockWorkspace();
+		hide();
+		return;
+	}
+	
 	if(FileOpen && !closeDatabase()){
+		ShutingDown = false;
 		e->ignore();
 		if (!isVisible())
 			show();
@@ -1245,7 +1265,14 @@ void KeepassMainWindow::OnSysTrayActivated(QSystemTrayIcon::ActivationReason rea
 }
 
 void KeepassMainWindow::restoreWindow(){
+#ifdef Q_WS_WIN
+	if (windowState() & Qt::WindowMaximized)
+		showMaximized();
+	else
+		showNormal();
+#else
 	showNormal();
+#endif
 	activateWindow();
 	if (IsLocked)
 		OnUnLockWorkspace();
@@ -1390,6 +1417,8 @@ void KeepassMainWindow::OnInactivityTimer(){
 }
 
 void KeepassMainWindow::OnShutdown(QSessionManager& manager) {
+	ShutingDown = true;
+	
 	/* QApplication::commitData() only closes visible windows,
 	   so we need to manually close mainwindow if it's hidden */
 	if (manager.allowsInteraction() && !isVisible()) {
