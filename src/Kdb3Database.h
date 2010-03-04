@@ -117,6 +117,7 @@ public:
 
 	class StdEntry:public CEntry{
 		public:
+				StdEntry();
 				quint16 Index;
 				EntryHandle* Handle;
 				StdGroup* Group;
@@ -124,7 +125,7 @@ public:
 
 	class StdGroup:public CGroup{
 		public:
-			StdGroup():CGroup(){};
+			StdGroup();
 			StdGroup(const CGroup&);
 			quint16 Index;
 			StdGroup* Parent;
@@ -137,6 +138,7 @@ public:
 	virtual ~Kdb3Database(){};
 	virtual bool load(QString identifier, bool readOnly);
 	virtual bool save();
+	virtual bool saveFileTransactional(char* buffer, int size);
 	virtual bool close();
 	virtual void create();
 	virtual int numEntries();
@@ -235,6 +237,7 @@ private:
 	StdGroup RootGroup;
 	QList<QPixmap>CustomIcons;
 	QFile* File;
+	bool openedReadOnly;
 	QString error;
 	bool KeyError;
 	bool PotentialEncodingIssueLatin1;

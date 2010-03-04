@@ -58,6 +58,10 @@ KeepassEntryView::KeepassEntryView(QWidget* parent) : QTreeWidget(parent) {
 
 KeepassEntryView::~KeepassEntryView(){
 	saveHeaderView();
+	if (ClipboardTimer.isActive()) {
+		ClipboardTimer.stop();
+		OnClipboardTimeOut();
+	}
 }
 
 void KeepassEntryView::retranslateColumns() {
@@ -368,16 +372,23 @@ void KeepassEntryView::editEntry(EntryViewItem* item){
 
 
 void KeepassEntryView::OnNewEntry(){
-	IEntryHandle* NewEntry = NULL;
+	IGroupHandle* ParentGroup;
+	
 	if (!CurrentGroup){ // We must be viewing search results. Add the new entry to the first group.
 		if (db->groups().size() > 0)
-			NewEntry=db->newEntry(db->sortedGroups()[0]);
+			ParentGroup = db->sortedGroups()[0];
+			
 		else{
 			QMessageBox::critical(NULL,tr("Error"),tr("At least one group must exist before adding an entry."),tr("OK"));
 		}
 	}
-	else
-		NewEntry=db->newEntry(CurrentGroup);
+	else{
+		ParentGroup = CurrentGroup;
+	}
+	
+	IEntryHandle* NewEntry = db->newEntry(ParentGroup);
+	NewEntry->setImage(ParentGroup->image());
+	
 	CEditEntryDlg dlg(db,NewEntry,this,true);
 	if(!dlg.exec()){
 		db->deleteLastEntry();
@@ -389,6 +400,7 @@ void KeepassEntryView::OnNewEntry(){
 		emit fileModified();
 		if (header()->isSortIndicatorShown())
 			sortByColumn(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
+		setCurrentItem(Items.back());
 	}
 
 }
@@ -427,7 +439,6 @@ void KeepassEntryView::OnEditOpenUrl(){
 void KeepassEntryView::OnEditCopyUrl(){
 	if (selectedItems().size() == 0) return;
 	QString url = ((EntryViewItem*)selectedItems().first())->EntryHandle->url();
-	if (url.trimmed().isEmpty()) return;
 	if (url.startsWith("cmd://") && url.length()>6)
 		url = url.right(url.length()-6);
 	
@@ -440,13 +451,12 @@ void KeepassEntryView::OnEditCopyUrl(){
 void KeepassEntryView::OnUsernameToClipboard(){
 	if (selectedItems().size() == 0) return;
 	QString username = ((EntryViewItem*)selectedItems().first())->EntryHandle->username();
-	if (username.trimmed().isEmpty()) return;
 	Clipboard->setText(username,  QClipboard::Clipboard);
 	if(Clipboard->supportsSelection()){
 		Clipboard->setText(username, QClipboard::Selection);
 	}
 	
-	if (config->clipboardTimeOut()!=0) {
+	if (config->clipboardTimeOut()!=0 && !username.trimmed().isEmpty()) {
 		ClipboardTimer.setSingleShot(true);
 		ClipboardTimer.start(config->clipboardTimeOut()*1000);
 	}
@@ -457,13 +467,12 @@ void KeepassEntryView::OnPasswordToClipboard(){
 	SecString password;
 	password=((EntryViewItem*)selectedItems().first())->EntryHandle->password();
 	password.unlock();
-	if (password.string().isEmpty()) return;
 	Clipboard->setText(password.string(), QClipboard::Clipboard);
 	if(Clipboard->supportsSelection()){
 		Clipboard->setText(password.string(), QClipboard::Selection);
 	}
 	
-	if (config->clipboardTimeOut()!=0) {
+	if (config->clipboardTimeOut()!=0 && !password.string().isEmpty()) {
 		ClipboardTimer.setSingleShot(true);
 		ClipboardTimer.start(config->clipboardTimeOut()*1000);
 	}
