@@ -2,7 +2,7 @@
 # -*- makefile -*-
 
 %:
-	dh --with quilt $@
+	dh $@
 
 override_dh_auto_configure:
 	qmake-qt4 -makefile -nocache QMAKE_STRIP=: PREFIX=/usr \

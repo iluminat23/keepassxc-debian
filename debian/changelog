@@ -1,9 +1,10 @@
 keepassx (0.4.2-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Switch to new source format 3.0 (quilt).
   * Bump Standards-Version to 3.8.4, no changes needed.
 
- -- Felix Geyer <debfx-pkg@fobos.de>  Thu, 04 Mar 2010 20:04:19 +0100
+ -- Felix Geyer <debfx-pkg@fobos.de>  Thu, 04 Mar 2010 20:37:46 +0100
 
 keepassx (0.4.1-1) unstable; urgency=low
 
