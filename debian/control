@@ -5,10 +5,10 @@ Maintainer: Reinhard Tartler <siretart@tauware.de>
 Uploaders: David Valot <ptitdav69@gmail.com>,
            Felix Geyer <debfx-pkg@fobos.de>
 Build-Depends: debhelper (>= 7.0.50~),
-	       quilt (>= 0.46-7~),
+               quilt (>= 0.46-7~),
                libqt4-dev (>= 4.3.0),
                libxtst-dev
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://www.keepassx.org/
 Vcs-Bzr: https://code.launchpad.net/~keepassx/keepassx/debian
 
