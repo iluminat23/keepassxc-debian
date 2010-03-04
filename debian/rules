@@ -1,28 +1,17 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
-CFLAGS = -Wall -g
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-
 %:
 	dh --with quilt $@
 
 override_dh_auto_configure:
-	qmake-qt4 PREFIX=/usr DEBUG=1 QMAKE_CFLAGS_DEBUG="$(CFLAGS)" \
-		QMAKE_CXXFLAGS_DEBUG="$(CFLAGS)"
+	qmake-qt4 -makefile -nocache QMAKE_STRIP=: PREFIX=/usr \
+		QMAKE_CXXFLAGS_RELEASE="$(CXXFLAGS)" \
+		QMAKE_CFLAGS_RELEASE="$(CFLAGS)" \
+		QMAKE_LFLAGS_RELEASE="$(LDFLAGS)"
 
 override_dh_auto_install:
-	$(MAKE) INSTALL_ROOT="$(CURDIR)/debian/keepassx" install
-	lrelease-qt4 src/src.pro
-	rm -f src/translations/keepassx-xx_XX.qm
-	mv src/translations/*.qm debian/keepassx/usr/share/keepassx/i18n
+	dh_auto_install -- INSTALL_ROOT="$(CURDIR)/debian/keepassx"
 
 override_dh_auto_clean:
 	dh_auto_clean
