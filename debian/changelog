@@ -1,6 +1,6 @@
 keepassx (0.4.2-1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream release. (Closes: #572614)
     - Fixes FTBFS with binutils-gold. (Closes: #554982)
   * Switch to new source format 3.0 (quilt).
   * Bump Standards-Version to 3.8.4, no changes needed.
