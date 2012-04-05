@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Reinhard Tartler <siretart@tauware.de>
 Uploaders: David Valot <ptitdav69@gmail.com>,
            Felix Geyer <debfx-pkg@fobos.de>
-Build-Depends: debhelper (>= 7.0.50~),
+Build-Depends: debhelper (>= 9),
                libqt4-dev (>= 4.3.0),
                libxtst-dev
 Standards-Version: 3.9.3
