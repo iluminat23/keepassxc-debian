@@ -4,6 +4,35 @@
 %:
 	dh $@ --parallel --buildsystem=qmake_qt4
 
+override_dh_auto_install:
+	dh_auto_install
+
+	mkdir -p debian/keepassx/usr/share/icons/hicolor/16x16/apps \
+	         debian/keepassx/usr/share/icons/hicolor/24x24/apps \
+	         debian/keepassx/usr/share/icons/hicolor/32x32/apps \
+	         debian/keepassx/usr/share/icons/hicolor/48x48/apps \
+	         debian/keepassx/usr/share/icons/hicolor/64x64/apps \
+	         debian/keepassx/usr/share/icons/hicolor/128x128/apps \
+	         debian/keepassx/usr/share/icons/hicolor/scalable/apps
+
+	cp share/keepassx/icons/keepassx_small.png \
+		debian/keepassx/usr/share/icons/hicolor/16x16/apps/keepassx.png
+	convert share/keepassx/icons/keepassx.png -resize 24x24 \
+		debian/keepassx/usr/share/icons/hicolor/24x24/apps/keepassx.png
+	cp share/keepassx/icons/keepassx.png \
+		debian/keepassx/usr/share/icons/hicolor/32x32/apps/keepassx.png
+	convert -density 72 -background none debian/keepassx.svg \
+		debian/keepassx/usr/share/icons/hicolor/48x48/apps/keepassx.png
+	convert -density 96 -background none debian/keepassx.svg \
+		debian/keepassx/usr/share/icons/hicolor/64x64/apps/keepassx.png
+	convert -density 192 -background none debian/keepassx.svg \
+		debian/keepassx/usr/share/icons/hicolor/128x128/apps/keepassx.png
+	cp debian/keepassx.svg \
+		debian/keepassx/usr/share/icons/hicolor/scalable/apps/keepassx.svg
+
+	rm debian/keepassx/usr/share/pixmaps/keepassx.xpm
+	cd debian/keepassx/usr/share/pixmaps && ln -s ../icons/hicolor/32x32/apps/keepassx.png .
+
 override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf bin build
