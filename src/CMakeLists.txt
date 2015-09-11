@@ -1,188 +1,302 @@
-# CMake is still experimental, use qmake instead
+#  Copyright (C) 2010 Felix Geyer <debfx@fobos.de>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 2 or (at your option)
+#  version 3 of the License.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(keepassx_HEADERS
-	main.h
-	mainwindow.h
-	Database.h
-	Kdb3Database.h
-	lib/EntryView.h
-	lib/FileDialogs.h
-	lib/GroupView.h
-	lib/ShortcutWidget.h
-	lib/UrlLabel.h
-	lib/WaitAnimationWidget.h
-	dialogs/AboutDlg.h
-	dialogs/AddBookmarkDlg.h
-	dialogs/CalendarDlg.h
-	dialogs/CollectEntropyDlg.h
-	dialogs/CustomizeDetailViewDlg.h
-	dialogs/DatabaseSettingsDlg.h
-	dialogs/EditEntryDlg.h
-	dialogs/EditGroupDlg.h
-	dialogs/ExpiredEntriesDlg.h
-	dialogs/HelpDlg.h
-	dialogs/ManageBookmarksDlg.h
-	dialogs/PasswordDlg.h
-	dialogs/PasswordGenDlg.h
-	dialogs/SearchDlg.h
-	dialogs/SelectIconDlg.h
-	dialogs/SettingsDlg.h
-	dialogs/SimplePasswordDlg.h
-#	dialogs/TrashCanDlg.h
-	import/Import.h
-#	import/Import_GnuKeyRing.h
-	import/Import_KeePassX_Xml.h
-	import/Import_KWalletXml.h
-	import/Import_PwManager.h
-	export/Export.h
-	export/Export_KeePassX_Xml.h
-	export/Export_Txt.h
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+
+configure_file(config-keepassx.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-keepassx.h)
+
+include(GetGitRevisionDescription)
+get_git_head_revision(GIT_REFSPEC GIT_HEAD)
+git_describe(GIT_DESCRIBE --long)
+
+if (NOT GIT_HEAD OR NOT GIT_DESCRIBE)
+    set(GIT_HEAD "")
+    set(GIT_DESCRIBE "")
+endif()
+
+configure_file(version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
+
+set(keepassx_SOURCES
+    autotype/AutoType.cpp
+    autotype/AutoTypeAction.cpp
+    autotype/AutoTypePlatformPlugin.h
+    autotype/AutoTypeSelectDialog.cpp
+    autotype/AutoTypeSelectView.cpp
+    autotype/ShortcutWidget.cpp
+    autotype/WildcardMatcher.cpp
+    autotype/WindowSelectComboBox.cpp
+    autotype/test/AutoTypeTestInterface.h
+    core/AutoTypeAssociations.cpp
+    core/Config.cpp
+    core/Database.cpp
+    core/DatabaseIcons.cpp
+    core/Endian.cpp
+    core/Entry.cpp
+    core/EntryAttachments.cpp
+    core/EntryAttributes.cpp
+    core/EntrySearcher.cpp
+    core/FilePath.cpp
+    core/Global.h
+    core/Group.cpp
+    core/InactivityTimer.cpp
+    core/ListDeleter.h
+    core/Metadata.cpp
+    core/PasswordGenerator.cpp
+    core/qlockfile.cpp
+    core/qsavefile.cpp
+    core/qsavefile_p.h
+    core/SignalMultiplexer.cpp
+    core/TimeDelta.cpp
+    core/TimeInfo.cpp
+    core/ToDbExporter.cpp
+    core/Tools.cpp
+    core/Translator.cpp
+    core/Uuid.cpp
+    core/qcommandlineoption.cpp
+    core/qcommandlineparser.cpp
+    crypto/Crypto.cpp
+    crypto/CryptoHash.cpp
+    crypto/Random.cpp
+    crypto/SymmetricCipher.cpp
+    crypto/SymmetricCipherBackend.h
+    crypto/SymmetricCipherGcrypt.cpp
+    format/CsvExporter.cpp
+    format/KeePass1.h
+    format/KeePass1Reader.cpp
+    format/KeePass2.h
+    format/KeePass2RandomStream.cpp
+    format/KeePass2Reader.cpp
+    format/KeePass2Writer.cpp
+    format/KeePass2XmlReader.cpp
+    format/KeePass2XmlWriter.cpp
+    gui/AboutDialog.cpp
+    gui/Application.cpp
+    gui/ChangeMasterKeyWidget.cpp
+    gui/Clipboard.cpp
+    gui/DatabaseOpenWidget.cpp
+    gui/DatabaseSettingsWidget.cpp
+    gui/DatabaseTabWidget.cpp
+    gui/DatabaseWidget.cpp
+    gui/DatabaseWidgetStateSync.cpp
+    gui/DialogyWidget.cpp
+    gui/DragTabBar.cpp
+    gui/EditWidget.cpp
+    gui/EditWidgetIcons.cpp
+    gui/EditWidgetProperties.cpp
+    gui/FileDialog.cpp
+    gui/IconModels.cpp
+    gui/KeePass1OpenWidget.cpp
+    gui/LineEdit.cpp
+    gui/MainWindow.cpp
+    gui/MessageBox.cpp
+    gui/PasswordEdit.cpp
+    gui/PasswordGeneratorWidget.cpp
+    gui/PasswordComboBox.cpp
+    gui/SettingsWidget.cpp
+    gui/SortFilterHideProxyModel.cpp
+    gui/UnlockDatabaseWidget.cpp
+    gui/WelcomeWidget.cpp
+    gui/entry/AutoTypeAssociationsModel.cpp
+    gui/entry/EditEntryWidget.cpp
+    gui/entry/EditEntryWidget_p.h
+    gui/entry/EntryAttachmentsModel.cpp
+    gui/entry/EntryAttributesModel.cpp
+    gui/entry/EntryHistoryModel.cpp
+    gui/entry/EntryModel.cpp
+    gui/entry/EntryView.cpp
+    gui/group/EditGroupWidget.cpp
+    gui/group/GroupModel.cpp
+    gui/group/GroupView.cpp
+    keys/CompositeKey.cpp
+    keys/CompositeKey_p.h
+    keys/FileKey.cpp
+    keys/Key.h
+    keys/PasswordKey.cpp
+    streams/HashedBlockStream.cpp
+    streams/LayeredStream.cpp
+    streams/qtiocompressor.cpp
+    streams/StoreDataStream.cpp
+    streams/SymmetricCipherStream.cpp
 )
 
-SET(keepassx_SOURCES
-	main.cpp
-	mainwindow.cpp
-	KpxConfig.cpp
-	Database.cpp
-	Kdb3Database.cpp
-	lib/bookmarks.cpp
-	lib/EntryView.cpp
-	lib/FileDialogs.cpp
-	lib/GroupView.cpp
-	lib/random.cpp
-	lib/SecString.cpp
-	lib/ShortcutWidget.cpp
-	lib/tools.cpp
-	lib/UrlLabel.cpp
-	lib/WaitAnimationWidget.cpp
-	crypto/aescrypt.c
-	crypto/aeskey.c
-	crypto/aes_modes.c
-	crypto/aestab.c
-	crypto/arcfour.cpp
-	crypto/blowfish.cpp
-	crypto/sha256.cpp
-	crypto/twoclass.cpp
-	crypto/twofish.cpp
-	crypto/yarrow.cpp
-	apg/convert.c
-	apg/pronpass.c
-	apg/randpass.c
-	dialogs/AboutDlg.cpp
-	dialogs/AddBookmarkDlg.cpp
-	dialogs/CalendarDlg.cpp
-	dialogs/CollectEntropyDlg.cpp
-	dialogs/CustomizeDetailViewDlg.cpp
-	dialogs/DatabaseSettingsDlg.cpp
-	dialogs/EditEntryDlg.cpp
-	dialogs/EditGroupDlg.cpp
-	dialogs/ExpiredEntriesDlg.cpp
-	dialogs/HelpDlg.cpp
-	dialogs/ManageBookmarksDlg.cpp
-	dialogs/PasswordDlg.cpp
-	dialogs/PasswordGenDlg.cpp
-	dialogs/SearchDlg.cpp
-	dialogs/SelectIconDlg.cpp
-	dialogs/SettingsDlg.cpp
-	dialogs/SimplePasswordDlg.cpp
-#	dialogs/TrashCanDlg.cpp
-	import/Import.cpp
-#	import/Import_GnuKeyRing.cpp
-	import/Import_KeePassX_Xml.cpp
-	import/Import_KWalletXml.cpp
-	import/Import_PwManager.cpp
-	export/Export.cpp
-	export/Export_KeePassX_Xml.cpp
-	export/Export_Txt.cpp
+if(NOT GCRYPT_HAS_SALSA20)
+  set(keepassx_SOURCES
+      ${keepassx_SOURCES}
+      crypto/salsa20/ecrypt-config.h
+      crypto/salsa20/ecrypt-machine.h
+      crypto/salsa20/ecrypt-portable.h
+      crypto/salsa20/ecrypt-sync.h
+      crypto/salsa20/salsa20.c
+      crypto/SymmetricCipherSalsa20.cpp
+  )
+endif()
+
+if(UNIX)
+  set(keepassx_SOURCES
+      ${keepassx_SOURCES}
+      core/qlockfile_unix.cpp
+  )
+elseif(MINGW)
+  set(keepassx_SOURCES
+      ${keepassx_SOURCES}
+      core/qlockfile_win.cpp
+  )
+endif()
+
+set(keepassx_SOURCES_MAINEXE
+    main.cpp
 )
 
-SET(keepassx_FORMS
-	forms/AboutDlg.ui
-	forms/AddBookmarkDlg.ui
-	forms/CalendarDlg.ui
-	forms/CollectEntropyDlg.ui
-	forms/CustomizeDetailViewDlg.ui
-	forms/DatabaseSettingsDlg.ui
-	forms/EditEntryDlg.ui
-	forms/EditGroupDlg.ui
-	forms/ExpiredEntriesDlg.ui
-	forms/HelpDlg.ui
-	forms/MainWindow.ui
-	forms/ManageBookmarksDlg.ui
-	forms/PasswordDlg.ui
-	forms/PasswordGenDlg.ui
-	forms/SearchDlg.ui
-	forms/SelectIconDlg.ui
-	forms/SettingsDlg.ui
-	forms/SimplePasswordDlg.ui
-#	forms/TrashCanDlg.ui
-	forms/WorkspaceLockedWidget.ui
+set(keepassx_MOC
+    autotype/AutoType.h
+    autotype/AutoTypeSelectDialog.h
+    autotype/AutoTypeSelectView.h
+    autotype/ShortcutWidget.h
+    autotype/WindowSelectComboBox.h
+    core/AutoTypeAssociations.h
+    core/Config.h
+    core/Database.h
+    core/Entry.h
+    core/EntryAttachments.h
+    core/EntryAttributes.h
+    core/Group.h
+    core/InactivityTimer.h
+    core/Metadata.h
+    core/qsavefile.h
+    gui/AboutDialog.h
+    gui/Application.h
+    gui/ChangeMasterKeyWidget.h
+    gui/Clipboard.h
+    gui/DatabaseOpenWidget.h
+    gui/DatabaseSettingsWidget.h
+    gui/DatabaseTabWidget.h
+    gui/DatabaseWidget.h
+    gui/DatabaseWidgetStateSync.h
+    gui/DialogyWidget.h
+    gui/DragTabBar.h
+    gui/EditWidget.h
+    gui/EditWidgetIcons.h
+    gui/EditWidgetProperties.h
+    gui/IconModels.h
+    gui/KeePass1OpenWidget.h
+    gui/LineEdit.h
+    gui/MainWindow.h
+    gui/PasswordEdit.h
+    gui/PasswordGeneratorWidget.h
+    gui/PasswordComboBox.h
+    gui/SettingsWidget.h
+    gui/SortFilterHideProxyModel.h
+    gui/UnlockDatabaseWidget.h
+    gui/WelcomeWidget.h
+    gui/entry/AutoTypeAssociationsModel.h
+    gui/entry/EditEntryWidget.h
+    gui/entry/EntryAttachmentsModel.h
+    gui/entry/EntryAttributesModel.h
+    gui/entry/EntryHistoryModel.h
+    gui/entry/EntryModel.h
+    gui/entry/EntryView.h
+    gui/group/EditGroupWidget.h
+    gui/group/GroupModel.h
+    gui/group/GroupView.h
+    keys/CompositeKey_p.h
+    streams/HashedBlockStream.h
+    streams/LayeredStream.h
+    streams/qtiocompressor.h
+    streams/StoreDataStream.h
+    streams/SymmetricCipherStream.h
 )
 
-SET(keepassx_RESOURCES res/resources.qrc)
-
-set(keepassx_TRANSLATIONS
-#	translations/keepassx-cs_CZ.ts
-	translations/keepassx-de_DE.ts
-	translations/keepassx-es_ES.ts
-	translations/keepassx-fi_FI.ts
-	translations/keepassx-fr_FR.ts
-	translations/keepassx-gl_ES.ts
-	translations/keepassx-hu_HU.ts
-	translations/keepassx-it_IT.ts
-	translations/keepassx-ja_JP.ts
-	translations/keepassx-nb_NO.ts
-	translations/keepassx-nl_NL.ts
-	translations/keepassx-pl_PL.ts
-	translations/keepassx-ru_RU.ts
-	translations/keepassx-tr_TR.ts
-	translations/keepassx-uk_UA.ts
-	translations/keepassx-zh_CN.ts
-	translations/qt_fi.ts
-	translations/qt_hu.ts
-	translations/qt_it.ts
-	translations/qt_nl.ts
-	translations/qt_tr.ts
+set(keepassx_FORMS
+    gui/AboutDialog.ui
+    gui/ChangeMasterKeyWidget.ui
+    gui/DatabaseOpenWidget.ui
+    gui/DatabaseSettingsWidget.ui
+    gui/EditWidget.ui
+    gui/EditWidgetIcons.ui
+    gui/EditWidgetProperties.ui
+    gui/MainWindow.ui
+    gui/PasswordGeneratorWidget.ui
+    gui/SearchWidget.ui
+    gui/SettingsWidgetGeneral.ui
+    gui/SettingsWidgetSecurity.ui
+    gui/WelcomeWidget.ui
+    gui/entry/EditEntryWidgetAdvanced.ui
+    gui/entry/EditEntryWidgetAutoType.ui
+    gui/entry/EditEntryWidgetHistory.ui
+    gui/entry/EditEntryWidgetMain.ui
+    gui/group/EditGroupWidgetMain.ui
 )
 
-#IF( MINGW )
-#	SET(keepassx_SOURCES ${keepassx_SOURCES} main_win32.cpp)
-#ELSEIF( APPLE )
-#	SET(keepassx_SOURCES ${keepassx_SOURCES} main_macx.cpp)
-#ELSE( MINGW )
-#	SET(keepassx_SOURCES ${keepassx_SOURCES} main_unix.cpp)
-#ENDIF( MINGW )
+if(MINGW)
+  set(keepassx_SOURCES_MAINEXE
+      ${keepassx_SOURCES_MAINEXE}
+      ${CMAKE_SOURCE_DIR}/share/windows/icon.rc)
+endif()
 
-IF( AUTOTYPE )
-	SET(keepassx_HEADERS ${keepassx_HEADERS}
-		Application_X11.h dialogs/AutoTypeDlg.h lib/AutoTypeTreeWidget.h dialogs/TargetWindowDlg.h)
-	SET(keepassx_SOURCES ${keepassx_SOURCES}
-		lib/HelperX11.cpp lib/AutoTypeX11.cpp Application_X11.cpp lib/AutoTypeGlobalX11.cpp
-		dialogs/AutoTypeDlg.cpp lib/AutoTypeTreeWidget.cpp dialogs/TargetWindowDlg.cpp)
-	SET(keepassx_FORMS ${keepassx_FORMS}
-		forms/AutoTypeDlg.ui forms/TargetWindowDlg.ui)
-ENDIF( AUTOTYPE )
+qt4_wrap_ui(keepassx_SOURCES ${keepassx_FORMS})
+qt4_wrap_cpp(keepassx_SOURCES ${keepassx_MOC})
 
-IF( NOT PRECOMPILED_HEADER )
-	ADD_DEFINITIONS(-include keepassx.h)
-ENDIF( NOT PRECOMPILED_HEADER )
+add_library(keepassx_core STATIC ${keepassx_SOURCES})
+set_target_properties(keepassx_core PROPERTIES COMPILE_DEFINITIONS KEEPASSX_BUILDING_CORE)
 
-INCLUDE_DIRECTORIES(. lib crypto plugins/interfaces export import dialogs ${CMAKE_CURRENT_BINARY_DIR})
+add_executable(${PROGNAME} WIN32 MACOSX_BUNDLE ${keepassx_SOURCES_MAINEXE})
+target_link_libraries(${PROGNAME}
+                      keepassx_core
+                      ${QT_QTCORE_LIBRARY}
+                      ${QT_QTGUI_LIBRARY}
+                      ${GCRYPT_LIBRARIES}
+                      ${ZLIB_LIBRARIES})
 
-QT4_ADD_RESOURCES( keepassx_RESOURCES_SOURCES ${keepassx_RESOURCES} )
-QT4_WRAP_UI( keepassx_FORMS_HEADERS ${keepassx_FORMS} )
-QT4_WRAP_CPP( keepassx_HEADERS_MOC ${keepassx_HEADERS} )
+set_target_properties(${PROGNAME} PROPERTIES ENABLE_EXPORTS ON)
 
-ADD_EXECUTABLE( ${PROGNAME} WIN32 MACOSX_BUNDLE ${keepassx_SOURCES} ${keepassx_HEADERS_MOC}
-	${keepassx_RESOURCES_SOURCES} ${keepassx_FORMS_HEADERS} ${keepassx_RCS} )
-IF( PRECOMPILED_HEADER )
-	ADD_PRECOMPILED_HEADER(${PROGNAME} keepassx.h)
-ENDIF( PRECOMPILED_HEADER )
+if(APPLE)
+  configure_file(${CMAKE_SOURCE_DIR}/share/macosx/Info.plist.cmake ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+  set_target_properties(${PROGNAME} PROPERTIES
+                        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+endif()
 
-TARGET_LINK_LIBRARIES(${PROGNAME} ${QT_LIBRARIES} ${AUTOTYPE_LIBRARIES})
+install(TARGETS ${PROGNAME}
+        BUNDLE DESTINATION . COMPONENT Runtime
+        RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT Runtime)
 
-QT4_ADD_TRANSLATION(QM_FILES ${keepassx_TRANSLATIONS})
-ADD_CUSTOM_TARGET(translations ALL DEPENDS ${QM_FILES})
+add_subdirectory(autotype)
 
-INSTALL(TARGETS ${PROGNAME} DESTINATION ${BINDIR})
-INSTALL(FILES ${QM_FILES} DESTINATION ${SHAREDIR}/i18n)
+if(APPLE AND NOT (${CMAKE_VERSION} VERSION_LESS 2.8.8))
+  if(QT_MAC_USE_COCOA AND EXISTS "${QT_LIBRARY_DIR}/Resources/qt_menu.nib")
+    install(DIRECTORY "${QT_LIBRARY_DIR}/Resources/qt_menu.nib"
+            DESTINATION "${DATA_INSTALL_DIR}")
+  endif()
+
+  set(CPACK_GENERATOR "DragNDrop")
+  set(CPACK_DMG_FORMAT "UDBZ")
+  set(CPACK_DMG_VOLUME_NAME "${PROGNAME}")
+  set(CPACK_SYSTEM_NAME "OSX")
+  set(CPACK_STRIP_FILES ON)
+  set(CPACK_PACKAGE_FILE_NAME "${PROGNAME}-${KEEPASSX_VERSION_NUM}")
+  include(CPack)
+
+  include(DeployQt4)
+  install_qt4_executable(${PROGNAME}.app "qjpeg;qgif;qico;qtaccessiblewidgets")
+endif()
+
+if(MINGW AND NOT (${CMAKE_VERSION} VERSION_LESS 2.8.8))
+  set(CPACK_GENERATOR "ZIP")
+  set(CPACK_STRIP_FILES ON)
+  set(CPACK_PACKAGE_FILE_NAME "${PROGNAME}-${KEEPASSX_VERSION_NUM}")
+  include(CPack)
+
+  include(DeployQt4)
+  install_qt4_executable(${PROGNAME}.exe "qjpeg;qgif;qico;qtaccessiblewidgets")
+endif()

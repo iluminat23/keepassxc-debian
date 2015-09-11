@@ -1,4 +1,4 @@
-# format version number, currently 3; this line is compulsory!
 version=3
-opts=dversionmangle=s/\+dfsg\d?$// \
-    http://sf.net/keepassx/ keepassx-(\d[\d_.]+)\.tar\.gz
+opts="uversionmangle=s/-alpha/~alpha/" \
+  https://www.keepassx.org/dev/projects/keepassx/files \
+  /dev/attachments/download/\d+/keepassx-(2.0-alpha6)\.tar\.gz

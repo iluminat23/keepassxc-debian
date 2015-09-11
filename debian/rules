@@ -1,38 +1,18 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
+include /usr/share/dpkg/architecture.mk
+
 %:
-	dh $@ --parallel --buildsystem=qmake_qt4
+	dh $@ --parallel
 
-override_dh_auto_install:
-	dh_auto_install
+override_dh_auto_configure:
+	dh_auto_configure -- -DWITH_GUI_TESTS=ON -DWITH_CXX11=ON
 
-	mkdir -p debian/keepassx/usr/share/icons/hicolor/16x16/apps \
-	         debian/keepassx/usr/share/icons/hicolor/24x24/apps \
-	         debian/keepassx/usr/share/icons/hicolor/32x32/apps \
-	         debian/keepassx/usr/share/icons/hicolor/48x48/apps \
-	         debian/keepassx/usr/share/icons/hicolor/64x64/apps \
-	         debian/keepassx/usr/share/icons/hicolor/128x128/apps \
-	         debian/keepassx/usr/share/icons/hicolor/scalable/apps
+override_dh_auto_test:
+	dh_auto_test -- ARGS+="-E testgui"
+	xvfb-run -a --server-args="-screen 0 800x600x24" dh_auto_test -- ARGS+="-R testgui"
 
-	cp share/keepassx/icons/keepassx_small.png \
-		debian/keepassx/usr/share/icons/hicolor/16x16/apps/keepassx.png
-	convert share/keepassx/icons/keepassx.png -resize 24x24 \
-		debian/keepassx/usr/share/icons/hicolor/24x24/apps/keepassx.png
-	cp share/keepassx/icons/keepassx.png \
-		debian/keepassx/usr/share/icons/hicolor/32x32/apps/keepassx.png
-	convert -density 72 -background none debian/keepassx.svg \
-		debian/keepassx/usr/share/icons/hicolor/48x48/apps/keepassx.png
-	convert -density 96 -background none debian/keepassx.svg \
-		debian/keepassx/usr/share/icons/hicolor/64x64/apps/keepassx.png
-	convert -density 192 -background none debian/keepassx.svg \
-		debian/keepassx/usr/share/icons/hicolor/128x128/apps/keepassx.png
-	cp debian/keepassx.svg \
-		debian/keepassx/usr/share/icons/hicolor/scalable/apps/keepassx.svg
-
-	rm debian/keepassx/usr/share/pixmaps/keepassx.xpm
-	cd debian/keepassx/usr/share/pixmaps && ln -s ../icons/hicolor/32x32/apps/keepassx.png .
-
-override_dh_auto_clean:
-	dh_auto_clean
-	rm -rf bin build
+override_dh_makeshlibs:
+	# keepassx only ships plugins
+	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/keepassx

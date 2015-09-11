@@ -1,8 +1,28 @@
-Installation instructions for *nix:
------------------------------------
-1. qmake-qt4 / qmake
-   You have to use qmake of Qt >= 4.3.0, depending on your distro it is called qmake or qmake-qt4.
-   By default KeePassX is installed to /usr, you can change that by adding PREFIX=[PATH] to the qmake command.
-   You can also add DEBUG=1 to build KeePassX with debug symbols.
-2. make
-3. make install
+Building:
+=========
+mkdir build
+cd build
+cmake [CMAKE PARAMETERS] ..
+make [-jX]
+
+Common cmake parameters:
+========================
+-DCMAKE_INSTALL_PREFIX=/usr/local
+-DCMAKE_VERBOSE_MAKEFILE=ON
+-DCMAKE_BUILD_TYPE=<RelWithDebInfo/Debug/Release>
+-DWITH_GUI_TESTS=ON
+
+Installing:
+===========
+make install [DESTDIR=X]
+
+Create a bundle on Mac:
+make package
+
+Run tests:
+==========
+make test [CTEST_OUTPUT_ON_FAILURE=1] [ARGS+=-jX] [ARGS+="-E testgui"]
+
+OS specific instructions:
+=========================
+https://www.keepassx.org/dev/projects/keepassx/wiki/Install_instructions

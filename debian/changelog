@@ -1,9 +1,27 @@
-keepassx (0.4.3+dfsg-1) unstable; urgency=medium
+keepassx (2.0~beta2-1) experimental; urgency=medium
 
-  * Acknowledge NMU, many thanks for helping out! (Closes: #698832)
-  * Add patch that fixes CVE-2015-8378 (Closes: #791858)
+  * New upstream beta release.
 
- -- Reinhard Tartler <siretart@tauware.de>  Thu, 03 Dec 2015 22:02:42 -0500
+ -- Felix Geyer <fgeyer@debian.org>  Fri, 11 Sep 2015 23:55:20 +0200
+
+keepassx (2.0~beta1-1) experimental; urgency=medium
+
+  * New upstream beta release.
+  * Update copyright file.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+
+ -- Felix Geyer <fgeyer@debian.org>  Sun, 19 Jul 2015 20:49:14 +0200
+
+keepassx (2.0~alpha6-1) experimental; urgency=medium
+
+  * New upstream alpha release.
+    - Supports the .kdbx (KeePass 2) file format.
+  * Drop fix_ftbfs_gcc47.diff, not needed anymore.
+  * Switch debian/rules to use cmake and run unit tests.
+  * Redo debian/copyright.
+  * Update watch file.
+
+ -- Felix Geyer <fgeyer@debian.org>  Fri, 15 Aug 2014 00:00:01 +0200
 
 keepassx (0.4.3+dfsg-0.1) unstable; urgency=high
 

@@ -3,15 +3,18 @@ Section: utils
 Priority: optional
 Maintainer: Reinhard Tartler <siretart@tauware.de>
 Uploaders: David Valot <ptitdav69@gmail.com>,
-           Felix Geyer <debfx-pkg@fobos.de>
+           Felix Geyer <fgeyer@debian.org>
 Build-Depends: debhelper (>= 9),
-               libqt4-dev (>= 4.3.0),
+               cmake,
+               libqt4-dev,
+               libgcrypt20-dev,
+               zlib1g-dev,
                libxtst-dev,
-               imagemagick,
-               librsvg2-bin
-Standards-Version: 3.9.3
+               xvfb,
+               xauth
+Standards-Version: 3.9.6
 Homepage: http://www.keepassx.org/
-Vcs-Git: https://anonscm.debian.org/git/collab-maint/keepassx.git
+Vcs-Bzr: https://code.launchpad.net/~keepassx/keepassx/debian
 
 Package: keepassx
 Architecture: any
