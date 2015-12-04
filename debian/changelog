@@ -1,3 +1,10 @@
+keepassx (0.4.3+dfsg-1) unstable; urgency=medium
+
+  * Acknowledge NMU, many thanks for helping out! (Closes: #698832)
+  * Add patch that fixes CVE-2015-8378 (Closes: #791858)
+
+ -- Reinhard Tartler <siretart@tauware.de>  Thu, 03 Dec 2015 22:02:42 -0500
+
 keepassx (0.4.3+dfsg-0.1) unstable; urgency=high
 
   * Non-maintainer upload.
