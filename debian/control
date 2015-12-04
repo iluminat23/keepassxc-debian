@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 9),
                librsvg2-bin
 Standards-Version: 3.9.3
 Homepage: http://www.keepassx.org/
-Vcs-Bzr: https://code.launchpad.net/~keepassx/keepassx/debian
+Vcs-Git: https://anonscm.debian.org/git/collab-maint/keepassx.git
 
 Package: keepassx
 Architecture: any
