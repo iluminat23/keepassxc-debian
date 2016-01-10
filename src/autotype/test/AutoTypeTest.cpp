@@ -17,6 +17,11 @@
 
 #include "AutoTypeTest.h"
 
+bool AutoTypePlatformTest::isAvailable()
+{
+    return true;
+}
+
 QString AutoTypePlatformTest::keyToString(Qt::Key key)
 {
     return QString("[Key0x%1]").arg(key, 0, 16);
@@ -101,6 +106,13 @@ void AutoTypePlatformTest::addActionKey(AutoTypeKey* action)
 int AutoTypePlatformTest::initialTimeout()
 {
     return 0;
+}
+
+bool AutoTypePlatformTest::raiseWindow(WId window)
+{
+    Q_UNUSED(window);
+
+    return false;
 }
 
 AutoTypeExecturorTest::AutoTypeExecturorTest(AutoTypePlatformTest* platform)

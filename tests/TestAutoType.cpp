@@ -38,7 +38,6 @@ void TestAutoType::initTestCase()
     QVERIFY(Crypto::init());
     Config::createTempFileInstance();
     AutoType::createTestInstance();
-    config()->set("AutoTypeEntryTitleMatch", false);
     config()->set("security/autotypeask", false);
 
     QPluginLoader loader(filePath()->pluginPath("keepassx-autotype-test"));
@@ -56,6 +55,7 @@ void TestAutoType::initTestCase()
 
 void TestAutoType::init()
 {
+    config()->set("AutoTypeEntryTitleMatch", false);
     m_test->clearActions();
 
     m_db = new Database();
@@ -64,11 +64,12 @@ void TestAutoType::init()
     m_group = new Group();
     m_db->setRootGroup(m_group);
 
+    AutoTypeAssociations::Association association;
+
     m_entry1 = new Entry();
     m_entry1->setGroup(m_group);
     m_entry1->setUsername("myuser");
     m_entry1->setPassword("mypass");
-    AutoTypeAssociations::Association association;
     association.window = "custom window";
     association.sequence = "{username}association{password}";
     m_entry1->autoTypeAssociations()->add(association);
@@ -77,6 +78,19 @@ void TestAutoType::init()
     m_entry2->setGroup(m_group);
     m_entry2->setPassword("myuser");
     m_entry2->setTitle("entry title");
+
+    m_entry3 = new Entry();
+    m_entry3->setGroup(m_group);
+    m_entry3->setPassword("regex");
+    association.window = "//REGEX1//";
+    association.sequence = "regex1";
+    m_entry3->autoTypeAssociations()->add(association);
+    association.window = "//^REGEX2$//";
+    association.sequence = "regex2";
+    m_entry3->autoTypeAssociations()->add(association);
+    association.window = "//^REGEX3-([rd]\\d){2}$//";
+    association.sequence = "regex3";
+    m_entry3->autoTypeAssociations()->add(association);
 }
 
 void TestAutoType::cleanup()
@@ -147,12 +161,36 @@ void TestAutoType::testGlobalAutoTypeTitleMatch()
 
 void TestAutoType::testGlobalAutoTypeTitleMatchDisabled()
 {
-    config()->set("AutoTypeEntryTitleMatch", false);
-
     m_test->setActiveWindowTitle("An Entry Title!");
     MessageBox::setNextAnswer(QMessageBox::Ok);
     m_autoType->performGlobalAutoType(m_dbList);
 
     QCOMPARE(m_test->actionChars(), QString());
+}
 
+void TestAutoType::testGlobalAutoTypeRegExp()
+{
+    // substring matches are ok
+    m_test->setActiveWindowTitle("lorem REGEX1 ipsum");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString("regex1"));
+    m_test->clearActions();
+
+    // should be case-insensitive
+    m_test->setActiveWindowTitle("lorem regex1 ipsum");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString("regex1"));
+    m_test->clearActions();
+
+    // exact match
+    m_test->setActiveWindowTitle("REGEX2");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString("regex2"));
+    m_test->clearActions();
+
+    // a bit more complicated regex
+    m_test->setActiveWindowTitle("REGEX3-R2D2");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString("regex3"));
+    m_test->clearActions();
 }

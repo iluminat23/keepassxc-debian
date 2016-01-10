@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 #ifdef QT_NO_DEBUG
     Tools::disableCoreDumps();
 #endif
+    Tools::setupSearchPaths();
 
     Application app(argc, argv);
     Application::setApplicationName("keepassx");
@@ -82,6 +83,7 @@ int main(int argc, char** argv)
 
     MainWindow mainWindow;
     mainWindow.show();
+    app.setMainWindow(&mainWindow);
 
     QObject::connect(&app, SIGNAL(openFile(QString)), &mainWindow, SLOT(openDatabase(QString)));
 
