@@ -35,10 +35,12 @@ bool readAllFromDevice(QIODevice* device, QByteArray& data);
 QDateTime currentDateTimeUtc();
 QString imageReaderFilter();
 bool isHex(const QByteArray& ba);
+bool isBase64(const QByteArray& ba);
 void sleep(int ms);
 void wait(int ms);
 QString platform();
 void disableCoreDumps();
+void setupSearchPaths();
 
 } // namespace Tools
 

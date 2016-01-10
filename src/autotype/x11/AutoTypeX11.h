@@ -42,15 +42,17 @@ class AutoTypePlatformX11 : public QObject, public AutoTypePlatformInterface
 
 public:
     AutoTypePlatformX11();
+    bool isAvailable() Q_DECL_OVERRIDE;
     void unload() Q_DECL_OVERRIDE;
-    QStringList windowTitles();
-    WId activeWindow();
-    QString activeWindowTitle();
-    bool registerGlobalShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers);
-    void unregisterGlobalShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers);
-    int platformEventFilter(void* event);
-    int initialTimeout();
-    AutoTypeExecutor* createExecutor();
+    QStringList windowTitles() Q_DECL_OVERRIDE;
+    WId activeWindow() Q_DECL_OVERRIDE;
+    QString activeWindowTitle() Q_DECL_OVERRIDE;
+    bool registerGlobalShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers) Q_DECL_OVERRIDE;
+    void unregisterGlobalShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers) Q_DECL_OVERRIDE;
+    int platformEventFilter(void* event) Q_DECL_OVERRIDE;
+    int initialTimeout() Q_DECL_OVERRIDE;
+    bool raiseWindow(WId window) Q_DECL_OVERRIDE;
+    AutoTypeExecutor* createExecutor() Q_DECL_OVERRIDE;
 
     KeySym charToKeySym(const QChar& ch);
     KeySym keyToKeySym(Qt::Key key);
@@ -71,6 +73,7 @@ private:
     void stopCatchXErrors();
     static int x11ErrorHandler(Display* display, XErrorEvent* error);
 
+    XkbDescPtr getKeyboard();
     void updateKeymap();
     bool isRemapKeycodeValid();
     int AddKeysym(KeySym keysym);
@@ -89,6 +92,7 @@ private:
     Atom m_atomNetWmName;
     Atom m_atomString;
     Atom m_atomUtf8String;
+    Atom m_atomNetActiveWindow;
     QSet<QString> m_classBlacklist;
     Qt::Key m_currentGlobalKey;
     Qt::KeyboardModifiers m_currentGlobalModifiers;
@@ -120,8 +124,8 @@ class AutoTypeExecturorX11 : public AutoTypeExecutor
 public:
     explicit AutoTypeExecturorX11(AutoTypePlatformX11* platform);
 
-    void execChar(AutoTypeChar* action);
-    void execKey(AutoTypeKey* action);
+    void execChar(AutoTypeChar* action) Q_DECL_OVERRIDE;
+    void execKey(AutoTypeKey* action) Q_DECL_OVERRIDE;
 
 private:
     AutoTypePlatformX11* const m_platform;
