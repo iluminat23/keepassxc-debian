@@ -14,7 +14,8 @@ Build-Depends: debhelper (>= 9),
                xauth
 Standards-Version: 3.9.6
 Homepage: http://www.keepassx.org/
-Vcs-Bzr: https://code.launchpad.net/~keepassx/keepassx/debian
+Vcs-Git: https://anonscm.debian.org/git/collab-maint/keepassx.git
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/keepassx.git
 
 Package: keepassx
 Architecture: any

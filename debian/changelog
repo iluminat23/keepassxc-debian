@@ -1,6 +1,7 @@
 keepassx (2.0.2-1) UNRELEASED; urgency=medium
 
   * New upstream release. (Closes: #813608)
+  * d/control: Point Vcs-* to the new git repo.
 
  -- Felix Geyer <fgeyer@debian.org>  Thu, 04 Feb 2016 21:28:09 +0100
 
