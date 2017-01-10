@@ -341,14 +341,24 @@ void DatabaseWidget::deleteEntries()
         }
     }
     else {
-        if (selected.size() > 1) {
-            QMessageBox::StandardButton result = MessageBox::question(
+        QMessageBox::StandardButton result;
+
+        if (selected.size() == 1) {
+            result = MessageBox::question(
+                this, tr("Move entry to recycle bin?"),
+                tr("Do you really want to move entry \"%1\" to the recycle bin?")
+                .arg(selectedEntries.first()->title()),
+                QMessageBox::Yes | QMessageBox::No);
+        }
+        else {
+            result = MessageBox::question(
                 this, tr("Move entries to recycle bin?"),
                 tr("Do you really want to move %n entry(s) to the recycle bin?", 0, selected.size()),
                 QMessageBox::Yes | QMessageBox::No);
-            if (result == QMessageBox::No) {
-                return;
-            }
+        }
+
+        if (result == QMessageBox::No) {
+            return;
         }
 
         Q_FOREACH (Entry* entry, selectedEntries) {
@@ -493,7 +503,9 @@ void DatabaseWidget::deleteGroup()
     }
 
     bool inRecylceBin = Tools::hasChild(m_db->metadata()->recycleBin(), currentGroup);
-    if (inRecylceBin || !m_db->metadata()->recycleBinEnabled()) {
+    bool isRecycleBin = (currentGroup == m_db->metadata()->recycleBin());
+    bool isRecycleBinSubgroup = Tools::hasChild(currentGroup, m_db->metadata()->recycleBin());
+    if (inRecylceBin || isRecycleBin || isRecycleBinSubgroup || !m_db->metadata()->recycleBinEnabled()) {
         QMessageBox::StandardButton result = MessageBox::question(
             this, tr("Delete group?"),
             tr("Do you really want to delete the group \"%1\" for good?")
@@ -871,8 +883,7 @@ bool DatabaseWidget::dbHasKey() const
 bool DatabaseWidget::canDeleteCurrentGroup() const
 {
     bool isRootGroup = m_db->rootGroup() == m_groupView->currentGroup();
-    bool isRecycleBin = m_db->metadata()->recycleBin() == m_groupView->currentGroup();
-    return !isRootGroup && !isRecycleBin;
+    return !isRootGroup;
 }
 
 bool DatabaseWidget::isInSearchMode() const
