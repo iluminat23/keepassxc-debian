@@ -1,10 +1,10 @@
-keepassx (2.0.3-1) UNRELEASED; urgency=medium
+keepassx (2.0.3-1) unstable; urgency=medium
 
   * New upstream release. (Closes: #845163)
   * Add missing Comment section to the desktop file. (Closes: #846274)
     - desktop_file_comment.patch
 
- -- Felix Geyer <fgeyer@debian.org>  Tue, 10 Jan 2017 22:27:55 +0100
+ -- Felix Geyer <fgeyer@debian.org>  Tue, 10 Jan 2017 22:33:14 +0100
 
 keepassx (2.0.2-1) unstable; urgency=medium
 
