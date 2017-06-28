@@ -1,9 +1,7 @@
 Source: keepassxc
 Section: utils
 Priority: optional
-Maintainer: Reinhard Tartler <siretart@tauware.de>
-Uploaders: David Valot <ptitdav69@gmail.com>,
-           Felix Geyer <fgeyer@debian.org>
+Maintainer: Julian Andres Klode <jak@debian.org>
 Build-Depends: debhelper (>= 10),
                cmake,
                qtbase5-dev,
