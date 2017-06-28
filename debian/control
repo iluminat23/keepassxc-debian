@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Reinhard Tartler <siretart@tauware.de>
 Uploaders: David Valot <ptitdav69@gmail.com>,
            Felix Geyer <fgeyer@debian.org>
-Build-Depends: debhelper (>= 9),
+Build-Depends: debhelper (>= 10),
                cmake,
                qtbase5-dev,
                qttools5-dev-tools,
@@ -16,7 +16,7 @@ Build-Depends: debhelper (>= 9),
                libyubikey-dev,
                xvfb,
                xauth
-Standards-Version: 3.9.6
+Standards-Version: 4.0.0
 Homepage: https://www.keepassxc.org/
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/keepassxc.git
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/keepassxc.git
