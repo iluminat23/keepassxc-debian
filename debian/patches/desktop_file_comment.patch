@@ -1,6 +1,16 @@
+From: Reinhard Tartler <siretart@tauware.de>
+Date: Wed, 28 Jun 2017 13:42:00 +0200
+Subject: desktop_file_comment
+
+---
+ share/linux/keepassxc.desktop | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/share/linux/keepassxc.desktop b/share/linux/keepassxc.desktop
+index 1e72c4f..a2c5e67 100644
 --- a/share/linux/keepassxc.desktop
 +++ b/share/linux/keepassxc.desktop
-@@ -5,6 +5,7 @@
+@@ -5,6 +5,7 @@ GenericName[de]=Passwortverwaltung
  GenericName[es]=Gestor de contraseñas
  GenericName[fr]=Gestionnaire de mot de passe
  GenericName[ru]=менеджер паролей
