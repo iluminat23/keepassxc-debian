@@ -32,7 +32,6 @@ EntryView::EntryView(QWidget* parent)
     m_sortModel->setDynamicSortFilter(true);
     m_sortModel->setSortLocaleAware(true);
     m_sortModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    m_sortModel->setSupportedDragActions(m_model->supportedDragActions());
     QTreeView::setModel(m_sortModel);
 
     setUniformRowHeights(true);
@@ -56,6 +55,10 @@ void EntryView::keyPressEvent(QKeyEvent* event)
 {
     if ((event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) && currentIndex().isValid()) {
         emitEntryActivated(currentIndex());
+#ifdef Q_OS_MAC
+        // Pressing return does not emit the QTreeView::activated signal on mac os
+        emit activated(currentIndex());
+#endif
     }
 
     QTreeView::keyPressEvent(event);
@@ -75,12 +78,12 @@ void EntryView::setEntryList(const QList<Entry*>& entries)
 
 void EntryView::setFirstEntryActive()
 {
-    if(m_model->rowCount() > 0) {
+    if (m_model->rowCount() > 0) {
         QModelIndex index = m_sortModel->mapToSource(m_sortModel->index(0, 0));
         setCurrentEntry(m_model->entryFromIndex(index));
     }
     else {
-        Q_EMIT entrySelectionChanged();
+        emit entrySelectionChanged();
     }
 }
 
@@ -93,7 +96,7 @@ void EntryView::emitEntryActivated(const QModelIndex& index)
 {
     Entry* entry = entryFromIndex(index);
 
-    Q_EMIT entryActivated(entry, static_cast<EntryModel::ModelColumn>(m_sortModel->mapToSource(index).column()));
+    emit entryActivated(entry, static_cast<EntryModel::ModelColumn>(m_sortModel->mapToSource(index).column()));
 }
 
 void EntryView::setModel(QAbstractItemModel* model)
@@ -109,7 +112,7 @@ Entry* EntryView::currentEntry()
         return m_model->entryFromIndex(m_sortModel->mapToSource(list.first()));
     }
     else {
-        return Q_NULLPTR;
+        return nullptr;
     }
 }
 
@@ -130,22 +133,28 @@ Entry* EntryView::entryFromIndex(const QModelIndex& index)
         return m_model->entryFromIndex(m_sortModel->mapToSource(index));
     }
     else {
-        return Q_NULLPTR;
+        return nullptr;
     }
 }
 
 void EntryView::switchToEntryListMode()
 {
     m_sortModel->hideColumn(0, false);
-    sortByColumn(1, Qt::AscendingOrder); // TODO: should probably be improved
+
+    m_sortModel->sort(1, Qt::AscendingOrder);
+    m_sortModel->sort(0, Qt::AscendingOrder);
     sortByColumn(0, Qt::AscendingOrder);
+
     m_inEntryListMode = true;
 }
 
 void EntryView::switchToGroupMode()
 {
     m_sortModel->hideColumn(0, true);
-    sortByColumn(-1, Qt::AscendingOrder);
+
+    m_sortModel->sort(-1, Qt::AscendingOrder);
+    m_sortModel->sort(0, Qt::AscendingOrder);
     sortByColumn(0, Qt::AscendingOrder);
+
     m_inEntryListMode = false;
 }

@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2011 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +22,6 @@
 #include <QTest>
 
 #include "config-keepassx-tests.h"
-#include "tests.h"
 #include "core/Database.h"
 #include "core/Metadata.h"
 #include "crypto/Crypto.h"
@@ -82,6 +82,22 @@ void TestKeys::testComposite()
 
     delete compositeKey3;
     delete compositeKey4;
+}
+
+void TestKeys::testCompositeKeyReadFromLine()
+{
+
+    QString keyFilename = QString("%1/FileKeyXml.key").arg(QString(KEEPASSX_TEST_DATA_DIR));
+
+    CompositeKey compositeFileKey = CompositeKey::readFromLine(keyFilename);
+    FileKey fileKey;
+    fileKey.load(keyFilename);
+    QCOMPARE(compositeFileKey.rawKey().size(), fileKey.rawKey().size());
+
+    CompositeKey compositePasswordKey = CompositeKey::readFromLine(QString("password"));
+    PasswordKey passwordKey(QString("password"));
+    QCOMPARE(compositePasswordKey.rawKey().size(), passwordKey.rawKey().size());
+
 }
 
 void TestKeys::testFileKey()
@@ -177,7 +193,7 @@ void TestKeys::benchmarkTransformKey()
     QByteArray env = qgetenv("BENCHMARK");
 
     if (env.isEmpty() || env == "0" || env == "no") {
-        QSKIP("Benchmark skipped. Set env variable BENCHMARK=1 to enable.", SkipAll);
+        QSKIP("Benchmark skipped. Set env variable BENCHMARK=1 to enable.");
     }
 
     PasswordKey pwKey;

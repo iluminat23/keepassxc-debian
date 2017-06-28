@@ -11,11 +11,29 @@
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QTreeView" name="historyView">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>
+     <attribute name="headerDefaultSectionSize">
+      <number>160</number>
+     </attribute>
     </widget>
    </item>
    <item>

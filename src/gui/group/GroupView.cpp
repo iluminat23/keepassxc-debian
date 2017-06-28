@@ -19,6 +19,7 @@
 
 #include <QDragMoveEvent>
 #include <QMetaObject>
+#include <QMimeData>
 
 #include "core/Database.h"
 #include "core/Group.h"
@@ -74,7 +75,7 @@ void GroupView::dragMoveEvent(QDragMoveEvent* event)
 Group* GroupView::currentGroup()
 {
     if (currentIndex() == QModelIndex()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
     else {
         return m_model->groupFromIndex(currentIndex());
@@ -97,7 +98,8 @@ void GroupView::recInitExpanded(Group* group)
     expandGroup(group, group->isExpanded());
     m_updatingExpanded = false;
 
-    Q_FOREACH (Group* child, group->children()) {
+    const QList<Group*> children = group->children();
+    for (Group* child : children) {
         recInitExpanded(child);
     }
 }
@@ -110,7 +112,7 @@ void GroupView::expandGroup(Group* group, bool expand)
 
 void GroupView::emitGroupChanged(const QModelIndex& index)
 {
-    Q_EMIT groupChanged(m_model->groupFromIndex(index));
+    emit groupChanged(m_model->groupFromIndex(index));
 }
 
 void GroupView::setModel(QAbstractItemModel* model)
@@ -121,7 +123,7 @@ void GroupView::setModel(QAbstractItemModel* model)
 
 void GroupView::emitGroupChanged()
 {
-    Q_EMIT groupChanged(currentGroup());
+    emit groupChanged(currentGroup());
 }
 
 void GroupView::syncExpandedState(const QModelIndex& parent, int start, int end)
@@ -134,7 +136,10 @@ void GroupView::syncExpandedState(const QModelIndex& parent, int start, int end)
 
 void GroupView::setCurrentGroup(Group* group)
 {
-    setCurrentIndex(m_model->index(group));
+    if (group == nullptr)
+        setCurrentIndex(QModelIndex());
+    else
+        setCurrentIndex(m_model->index(group));
 }
 
 void GroupView::modelReset()

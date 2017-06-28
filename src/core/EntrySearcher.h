@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2014 Florian Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,10 +29,13 @@ class EntrySearcher
 {
 public:
     QList<Entry*> search(const QString& searchTerm, const Group* group, Qt::CaseSensitivity caseSensitivity);
+
 private:
     QList<Entry*> searchEntries(const QString& searchTerm, const Group* group, Qt::CaseSensitivity caseSensitivity);
     QList<Entry*> matchEntry(const QString& searchTerm, Entry* entry, Qt::CaseSensitivity caseSensitivity);
-    bool wordMatch(const QString &word, Entry *entry, Qt::CaseSensitivity caseSensitivity);
+    bool wordMatch(const QString& word, Entry* entry, Qt::CaseSensitivity caseSensitivity);
+    bool matchGroup(const QString& searchTerm, const Group* group, Qt::CaseSensitivity caseSensitivity);
+    bool wordMatch(const QString& word, const Group* group, Qt::CaseSensitivity caseSensitivity);
 };
 
 #endif // KEEPASSX_ENTRYSEARCHER_H

@@ -19,17 +19,18 @@
 
 #include <QFont>
 #include <QMimeData>
+#include <QPalette>
 
 #include "core/DatabaseIcons.h"
 #include "core/Entry.h"
+#include "core/Global.h"
 #include "core/Group.h"
 #include "core/Metadata.h"
 
 EntryModel::EntryModel(QObject* parent)
     : QAbstractTableModel(parent)
-    , m_group(Q_NULLPTR)
+    , m_group(nullptr)
 {
-    setSupportedDragActions(Qt::MoveAction | Qt::CopyAction);
 }
 
 Entry* EntryModel::entryFromIndex(const QModelIndex& index) const
@@ -63,7 +64,7 @@ void EntryModel::setGroup(Group* group)
     makeConnections(group);
 
     endResetModel();
-    Q_EMIT switchedToGroupMode();
+    emit switchedToGroupMode();
 }
 
 void EntryModel::setEntryList(const QList<Entry*>& entries)
@@ -72,20 +73,21 @@ void EntryModel::setEntryList(const QList<Entry*>& entries)
 
     severConnections();
 
-    m_group = Q_NULLPTR;
+    m_group = nullptr;
     m_allGroups.clear();
     m_entries = entries;
     m_orgEntries = entries;
 
     QSet<Database*> databases;
 
-    Q_FOREACH (Entry* entry, m_entries) {
+    for (Entry* entry : asConst(m_entries)) {
         databases.insert(entry->group()->database());
     }
 
-    Q_FOREACH (Database* db, databases) {
+    for (Database* db : asConst(databases)) {
         Q_ASSERT(db);
-        Q_FOREACH (const Group* group, db->rootGroup()->groupsRecursive(true)) {
+        const QList<Group*> groupList = db->rootGroup()->groupsRecursive(true);
+        for (const Group* group : groupList) {
             m_allGroups.append(group);
         }
 
@@ -94,12 +96,12 @@ void EntryModel::setEntryList(const QList<Entry*>& entries)
         }
     }
 
-    Q_FOREACH (const Group* group, m_allGroups) {
+    for (const Group* group : asConst(m_allGroups)) {
         makeConnections(group);
     }
 
     endResetModel();
-    Q_EMIT switchedToEntryListMode();
+    emit switchedToEntryListMode();
 }
 
 int EntryModel::rowCount(const QModelIndex& parent) const
@@ -126,8 +128,10 @@ QVariant EntryModel::data(const QModelIndex& index, int role) const
     }
 
     Entry* entry = entryFromIndex(index);
+    EntryAttributes* attr = entry->attributes();
 
     if (role == Qt::DisplayRole) {
+        QString result;
         switch (index.column()) {
         case ParentGroup:
             if (entry->group()) {
@@ -135,11 +139,23 @@ QVariant EntryModel::data(const QModelIndex& index, int role) const
             }
             break;
         case Title:
-            return entry->title();
+            result = entry->resolveMultiplePlaceholders(entry->title());
+            if (attr->isReference(EntryAttributes::TitleKey)) {
+                result.prepend(tr("Ref: ","Reference abbreviation"));
+            }
+            return result;
         case Username:
-            return entry->username();
+            result = entry->resolveMultiplePlaceholders(entry->username());
+            if (attr->isReference(EntryAttributes::UserNameKey)) {
+                result.prepend(tr("Ref: ","Reference abbreviation"));
+            }
+            return result;
         case Url:
-            return entry->url();
+            result = entry->resolveMultiplePlaceholders(entry->url());
+            if (attr->isReference(EntryAttributes::URLKey)) {
+                result.prepend(tr("Ref: ","Reference abbreviation"));
+            }
+            return result;
         }
     }
     else if (role == Qt::DecorationRole) {
@@ -164,6 +180,12 @@ QVariant EntryModel::data(const QModelIndex& index, int role) const
             font.setStrikeOut(true);
         }
         return font;
+    }
+    else if (role == Qt::TextColorRole) {
+        if (entry->hasReferences()) {
+            QPalette p;
+            return QVariant(p.color(QPalette::Active, QPalette::Mid));
+        }
     }
 
     return QVariant();
@@ -191,6 +213,11 @@ Qt::DropActions EntryModel::supportedDropActions() const
     return 0;
 }
 
+Qt::DropActions EntryModel::supportedDragActions() const
+{
+    return (Qt::MoveAction | Qt::CopyAction);
+}
+
 Qt::ItemFlags EntryModel::flags(const QModelIndex& modelIndex) const
 {
     if (!modelIndex.isValid()) {
@@ -211,7 +238,7 @@ QStringList EntryModel::mimeTypes() const
 QMimeData* EntryModel::mimeData(const QModelIndexList& indexes) const
 {
     if (indexes.isEmpty()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     QMimeData* data = new QMimeData();
@@ -220,7 +247,7 @@ QMimeData* EntryModel::mimeData(const QModelIndexList& indexes) const
 
     QSet<Entry*> seenEntries;
 
-    Q_FOREACH (const QModelIndex& index, indexes) {
+    for (const QModelIndex& index : indexes) {
         if (!index.isValid()) {
             continue;
         }
@@ -236,7 +263,7 @@ QMimeData* EntryModel::mimeData(const QModelIndexList& indexes) const
 
     if (seenEntries.isEmpty()) {
         delete data;
-        return Q_NULLPTR;
+        return nullptr;
     }
     else {
         data->setData(mimeTypes().at(0), encoded);
@@ -288,17 +315,17 @@ void EntryModel::entryRemoved()
 void EntryModel::entryDataChanged(Entry* entry)
 {
     int row = m_entries.indexOf(entry);
-    Q_EMIT dataChanged(index(row, 0), index(row, columnCount()-1));
+    emit dataChanged(index(row, 0), index(row, columnCount()-1));
 }
 
 void EntryModel::severConnections()
 {
     if (m_group) {
-        disconnect(m_group, Q_NULLPTR, this, Q_NULLPTR);
+        disconnect(m_group, nullptr, this, nullptr);
     }
 
-    Q_FOREACH (const Group* group, m_allGroups) {
-        disconnect(group, Q_NULLPTR, this, Q_NULLPTR);
+    for (const Group* group : asConst(m_allGroups)) {
+        disconnect(group, nullptr, this, nullptr);
     }
 }
 

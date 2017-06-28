@@ -21,7 +21,6 @@
 #include <QTest>
 
 #include "modeltest.h"
-#include "tests.h"
 #include "core/DatabaseIcons.h"
 #include "core/Entry.h"
 #include "core/Group.h"
@@ -182,6 +181,12 @@ void TestEntryModel::testAttributesModel()
     QCOMPARE(spyAboutToRemove.count(), 1);
     QCOMPARE(spyRemoved.count(), 1);
 
+    // test attribute protection
+    QString value = entryAttributes->value("2nd");
+    entryAttributes->set("2nd", value, true);
+    QVERIFY(entryAttributes->isProtected("2nd"));
+    QCOMPARE(entryAttributes->value("2nd"), value);
+
     QSignalSpy spyReset(model, SIGNAL(modelReset()));
     entryAttributes->clear();
     model->setEntryAttributes(0);
@@ -237,15 +242,15 @@ void TestEntryModel::testAutoTypeAssociationsModel()
 
     QCOMPARE(model->rowCount(), 0);
 
-    AutoTypeAssociations* assocications = new AutoTypeAssociations(this);
-    model->setAutoTypeAssociations(assocications);
+    AutoTypeAssociations* associations = new AutoTypeAssociations(this);
+    model->setAutoTypeAssociations(associations);
 
     QCOMPARE(model->rowCount(), 0);
 
     AutoTypeAssociations::Association assoc;
     assoc.window = "1";
     assoc.sequence = "2";
-    assocications->add(assoc);
+    associations->add(assoc);
 
     QCOMPARE(model->rowCount(), 1);
     QCOMPARE(model->data(model->index(0, 0)).toString(), QString("1"));
@@ -253,17 +258,17 @@ void TestEntryModel::testAutoTypeAssociationsModel()
 
     assoc.window = "3";
     assoc.sequence = "4";
-    assocications->update(0, assoc);
+    associations->update(0, assoc);
     QCOMPARE(model->data(model->index(0, 0)).toString(), QString("3"));
     QCOMPARE(model->data(model->index(0, 1)).toString(), QString("4"));
 
-    assocications->add(assoc);
-    assocications->remove(0);
+    associations->add(assoc);
+    associations->remove(0);
     QCOMPARE(model->rowCount(), 1);
 
     delete modelTest;
     delete model;
-    delete assocications;
+    delete associations;
 }
 
 void TestEntryModel::testProxyModel()

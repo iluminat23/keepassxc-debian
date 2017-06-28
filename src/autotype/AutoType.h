@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +23,6 @@
 #include <QStringList>
 #include <QWidget>
 
-#include "core/Global.h"
-
 class AutoTypeAction;
 class AutoTypeExecutor;
 class AutoTypePlatformInterface;
@@ -37,7 +36,7 @@ class AutoType : public QObject
 
 public:
     QStringList windowTitles();
-    void performAutoType(const Entry* entry, QWidget* hideWindow = Q_NULLPTR,
+    void performAutoType(const Entry* entry, QWidget* hideWindow = nullptr,
                          const QString& customSequence = QString(), WId window = 0);
     bool registerGlobalShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers);
     void unregisterGlobalShortcut();
@@ -50,27 +49,30 @@ public:
     static AutoType* instance();
     static void createTestInstance();
 
-public Q_SLOTS:
+public slots:
     void performGlobalAutoType(const QList<Database*>& dbList);
 
-Q_SIGNALS:
+signals:
     void globalShortcutTriggered();
 
-private Q_SLOTS:
+private slots:
     void performAutoTypeFromGlobal(Entry* entry, const QString& sequence);
     void resetInAutoType();
     void unloadPlugin();
 
 private:
-    explicit AutoType(QObject* parent = Q_NULLPTR, bool test = false);
+    explicit AutoType(QObject* parent = nullptr, bool test = false);
     ~AutoType();
     void loadPlugin(const QString& pluginPath);
     bool parseActions(const QString& sequence, const Entry* entry, QList<AutoTypeAction*>& actions);
     QList<AutoTypeAction*> createActionFromTemplate(const QString& tmpl, const Entry* entry);
     QString autoTypeSequence(const Entry* entry, const QString& windowTitle = QString());
+    bool windowMatchesTitle(const QString& windowTitle, const QString& resolvedTitle);
+    bool windowMatchesUrl(const QString& windowTitle, const QString& resolvedUrl);
     bool windowMatches(const QString& windowTitle, const QString& windowPattern);
 
     bool m_inAutoType;
+    int m_autoTypeDelay;
     Qt::Key m_currentGlobalKey;
     Qt::KeyboardModifiers m_currentGlobalModifiers;
     QPluginLoader* m_pluginLoader;

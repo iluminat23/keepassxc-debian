@@ -20,10 +20,12 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
+#include <QHeaderView>
 #include <QLabel>
 #include <QVBoxLayout>
 
 #include "autotype/AutoTypeSelectView.h"
+#include "core/Config.h"
 #include "core/FilePath.h"
 #include "gui/entry/EntryModel.h"
 
@@ -36,14 +38,17 @@ AutoTypeSelectDialog::AutoTypeSelectDialog(QWidget* parent)
     // Places the window on the active (virtual) desktop instead of where the main window is.
     setAttribute(Qt::WA_X11BypassTransientForHint);
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
-    setWindowTitle(tr("Auto-Type - KeePassX"));
+    setWindowTitle(tr("Auto-Type - KeePassXC"));
     setWindowIcon(filePath()->applicationIcon());
 
-    QSize size(400, 250);
+    QRect screenGeometry = QApplication::desktop()->availableGeometry(QCursor::pos());
+    QSize size = config()->get("GUI/AutoTypeSelectDialogSize", QSize(400, 250)).toSize();
+    size.setWidth(qMin(size.width(), screenGeometry.width()));
+    size.setHeight(qMin(size.height(), screenGeometry.height()));
     resize(size);
 
     // move dialog to the center of the screen
-    QPoint screenCenter = QApplication::desktop()->availableGeometry(QCursor::pos()).center();
+    QPoint screenCenter = screenGeometry.center();
     move(screenCenter.x() - (size.width() / 2), screenCenter.y() - (size.height() / 2));
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -65,6 +70,15 @@ void AutoTypeSelectDialog::setEntries(const QList<Entry*>& entries, const QHash<
 {
     m_sequences = sequences;
     m_view->setEntryList(entries);
+
+    m_view->header()->resizeSections(QHeaderView::ResizeToContents);
+}
+
+void AutoTypeSelectDialog::done(int r)
+{
+    config()->set("GUI/AutoTypeSelectDialogSize", size());
+
+    QDialog::done(r);
 }
 
 void AutoTypeSelectDialog::emitEntryActivated(const QModelIndex& index)
@@ -77,7 +91,7 @@ void AutoTypeSelectDialog::emitEntryActivated(const QModelIndex& index)
 
     Entry* entry = m_view->entryFromIndex(index);
     accept();
-    Q_EMIT entryActivated(entry, m_sequences[entry]);
+    emit entryActivated(entry, m_sequences[entry]);
 }
 
 void AutoTypeSelectDialog::entryRemoved()

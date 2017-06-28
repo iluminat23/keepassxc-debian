@@ -20,8 +20,6 @@
 
 #include <QObject>
 
-#include "core/Global.h"
-
 class QTimer;
 
 class Clipboard : public QObject
@@ -33,14 +31,14 @@ public:
 
     static Clipboard* instance();
 
-public Q_SLOTS:
+public slots:
     void clearCopiedText();
 
-private Q_SLOTS:
+private slots:
     void clearClipboard();
 
 private:
-    explicit Clipboard(QObject* parent = Q_NULLPTR);
+    explicit Clipboard(QObject* parent = nullptr);
 
     static Clipboard* m_instance;
 

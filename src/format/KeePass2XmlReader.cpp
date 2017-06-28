@@ -31,10 +31,10 @@
 typedef QPair<QString, QString> StringPair;
 
 KeePass2XmlReader::KeePass2XmlReader()
-    : m_randomStream(Q_NULLPTR)
-    , m_db(Q_NULLPTR)
-    , m_meta(Q_NULLPTR)
-    , m_tmpParent(Q_NULLPTR)
+    : m_randomStream(nullptr)
+    , m_db(nullptr)
+    , m_meta(nullptr)
+    , m_tmpParent(nullptr)
     , m_error(false)
     , m_strictMode(false)
 {
@@ -86,17 +86,17 @@ void KeePass2XmlReader::readDatabase(QIODevice* device, Database* db, KeePass2Ra
         }
     }
 
-    QSet<QString> poolKeys = m_binaryPool.keys().toSet();
-    QSet<QString> entryKeys = m_binaryMap.keys().toSet();
-    QSet<QString> unmappedKeys = entryKeys - poolKeys;
-    QSet<QString> unusedKeys = poolKeys - entryKeys;
+    const QSet<QString> poolKeys = m_binaryPool.keys().toSet();
+    const QSet<QString> entryKeys = m_binaryMap.keys().toSet();
+    const QSet<QString> unmappedKeys = entryKeys - poolKeys;
+    const QSet<QString> unusedKeys = poolKeys - entryKeys;
 
     if (!unmappedKeys.isEmpty()) {
         raiseError("Unmapped keys left.");
     }
 
     if (!m_xml.error()) {
-        Q_FOREACH (const QString& key, unusedKeys) {
+        for (const QString& key : unusedKeys) {
             qWarning("KeePass2XmlReader::readDatabase: found unused key \"%s\"", qPrintable(key));
         }
     }
@@ -118,7 +118,8 @@ void KeePass2XmlReader::readDatabase(QIODevice* device, Database* db, KeePass2Ra
     for (iEntry = m_entries.constBegin(); iEntry != m_entries.constEnd(); ++iEntry) {
         iEntry.value()->setUpdateTimeinfo(true);
 
-        Q_FOREACH (Entry* histEntry, iEntry.value()->historyItems()) {
+        const QList<Entry*> historyItems = iEntry.value()->historyItems();
+        for (Entry* histEntry : historyItems) {
             histEntry->setUpdateTimeinfo(true);
         }
     }
@@ -177,7 +178,7 @@ bool KeePass2XmlReader::parseKeePassFile()
     Q_ASSERT(m_xml.isStartElement() && m_xml.name() == "KeePassFile");
 
     bool rootElementFound = false;
-    bool rootParsedSuccesfully = false;
+    bool rootParsedSuccessfully = false;
 
     while (!m_xml.error() && m_xml.readNextStartElement()) {
         if (m_xml.name() == "Meta") {
@@ -185,11 +186,11 @@ bool KeePass2XmlReader::parseKeePassFile()
         }
         else if (m_xml.name() == "Root") {
             if (rootElementFound) {
-                rootParsedSuccesfully = false;
+                rootParsedSuccessfully = false;
                 raiseError("Multiple root elements");
             }
             else {
-                rootParsedSuccesfully = parseRoot();
+                rootParsedSuccessfully = parseRoot();
                 rootElementFound = true;
             }
         }
@@ -198,7 +199,7 @@ bool KeePass2XmlReader::parseKeePassFile()
         }
     }
 
-    return rootParsedSuccesfully;
+    return rootParsedSuccessfully;
 }
 
 void KeePass2XmlReader::parseMeta()
@@ -387,7 +388,7 @@ void KeePass2XmlReader::parseBinaries()
             QString id = attr.value("ID").toString();
 
             QByteArray data;
-            if (attr.value("Compressed").compare("True", Qt::CaseInsensitive) == 0) {
+            if (attr.value("Compressed").compare(QLatin1String("True"), Qt::CaseInsensitive) == 0) {
                 data = readCompressedBinary();
             }
             else {
@@ -457,12 +458,12 @@ bool KeePass2XmlReader::parseRoot()
     Q_ASSERT(m_xml.isStartElement() && m_xml.name() == "Root");
 
     bool groupElementFound = false;
-    bool groupParsedSuccesfully = false;
+    bool groupParsedSuccessfully = false;
 
     while (!m_xml.error() && m_xml.readNextStartElement()) {
         if (m_xml.name() == "Group") {
             if (groupElementFound) {
-                groupParsedSuccesfully = false;
+                groupParsedSuccessfully = false;
                 raiseError("Multiple group elements");
                 continue;
             }
@@ -472,7 +473,7 @@ bool KeePass2XmlReader::parseRoot()
                 Group* oldRoot = m_db->rootGroup();
                 m_db->setRootGroup(rootGroup);
                 delete oldRoot;
-                groupParsedSuccesfully = true;
+                groupParsedSuccessfully = true;
             }
 
             groupElementFound = true;
@@ -485,7 +486,7 @@ bool KeePass2XmlReader::parseRoot()
         }
     }
 
-    return groupParsedSuccesfully;
+    return groupParsedSuccessfully;
 }
 
 Group* KeePass2XmlReader::parseGroup()
@@ -614,11 +615,11 @@ Group* KeePass2XmlReader::parseGroup()
         raiseError("No group uuid found");
     }
 
-    Q_FOREACH (Group* child, children) {
+    for (Group* child : asConst(children)) {
         child->setParent(group);
     }
 
-    Q_FOREACH (Entry* entry, entries) {
+    for (Entry* entry : asConst(entries)) {
         entry->setGroup(group);
     }
 
@@ -777,7 +778,7 @@ Entry* KeePass2XmlReader::parseEntry(bool history)
         raiseError("No entry uuid found");
     }
 
-    Q_FOREACH (Entry* historyItem, historyItems) {
+    for (Entry* historyItem : asConst(historyItems)) {
         if (historyItem->uuid() != entry->uuid()) {
             if (m_strictMode) {
                 raiseError("History element with different uuid");
@@ -788,7 +789,7 @@ Entry* KeePass2XmlReader::parseEntry(bool history)
         entry->addHistoryItem(historyItem);
     }
 
-    Q_FOREACH (const StringPair& ref, binaryRefs) {
+    for (const StringPair& ref : asConst(binaryRefs)) {
         m_binaryMap.insertMulti(ref.first, qMakePair(entry, ref.second));
     }
 
@@ -1036,6 +1037,9 @@ bool KeePass2XmlReader::readBool()
     else if (str.compare("False", Qt::CaseInsensitive) == 0) {
         return false;
     }
+    else if (str.length() == 0) {
+        return false;
+    }
     else {
         raiseError("Invalid bool value");
         return false;
@@ -1052,7 +1056,7 @@ QDateTime KeePass2XmlReader::readDateTime()
             raiseError("Invalid date time value");
         }
         else {
-            dt = Tools::currentDateTimeUtc();
+            dt = QDateTime::currentDateTimeUtc();
         }
     }
 
@@ -1153,7 +1157,7 @@ QByteArray KeePass2XmlReader::readCompressedBinary()
 Group* KeePass2XmlReader::getGroup(const Uuid& uuid)
 {
     if (uuid.isNull()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     if (m_groups.contains(uuid)) {
@@ -1172,7 +1176,7 @@ Group* KeePass2XmlReader::getGroup(const Uuid& uuid)
 Entry* KeePass2XmlReader::getEntry(const Uuid& uuid)
 {
     if (uuid.isNull()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     if (m_entries.contains(uuid)) {

@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2013 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,12 +19,18 @@
 #include "PasswordGenerator.h"
 
 #include "crypto/Random.h"
+#include "zxcvbn/zxcvbn.h"
 
 PasswordGenerator::PasswordGenerator()
     : m_length(0)
     , m_classes(0)
     , m_flags(0)
 {
+}
+
+double PasswordGenerator::calculateEntropy(QString password)
+{
+    return ZxcvbnMatch(password.toLatin1(), 0, 0);
 }
 
 void PasswordGenerator::setLength(int length)
@@ -45,11 +52,11 @@ QString PasswordGenerator::generatePassword() const
 {
     Q_ASSERT(isValid());
 
-    QVector<PasswordGroup> groups = passwordGroups();
+    const QVector<PasswordGroup> groups = passwordGroups();
 
     QVector<QChar> passwordChars;
-    Q_FOREACH (const PasswordGroup& group, groups) {
-        Q_FOREACH (QChar ch, group) {
+    for (const PasswordGroup& group : groups) {
+        for (QChar ch : group) {
             passwordChars.append(ch);
         }
     }
@@ -88,6 +95,22 @@ QString PasswordGenerator::generatePassword() const
 
     return password;
 }
+
+int PasswordGenerator::getbits() const
+{
+    const QVector<PasswordGroup> groups = passwordGroups();
+
+    int bits = 0;
+    QVector<QChar> passwordChars;
+    for (const PasswordGroup& group: groups) {
+        bits += group.size();
+    }
+
+    bits *= m_length;
+
+    return bits;
+}
+
 
 bool PasswordGenerator::isValid() const
 {
@@ -173,6 +196,24 @@ QVector<PasswordGroup> PasswordGenerator::passwordGroups() const
 
         passwordGroups.append(group);
     }
+    if (m_classes & EASCII) {
+        PasswordGroup group;
+
+        // [U+0080, U+009F] are C1 control characters,
+        // U+00A0 is non-breaking space
+        for (int i = 161; i <= 172; i++) {
+            group.append(i);
+        }
+        // U+00AD is soft hyphen (format character)
+        for (int i = 174; i <= 255; i++) {
+            if ((m_flags & ExcludeLookAlike) && (i == 249)) { // "﹒"
+                continue;
+            }
+            group.append(i);
+        }
+
+        passwordGroups.append(group);
+    }
 
     return passwordGroups;
 }
@@ -191,6 +232,9 @@ int PasswordGenerator::numCharClasses() const
         numClasses++;
     }
     if (m_classes & SpecialCharacters) {
+        numClasses++;
+    }
+    if (m_classes & EASCII) {
         numClasses++;
     }
 

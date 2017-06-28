@@ -26,7 +26,7 @@ class TestWildcardMatcher : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void testMatcher();
     void testMatcher_data();
 
@@ -35,6 +35,7 @@ private:
     static const QString AlternativeText;
 
     void initMatcher(QString text);
+    void cleanupMatcher();
     void verifyMatchResult(QString pattern, bool expected);
     void verifyMatch(QString pattern);
     void verifyNoMatch(QString pattern);

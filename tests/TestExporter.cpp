@@ -20,7 +20,6 @@
 
 #include <QTest>
 
-#include "tests.h"
 #include "core/ToDbExporter.h"
 #include "core/Group.h"
 #include "core/Metadata.h"
@@ -77,6 +76,3 @@ void TestExporter::testToDbExporter()
     delete dbOrg;
     delete dbExp;
 }
-
-
-

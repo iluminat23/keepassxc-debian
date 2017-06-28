@@ -28,7 +28,7 @@ Metadata::Metadata(QObject* parent)
     : QObject(parent)
     , m_updateDatetime(true)
 {
-    m_data.generator = "KeePassX";
+    m_data.generator = "KeePassXC";
     m_data.maintenanceHistoryDays = 365;
     m_data.masterKeyChangeRec = -1;
     m_data.masterKeyChangeForce = -1;
@@ -42,7 +42,7 @@ Metadata::Metadata(QObject* parent)
     m_data.protectNotes = false;
     // m_data.autoEnableVisualHiding = false;
 
-    QDateTime now = Tools::currentDateTimeUtc();
+    QDateTime now = QDateTime::currentDateTimeUtc();
     m_data.nameChanged = now;
     m_data.descriptionChanged = now;
     m_data.defaultUserNameChanged = now;
@@ -55,7 +55,7 @@ template <class P, class V> bool Metadata::set(P& property, const V& value)
 {
     if (property != value) {
         property = value;
-        Q_EMIT modified();
+        emit modified();
         return true;
     }
     else {
@@ -67,9 +67,9 @@ template <class P, class V> bool Metadata::set(P& property, const V& value, QDat
     if (property != value) {
         property = value;
         if (m_updateDatetime) {
-            dateTime = Tools::currentDateTimeUtc();
+            dateTime = QDateTime::currentDateTimeUtc();
         }
-        Q_EMIT modified();
+        emit modified();
         return true;
     }
     else {
@@ -218,7 +218,7 @@ QHash<Uuid, QPixmap> Metadata::customIconsScaledPixmaps() const
 {
     QHash<Uuid, QPixmap> result;
 
-    Q_FOREACH (const Uuid& uuid, m_customIconsOrder) {
+    for (const Uuid& uuid : m_customIconsOrder) {
         result.insert(uuid, customIconScaledPixmap(uuid));
     }
 
@@ -308,7 +308,7 @@ void Metadata::setGenerator(const QString& value)
 void Metadata::setName(const QString& value)
 {
     if (set(m_data.name, value, m_data.nameChanged)) {
-        Q_EMIT nameTextChanged();
+        emit nameTextChanged();
     }
 }
 
@@ -391,7 +391,7 @@ void Metadata::addCustomIcon(const Uuid& uuid, const QImage& icon)
     m_customIconScaledCacheKeys[uuid] = QPixmapCache::Key();
     m_customIconsOrder.append(uuid);
     Q_ASSERT(m_customIcons.count() == m_customIconsOrder.count());
-    Q_EMIT modified();
+    emit modified();
 }
 
 void Metadata::addCustomIconScaled(const Uuid& uuid, const QImage& icon)
@@ -422,12 +422,12 @@ void Metadata::removeCustomIcon(const Uuid& uuid)
     m_customIconScaledCacheKeys.remove(uuid);
     m_customIconsOrder.removeAll(uuid);
     Q_ASSERT(m_customIcons.count() == m_customIconsOrder.count());
-    Q_EMIT modified();
+    emit modified();
 }
 
 void Metadata::copyCustomIcons(const QSet<Uuid>& iconList, const Metadata* otherMetadata)
 {
-    Q_FOREACH (const Uuid& uuid, iconList) {
+    for (const Uuid& uuid : iconList) {
         Q_ASSERT(otherMetadata->containsCustomIcon(uuid));
 
         if (!containsCustomIcon(uuid) && otherMetadata->containsCustomIcon(uuid)) {
@@ -504,7 +504,7 @@ void Metadata::addCustomField(const QString& key, const QString& value)
     Q_ASSERT(!m_customFields.contains(key));
 
     m_customFields.insert(key, value);
-    Q_EMIT modified();
+    emit modified();
 }
 
 void Metadata::removeCustomField(const QString& key)
@@ -512,5 +512,5 @@ void Metadata::removeCustomField(const QString& key)
     Q_ASSERT(m_customFields.contains(key));
 
     m_customFields.remove(key);
-    Q_EMIT modified();
+    emit modified();
 }

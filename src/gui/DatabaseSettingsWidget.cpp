@@ -21,12 +21,14 @@
 #include "core/Database.h"
 #include "core/Group.h"
 #include "core/Metadata.h"
+#include "crypto/SymmetricCipher.h"
+#include "format/KeePass2.h"
 #include "keys/CompositeKey.h"
 
 DatabaseSettingsWidget::DatabaseSettingsWidget(QWidget* parent)
     : DialogyWidget(parent)
     , m_ui(new Ui::DatabaseSettingsWidget())
-    , m_db(Q_NULLPTR)
+    , m_db(nullptr)
 {
     m_ui->setupUi(this);
 
@@ -53,6 +55,7 @@ void DatabaseSettingsWidget::load(Database* db)
     m_ui->dbDescriptionEdit->setText(meta->description());
     m_ui->recycleBinEnabledCheckBox->setChecked(meta->recycleBinEnabled());
     m_ui->defaultUsernameEdit->setText(meta->defaultUserName());
+    m_ui->AlgorithmComboBox->setCurrentIndex(SymmetricCipher::cipherToAlgorithm(m_db->cipher()));
     m_ui->transformRoundsSpinBox->setValue(m_db->transformRounds());
     if (meta->historyMaxItems() > -1) {
         m_ui->historyMaxItemsSpinBox->setValue(meta->historyMaxItems());
@@ -82,6 +85,8 @@ void DatabaseSettingsWidget::save()
     meta->setName(m_ui->dbNameEdit->text());
     meta->setDescription(m_ui->dbDescriptionEdit->text());
     meta->setDefaultUserName(m_ui->defaultUsernameEdit->text());
+    m_db->setCipher(SymmetricCipher::algorithmToCipher(static_cast<SymmetricCipher::Algorithm>
+                                                       (m_ui->AlgorithmComboBox->currentIndex())));
     meta->setRecycleBinEnabled(m_ui->recycleBinEnabledCheckBox->isChecked());
     if (static_cast<quint64>(m_ui->transformRoundsSpinBox->value()) != m_db->transformRounds()) {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -119,12 +124,12 @@ void DatabaseSettingsWidget::save()
         truncateHistories();
     }
 
-    Q_EMIT editFinished(true);
+    emit editFinished(true);
 }
 
 void DatabaseSettingsWidget::reject()
 {
-    Q_EMIT editFinished(false);
+    emit editFinished(false);
 }
 
 void DatabaseSettingsWidget::transformRoundsBenchmark()
@@ -139,8 +144,8 @@ void DatabaseSettingsWidget::transformRoundsBenchmark()
 
 void DatabaseSettingsWidget::truncateHistories()
 {
-    QList<Entry*> allEntries = m_db->rootGroup()->entriesRecursive(false);
-    Q_FOREACH (Entry* entry, allEntries) {
+    const QList<Entry*> allEntries = m_db->rootGroup()->entriesRecursive(false);
+    for (Entry* entry : allEntries) {
         entry->truncateHistory();
     }
 }

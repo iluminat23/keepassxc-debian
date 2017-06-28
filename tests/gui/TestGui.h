@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2011 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,9 +19,10 @@
 #ifndef KEEPASSX_TESTGUI_H
 #define KEEPASSX_TESTGUI_H
 
+#include "TemporaryFile.h"
+
 #include <QAbstractItemModel>
 #include <QObject>
-#include <QTemporaryFile>
 
 class Database;
 class DatabaseTabWidget;
@@ -32,15 +34,24 @@ class TestGui : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
-    void testOpenDatabase();
+    void init();
+    void cleanup();
+    void cleanupTestCase();
+
+    void testMergeDatabase();
+    void testAutoreloadDatabase();
     void testTabs();
     void testEditEntry();
     void testAddEntry();
+    void testPasswordEntryEntropy();
+    void testDicewareEntryEntropy();
+    void testTotp();
     void testSearch();
     void testDeleteEntry();
     void testCloneEntry();
+    void testEntryPlaceholders();
     void testDragAndDropEntry();
     void testDragAndDropGroup();
     void testSaveAs();
@@ -48,10 +59,9 @@ private Q_SLOTS:
     void testDatabaseSettings();
     void testKeePass1Import();
     void testDatabaseLocking();
-    void cleanupTestCase();
 
 private:
-    void checkDatabase();
+    void checkDatabase(QString dbFileName = "");
     void triggerAction(const QString& name);
     void dragAndDropGroup(const QModelIndex& sourceIndex, const QModelIndex& targetIndex, int row,
                           bool expectedResult, const QString& expectedParentName, int expectedPos);
@@ -61,9 +71,10 @@ private:
     MainWindow* m_mainWindow;
     DatabaseTabWidget* m_tabWidget;
     DatabaseWidget* m_dbWidget;
-    QTemporaryFile m_orgDbFile;
-    QString m_orgDbFileName;
-    QString m_tmpFileName;
+    QByteArray m_dbData;
+    TemporaryFile m_dbFile;
+    QString m_dbFileName;
+    QString m_dbFilePath;
     Database* m_db;
 };
 

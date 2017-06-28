@@ -1,32 +1,143 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt_BR" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt_BR" version="2.1">
 <context>
     <name>AboutDialog</name>
     <message>
-        <source>About KeePassX</source>
-        <translation>Sobre KeePassX</translation>
+        <source>About KeePassXC</source>
+        <translation>Sobre KeePassXC</translation>
     </message>
     <message>
-        <source>KeePassX is distributed under the term of the GNU General Public License (GPL) version 2 or (at your option) version 3.</source>
-        <translation>KeePassX é distribuído nos termos da Licença Pública Geral (GPL), versão 2 ou (à sua escolha) versão 3, do GNU.</translation>
+        <source>About</source>
+        <translation>Sobre</translation>
     </message>
     <message>
-        <source>Revision</source>
-        <translation>Revisão</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Report bugs at: &lt;a href=&quot;https://github.com/keepassxreboot/keepassxc/issues&quot;&gt;&lt;span style=&quot;text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Using:</source>
-        <translation>Usando:</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;KeePassXC is distributed under the terms of the GNU General Public License (GPL) version 2 or (at your option) version 3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;style&gt;li {font-size: 10pt}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Project Maintainers:&lt;/span&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;droidmonkey&lt;/li&gt;&lt;li&gt;phoerious&lt;/li&gt;&lt;li&gt;TheZ3ro&lt;/li&gt;&lt;li&gt;louib&lt;/li&gt;&lt;li&gt;Weslly&lt;/li&gt;&lt;li&gt;debfx (KeePassX)&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Contributors</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;body&gt;
+            &lt;p style=&quot;font-size:x-large; font-weight:600;&quot;&gt;Code:&lt;/p&gt;
+            &lt;ul&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;debfx (KeePassX)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;BlueIce (KeePassX)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;droidmonkey&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;phoerious&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;TheZ3ro&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;louib&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;weslly&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;keithbennett (KeePassHTTP)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;Typz (KeePassHTTP)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;denk-mal (KeePassHTTP)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;kylemanna (YubiKey)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;seatedscribe (CSV Importer)&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;pgalves (Inline Messages)&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p style=&quot;font-size:x-large; font-weight:600;&quot;&gt;Translations:&lt;/p&gt;
+            &lt;ul&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Chinese:&lt;/span&gt; Biggulu, ligyxy, BestSteve&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Czech:&lt;/span&gt; pavelb, JosefVitu&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Dutch:&lt;/span&gt; Vistaus, KnooL, apie&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Finnish:&lt;/span&gt; MawKKe&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;French:&lt;/span&gt; Scrat15, frgnca, gilbsgilbs, gtalbot, iannick, kyodev, logut&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;German:&lt;/span&gt; Calyrx, DavidHamburg, antsas, codejunky, jensrutschmann, montilo, omnisome4, origin_de, pcrcoding, phoerious, rgloor, vlenzer&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Greek:&lt;/span&gt; nplatis&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Italian:&lt;/span&gt; TheZ3ro, FranzMari, Mte90, tosky&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Kazakh:&lt;/span&gt; sotrud_nik&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Lithuanian:&lt;/span&gt; Moo&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Polish:&lt;/span&gt; konradmb, mrerexx&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Portuguese: &lt;/span&gt;vitor895, weslly, American_Jesus, mihai.ile&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Russian:&lt;/span&gt; vsvyatski, KekcuHa, wkill95&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Spanish:&lt;/span&gt; EdwardNavarro, antifaz, piegope, pquin, vsvyatski&lt;/li&gt;
+            &lt;li style=&quot;font-size:10pt&quot;&gt;&lt;span style=&quot;font-weight:600;&quot;&gt;Swedish:&lt;/span&gt; henziger&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;https://github.com/keepassxreboot/keepassxc/graphs/contributors&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;See Contributions on GitHub&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Debug Info</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Include the following information whenever you report a bug:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Copy to clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Version %1
+</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Revision: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Libraries:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Operating system: %1
+CPU architecture: %2
+Kernel: %3 %4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Enabled extensions:</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>AccessControlDialog</name>
+    <message>
+        <source>Remember this decision</source>
+        <translation>Lembrar esta escolha</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Permitir</translation>
+    </message>
+    <message>
+        <source>Deny</source>
+        <translation>Negar</translation>
+    </message>
+    <message>
+        <source>%1 has requested access to passwords for the following item(s).
+Please select whether you want to allow access.</source>
+        <translation>%1 solicitou acesso a senhas para o(s) seguinte(s) iten(s).
+Selecione se deseja permitir o acesso.</translation>
+    </message>
+    <message>
+        <source>KeePassXC HTTP Confirm Access</source>
+        <translation>KeePassXC HTTP Confirmar Acesso</translation>
     </message>
 </context>
 <context>
     <name>AutoType</name>
     <message>
-        <source>Auto-Type - KeePassX</source>
-        <translation>Auto-Digitação - KeePassX</translation>
-    </message>
-    <message>
         <source>Couldn&apos;t find an entry that matches the window title:</source>
         <translation>Não foi possível localizar uma entrada que corresponda ao título da janela:</translation>
+    </message>
+    <message>
+        <source>Auto-Type - KeePassXC</source>
+        <translation>Auto-Digitação - KeePassXC</translation>
     </message>
 </context>
 <context>
@@ -47,12 +158,12 @@
 <context>
     <name>AutoTypeSelectDialog</name>
     <message>
-        <source>Auto-Type - KeePassX</source>
-        <translation>Auto-Digitação - KeePassX</translation>
-    </message>
-    <message>
         <source>Select entry to Auto-Type:</source>
         <translation>Escolha uma entrada para Auto-Digitar:</translation>
+    </message>
+    <message>
+        <source>Auto-Type - KeePassXC</source>
+        <translation>Auto-Digitação - KeePassXC</translation>
     </message>
 </context>
 <context>
@@ -68,10 +179,6 @@
     <message>
         <source>Repeat password:</source>
         <translation>Repita senha:</translation>
-    </message>
-    <message>
-        <source>Key file</source>
-        <translation>Arquivo-Chave</translation>
     </message>
     <message>
         <source>Browse</source>
@@ -94,20 +201,12 @@
         <translation>Criar Arquivo-Chave...</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Erro</translation>
-    </message>
-    <message>
         <source>Unable to create Key File : </source>
         <translation>Não foi possível criar o Arquivo-Chave : </translation>
     </message>
     <message>
         <source>Select a key file</source>
         <translation>Escolha um arquivo-chave</translation>
-    </message>
-    <message>
-        <source>Question</source>
-        <translation>Pergunta</translation>
     </message>
     <message>
         <source>Do you really want to use an empty string as password?</source>
@@ -118,14 +217,171 @@
         <translation>Senhas diferentes fornecidas.</translation>
     </message>
     <message>
-        <source>Failed to set key file</source>
-        <translation>Falha ao definir arquivo-chave</translation>
-    </message>
-    <message>
         <source>Failed to set %1 as the Key file:
 %2</source>
         <translation>Falha ao definir %1 como o Arquivo-Chave:
 %2</translation>
+    </message>
+    <message>
+        <source>&amp;Key file</source>
+        <translation>&amp;Arquivo-Chave</translation>
+    </message>
+    <message>
+        <source>Cha&amp;llenge Response</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Empty password</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Changing master key failed: no YubiKey inserted.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>CloneDialog</name>
+    <message>
+        <source>Clone Options</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Append &apos; - Copy&apos; to title</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Replace username and password with references</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Copy history</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>CsvImportWidget</name>
+    <message>
+        <source>Import CSV fields</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>filename</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>size, rows, columns</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Encoding</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Codec</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Text is qualified by</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Fields are separated by</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Comments start with</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>First record has field names</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Number of headers line to discard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Consider &apos;\&apos; an escape character</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Column layout</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Not present in CSV file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Empty fieldname </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>column </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Imported from CSV file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Original data: </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Error(s) detected in CSV file !</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source> more messages skipped]</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erro</translation>
+    </message>
+    <message>
+        <source>CSV import: writer has errors:
+</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>CsvImportWizard</name>
+    <message>
+        <source>Import CSV file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erro</translation>
+    </message>
+    <message>
+        <source>Unable to calculate master key</source>
+        <translation>Não foi possível calcular a chave mestre</translation>
+    </message>
+</context>
+<context>
+    <name>CsvParserModel</name>
+    <message>
+        <source> byte, </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source> rows, </source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source> columns</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -147,10 +403,6 @@
         <translation>Navegar</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Erro</translation>
-    </message>
-    <message>
         <source>Unable to open the database.</source>
         <translation>Não foi possível abrir o banco de dados.</translation>
     </message>
@@ -169,6 +421,14 @@
     <message>
         <source>Select key file</source>
         <translation>Escolha o arquivo-chave</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Challenge Response:</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -227,10 +487,6 @@ Você pode salvá-lo agora.</translation>
         <translation>Usuário padrão:</translation>
     </message>
     <message>
-        <source>Use recycle bin:</source>
-        <translation>Usar lixeira:</translation>
-    </message>
-    <message>
         <source> MiB</source>
         <translation> MB</translation>
     </message>
@@ -245,6 +501,22 @@ Você pode salvá-lo agora.</translation>
     <message>
         <source>Max. history size:</source>
         <translation>Tamanho máx. do histórico:</translation>
+    </message>
+    <message>
+        <source>Use recycle bin</source>
+        <translation>Usar lixeira</translation>
+    </message>
+    <message>
+        <source>AES:  256 Bit   (default)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Twofish:  256 Bit</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Algorithm:</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -264,10 +536,6 @@ Você pode salvá-lo agora.</translation>
     <message>
         <source>Open database</source>
         <translation>Abrir banco de dados</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Aviso</translation>
     </message>
     <message>
         <source>File not found!</source>
@@ -300,10 +568,6 @@ Save changes?</source>
 Salvar alterações?</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Erro</translation>
-    </message>
-    <message>
         <source>Writing the database failed.</source>
         <translation>Escrever no banco de dados falhou.</translation>
     </message>
@@ -318,12 +582,6 @@ Salvar alterações?</translation>
     <message>
         <source>locked</source>
         <translation>trancado</translation>
-    </message>
-    <message>
-        <source>The database you are trying to open is locked by another instance of KeePassX.
-Do you want to open it anyway? Alternatively the database is opened read-only.</source>
-        <translation>O banco de dados que você está tentando abrir está bloqueado por outra instância do KeePassX.
-Você quer abri-lo de qualquer forma? Alternativamente, o banco de dados é aberto como somente leitura.</translation>
     </message>
     <message>
         <source>Lock database</source>
@@ -368,10 +626,46 @@ Descartar alterações e fechar mesmo assim?</translation>
         <translation>Falha ao gravar arquivo CSV.</translation>
     </message>
     <message>
-        <source>The database you are trying to save as is locked by another instance of KeePassX.
+        <source>Unable to open the database.</source>
+        <translation>Não foi possível abrir o banco de dados.</translation>
+    </message>
+    <message>
+        <source>Merge database</source>
+        <translation>Juntar banco de dados</translation>
+    </message>
+    <message>
+        <source>The database you are trying to save as is locked by another instance of KeePassXC.
 Do you want to save it anyway?</source>
-        <translation>O banco de dados que você está tentando salvar como está travado por uma outra instância de KeePassX.
-Você deseja salvá-lo mesmo assim?</translation>
+        <translation>A base de dados que você está tentando abrir está bloqueada por outra instância de KeePassXC.
+Mesmo assim deseja salvá-la?</translation>
+    </message>
+    <message>
+        <source>Passwords</source>
+        <translation>Senhas</translation>
+    </message>
+    <message>
+        <source>Database already opened</source>
+        <translation>Banco de dados já aberto</translation>
+    </message>
+    <message>
+        <source>The database you are trying to open is locked by another instance of KeePassXC.
+
+Do you want to open it anyway?</source>
+        <translation>O banco de dados que você está tentando abrir está bloqueada por outra instância do KeePassXC.
+
+Mesmo assim deseja salvá-la?</translation>
+    </message>
+    <message>
+        <source>Open read-only</source>
+        <translation>Abrir somente leitura</translation>
+    </message>
+    <message>
+        <source>File opened in read only mode.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open CSV file</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -413,16 +707,76 @@ Você deseja salvá-lo mesmo assim?</translation>
         <translation>Você realmente quer apagar o grupo &quot;%1&quot; para sempre?</translation>
     </message>
     <message>
-        <source>Current group</source>
-        <translation>Grupo atual</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erro</translation>
-    </message>
-    <message>
         <source>Unable to calculate master key</source>
         <translation>Não foi possível calcular chave mestra</translation>
+    </message>
+    <message>
+        <source>Move entry to recycle bin?</source>
+        <translation>Mover entrada para a lixeira?</translation>
+    </message>
+    <message>
+        <source>Do you really want to move entry &quot;%1&quot; to the recycle bin?</source>
+        <translation>Pretende realmente mover a entrada &quot;%1&quot; para a lixeira?</translation>
+    </message>
+    <message>
+        <source>Searching...</source>
+        <translation>Pesquisando...</translation>
+    </message>
+    <message>
+        <source>No current database.</source>
+        <translation>Nenhuma base de dados atual.</translation>
+    </message>
+    <message>
+        <source>No source database, nothing to do.</source>
+        <translation>Nenhuma base de dados de origem, nada a fazer.</translation>
+    </message>
+    <message>
+        <source>Search Results (%1)</source>
+        <translation>Resultados da Pesquisa (%1)</translation>
+    </message>
+    <message>
+        <source>No Results</source>
+        <translation>Sem Resultados</translation>
+    </message>
+    <message>
+        <source>Execute command?</source>
+        <translation>Executar comando?</translation>
+    </message>
+    <message>
+        <source>Do you really want to execute the following command?&lt;br&gt;&lt;br&gt;%1&lt;br&gt;</source>
+        <translation>Você quer realmente executar o comando seguinte?&lt;br&gt;&lt;br&gt;%1&lt;br&gt;</translation>
+    </message>
+    <message>
+        <source>Remember my choice</source>
+        <translation>Lembrar minha escolha</translation>
+    </message>
+    <message>
+        <source>Autoreload Request</source>
+        <translation>Recarregar Automaticamente Pedido</translation>
+    </message>
+    <message>
+        <source>The database file has changed. Do you want to load the changes?</source>
+        <translation>A base de dados foi alterada. Deseja carregar as alterações?</translation>
+    </message>
+    <message>
+        <source>Merge Request</source>
+        <translation>Juntar Pedido</translation>
+    </message>
+    <message>
+        <source>The database file has changed and you have unsaved changes.Do you want to merge your changes?</source>
+        <translation>A base de dados foi alterada e tem alterações não gravadas. Deseja juntar as suas alterações?</translation>
+    </message>
+    <message>
+        <source>Could not open the new database file while attempting to autoreload this database.</source>
+        <translation>Não foi possível abrir a nova base de dados ao tentar recarregar automaticamente essa base de dados.</translation>
+    </message>
+    <message>
+        <source>Empty recycle bin?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Are you sure you want to permanently delete everything from your recycle bin?</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -462,10 +816,6 @@ Você deseja salvá-lo mesmo assim?</translation>
     <message>
         <source>Edit entry</source>
         <translation>Editar entrada</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erro</translation>
     </message>
     <message>
         <source>Different passwords supplied.</source>
@@ -509,6 +859,22 @@ Você deseja salvá-lo mesmo assim?</translation>
         <source>1 year</source>
         <translation>1 ano</translation>
     </message>
+    <message>
+        <source>Confirm Remove</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this attribute?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>[PROTECTED] Press reveal to view or edit</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Are you sure you want to remove this attachment?</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>EditEntryWidgetAdvanced</name>
@@ -519,10 +885,6 @@ Você deseja salvá-lo mesmo assim?</translation>
     <message>
         <source>Add</source>
         <translation>Adicionar</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Editar</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -540,20 +902,24 @@ Você deseja salvá-lo mesmo assim?</translation>
         <source>Open</source>
         <translation>Abrir</translation>
     </message>
+    <message>
+        <source>Edit Name</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Protect</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Reveal</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>EditEntryWidgetAutoType</name>
     <message>
         <source>Enable Auto-Type for this entry</source>
         <translation>Habilitar Auto-Digitação para esta entrada</translation>
-    </message>
-    <message>
-        <source>Inherit default Auto-Type sequence from the group</source>
-        <translation>Herdar sequência pré-definida de Auto-Digitação do grupo</translation>
-    </message>
-    <message>
-        <source>Use custom Auto-Type sequence:</source>
-        <translation>Usar sequência de Auto-Digitação personalizada:</translation>
     </message>
     <message>
         <source>+</source>
@@ -568,12 +934,24 @@ Você deseja salvá-lo mesmo assim?</translation>
         <translation>Título da Janela:</translation>
     </message>
     <message>
-        <source>Use default sequence</source>
-        <translation>Usar sequência pré-definida</translation>
+        <source>Inherit default Auto-Type sequence from the &amp;group</source>
+        <translation>Herdar sequência pré-definida de Auto-Digitação do &amp;grupo</translation>
     </message>
     <message>
-        <source>Set custom sequence:</source>
-        <translation>Definir sequência personalizada:</translation>
+        <source>&amp;Use custom Auto-Type sequence:</source>
+        <translation>&amp;Usar sequência de Auto-Digitação personalizada:</translation>
+    </message>
+    <message>
+        <source>Use default se&amp;quence</source>
+        <translation>Usar se&amp;quência pré-definida</translation>
+    </message>
+    <message>
+        <source>Set custo&amp;m sequence:</source>
+        <translation>Definir sequência &amp;personalizada:</translation>
+    </message>
+    <message>
+        <source>Window Associations</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -612,10 +990,6 @@ Você deseja salvá-lo mesmo assim?</translation>
     <message>
         <source>Repeat:</source>
         <translation>Repetir:</translation>
-    </message>
-    <message>
-        <source>Gen.</source>
-        <translation>Gerar</translation>
     </message>
     <message>
         <source>URL:</source>
@@ -688,28 +1062,20 @@ Você deseja salvá-lo mesmo assim?</translation>
         <translation>Buscar</translation>
     </message>
     <message>
-        <source>Auto-type</source>
-        <translation>Auto-digitar</translation>
+        <source>Auto-Type</source>
+        <translation>Auto-Digitação</translation>
     </message>
     <message>
-        <source>Use default auto-type sequence of parent group</source>
-        <translation>Usar sequência de auto-digitação padrão do grupo pai</translation>
+        <source>&amp;Use default Auto-Type sequence of parent group</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Set default auto-type sequence</source>
-        <translation>Definir sequência auto-digitação padrão</translation>
+        <source>Set default Auto-Type se&amp;quence</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>EditWidgetIcons</name>
-    <message>
-        <source>Use default icon</source>
-        <translation>Usar ícone padrão</translation>
-    </message>
-    <message>
-        <source>Use custom icon</source>
-        <translation>Usar ícone personalizado</translation>
-    </message>
     <message>
         <source>Add custom icon</source>
         <translation>Adicionar ícone personalizado</translation>
@@ -731,12 +1097,36 @@ Você deseja salvá-lo mesmo assim?</translation>
         <translation>Selecionar imagem</translation>
     </message>
     <message>
-        <source>Can&apos;t delete icon!</source>
-        <translation>Não é possível apagar o ícone!</translation>
+        <source>Error</source>
+        <translation>Erro</translation>
     </message>
-    <message numerus="yes">
-        <source>Can&apos;t delete icon. Still used by %n item(s).</source>
-        <translation><numerusform>Não é possível apagar o ícone. Ainda usado por %n item.</numerusform><numerusform>Não é possível apagar o ícone. Ainda usado por %n itens.</numerusform></translation>
+    <message>
+        <source>Download favicon</source>
+        <translation>Baixar favicon</translation>
+    </message>
+    <message>
+        <source>Unable to fetch favicon.</source>
+        <translation>Não foi possível obter favicon.</translation>
+    </message>
+    <message>
+        <source>Can&apos;t read icon</source>
+        <translation>Não foi possível ler ícone</translation>
+    </message>
+    <message>
+        <source>&amp;Use default icon</source>
+        <translation>&amp;Usar ícone padrão</translation>
+    </message>
+    <message>
+        <source>Use custo&amp;m icon</source>
+        <translation>Usar ícone &amp;personalizado</translation>
+    </message>
+    <message>
+        <source>Confirm Delete</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>This icon is used by %1 entries, and will be replaced by the default icon. Are you sure you want to delete it?</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -756,6 +1146,13 @@ Você deseja salvá-lo mesmo assim?</translation>
     <message>
         <source>Uuid:</source>
         <translation>Uuid:</translation>
+    </message>
+</context>
+<context>
+    <name>Entry</name>
+    <message>
+        <source> - Clone</source>
+        <translation> - Clone</translation>
     </message>
 </context>
 <context>
@@ -802,6 +1199,11 @@ Você deseja salvá-lo mesmo assim?</translation>
         <source>URL</source>
         <translation>URL</translation>
     </message>
+    <message>
+        <source>Ref: </source>
+        <comment>Reference abbreviation</comment>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>Group</name>
@@ -811,14 +1213,72 @@ Você deseja salvá-lo mesmo assim?</translation>
     </message>
 </context>
 <context>
+    <name>HttpPasswordGeneratorWidget</name>
+    <message>
+        <source>Length:</source>
+        <translation>Comprimento:</translation>
+    </message>
+    <message>
+        <source>Character Types</source>
+        <translation>Tipo de Caracteres</translation>
+    </message>
+    <message>
+        <source>Upper Case Letters</source>
+        <translation>Letras Maiúsculas</translation>
+    </message>
+    <message>
+        <source>A-Z</source>
+        <translation>A-Z</translation>
+    </message>
+    <message>
+        <source>Lower Case Letters</source>
+        <translation>Letras Minúsculas</translation>
+    </message>
+    <message>
+        <source>a-z</source>
+        <translation>a-z</translation>
+    </message>
+    <message>
+        <source>Numbers</source>
+        <translation>Números</translation>
+    </message>
+    <message>
+        <source>0-9</source>
+        <translation>0-9</translation>
+    </message>
+    <message>
+        <source>Special Characters</source>
+        <translation>Caracteres Especiais</translation>
+    </message>
+    <message>
+        <source>/*_&amp; ...</source>
+        <translation>/*_&amp; ...</translation>
+    </message>
+    <message>
+        <source>Exclude look-alike characters</source>
+        <translation>Excluir caracteres semelhantes</translation>
+    </message>
+    <message>
+        <source>Ensure that the password contains characters from every group</source>
+        <translation>Verificar se a senha contém caracteres de todos os grupos</translation>
+    </message>
+</context>
+<context>
+    <name>KMessageWidget</name>
+    <message>
+        <source>&amp;Close</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Close message</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>KeePass1OpenWidget</name>
     <message>
         <source>Import KeePass1 database</source>
         <translation>Importar banco de dados KeePass1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erro</translation>
     </message>
     <message>
         <source>Unable to open the database.</source>
@@ -851,6 +1311,10 @@ Você deseja salvá-lo mesmo assim?</translation>
         <source>Unable to calculate master key</source>
         <translation>Não foi possível calcular a chave mestra</translation>
     </message>
+    <message>
+        <source>Wrong key or database file is corrupt.</source>
+        <translation>Chave errada ou base de dados corrompida.</translation>
+    </message>
 </context>
 <context>
     <name>KeePass2Reader</name>
@@ -880,6 +1344,10 @@ This is a one-way migration. You won&apos;t be able to open the imported databas
 Você pode importá-lo clicando em Banco de Dados &gt; &apos;Importar banco de dados KeePass 1&apos;.
 Esta é uma migração de uma via. Você não poderá abrir o banco de dados importado com a versão antiga do KeePassX 0.4.</translation>
     </message>
+    <message>
+        <source>Unable to issue challenge-response.</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>Main</name>
@@ -888,111 +1356,27 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Erro fatal enquanto testava as funções criptográficas.</translation>
     </message>
     <message>
-        <source>KeePassX - Error</source>
-        <translation>KeePassX - Erro</translation>
+        <source>KeePassXC - Error</source>
+        <translation>KeePassXC - Erro</translation>
+    </message>
+    <message>
+        <source>The lock file could not be created. Single-instance mode disabled.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Another instance of KeePassXC is already running.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Database</source>
-        <translation>Banco de Dados</translation>
-    </message>
-    <message>
-        <source>Recent databases</source>
-        <translation>Bancos de dados recentes</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation>Ajuda</translation>
-    </message>
-    <message>
-        <source>Entries</source>
-        <translation>Entradas</translation>
-    </message>
-    <message>
-        <source>Copy attribute to clipboard</source>
-        <translation>Copiar atributo para a área de transferência</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Grupos</translation>
-    </message>
-    <message>
-        <source>View</source>
-        <translation>Ver</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Sair</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Sobre</translation>
-    </message>
-    <message>
         <source>Open database</source>
         <translation>Abrir banco de dados</translation>
     </message>
     <message>
-        <source>Save database</source>
-        <translation>Salvar banco de dados</translation>
-    </message>
-    <message>
-        <source>Close database</source>
-        <translation>Fechar banco de dados</translation>
-    </message>
-    <message>
-        <source>New database</source>
-        <translation>Novo banco de dados</translation>
-    </message>
-    <message>
-        <source>Add new entry</source>
-        <translation>Adicionar nova entrada</translation>
-    </message>
-    <message>
-        <source>View/Edit entry</source>
-        <translation>Ver/Editar entrada</translation>
-    </message>
-    <message>
-        <source>Delete entry</source>
-        <translation>Excluir entrada</translation>
-    </message>
-    <message>
-        <source>Add new group</source>
-        <translation>Adicionar novo grupo</translation>
-    </message>
-    <message>
-        <source>Edit group</source>
-        <translation>Editar grupo</translation>
-    </message>
-    <message>
-        <source>Delete group</source>
-        <translation>Excluir grupo</translation>
-    </message>
-    <message>
-        <source>Save database as</source>
-        <translation>Salvar banco de dados como</translation>
-    </message>
-    <message>
-        <source>Change master key</source>
-        <translation>Alterar chave-mestra</translation>
-    </message>
-    <message>
         <source>Database settings</source>
         <translation>Configurações do Banco de Dados</translation>
-    </message>
-    <message>
-        <source>Import KeePass 1 database</source>
-        <translation>Importar banco de dados KeePass1</translation>
-    </message>
-    <message>
-        <source>Clone entry</source>
-        <translation>Clonar entrada</translation>
-    </message>
-    <message>
-        <source>Find</source>
-        <translation>Localizar</translation>
     </message>
     <message>
         <source>Copy username to clipboard</source>
@@ -1007,30 +1391,6 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Configurações</translation>
     </message>
     <message>
-        <source>Perform Auto-Type</source>
-        <translation>Realizar Auto-Digitação</translation>
-    </message>
-    <message>
-        <source>Open URL</source>
-        <translation>Abrir URL</translation>
-    </message>
-    <message>
-        <source>Lock databases</source>
-        <translation>Trancar bancos de dados</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation>Título</translation>
-    </message>
-    <message>
-        <source>URL</source>
-        <translation>URL</translation>
-    </message>
-    <message>
-        <source>Notes</source>
-        <translation>Notas</translation>
-    </message>
-    <message>
         <source>Show toolbar</source>
         <translation>Mostrar barra de ferramentas</translation>
     </message>
@@ -1041,26 +1401,6 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
     <message>
         <source>Toggle window</source>
         <translation>Alternar Janela</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation>Ferramentas</translation>
-    </message>
-    <message>
-        <source>Copy username</source>
-        <translation>Copiar nome de usuário</translation>
-    </message>
-    <message>
-        <source>Copy password</source>
-        <translation>Copiar senha</translation>
-    </message>
-    <message>
-        <source>Export to CSV file</source>
-        <translation>Exportar para arquivo CSV</translation>
-    </message>
-    <message>
-        <source>Repair database</source>
-        <translation>Reparar banco de dados</translation>
     </message>
     <message>
         <source>KeePass 2 Database</source>
@@ -1075,12 +1415,326 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Salvar banco de dados reparado</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Erro</translation>
-    </message>
-    <message>
         <source>Writing the database failed.</source>
         <translation>Escrita do banco de dados falhou.</translation>
+    </message>
+    <message>
+        <source>&amp;Recent databases</source>
+        <translation>&amp;Bancos de dados recentes</translation>
+    </message>
+    <message>
+        <source>He&amp;lp</source>
+        <translation>&amp;Ajuda</translation>
+    </message>
+    <message>
+        <source>E&amp;ntries</source>
+        <translation>E&amp;ntradas</translation>
+    </message>
+    <message>
+        <source>Copy att&amp;ribute to clipboard</source>
+        <translation>Copiar at&amp;ributo para área de transferência</translation>
+    </message>
+    <message>
+        <source>&amp;Groups</source>
+        <translation>&amp;Grupos</translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation>&amp;Ver</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation>&amp;Sair</translation>
+    </message>
+    <message>
+        <source>&amp;About</source>
+        <translation>&amp;Sobre</translation>
+    </message>
+    <message>
+        <source>&amp;Open database</source>
+        <translation>&amp;Abrir base de dados</translation>
+    </message>
+    <message>
+        <source>&amp;Save database</source>
+        <translation>&amp;Salvar base de dados</translation>
+    </message>
+    <message>
+        <source>&amp;Close database</source>
+        <translation>&amp;Fechar base de dados</translation>
+    </message>
+    <message>
+        <source>&amp;New database</source>
+        <translation>&amp;Nova base de dados</translation>
+    </message>
+    <message>
+        <source>Merge from KeePassX database</source>
+        <translation>Juntar base de dados a partir de KeePassX</translation>
+    </message>
+    <message>
+        <source>&amp;Add new entry</source>
+        <translation>&amp;Adicionar nova entrada</translation>
+    </message>
+    <message>
+        <source>&amp;View/Edit entry</source>
+        <translation>&amp;Ver/Editar entrada</translation>
+    </message>
+    <message>
+        <source>&amp;Delete entry</source>
+        <translation>&amp;Apagar entrada</translation>
+    </message>
+    <message>
+        <source>&amp;Add new group</source>
+        <translation>&amp;Adicionar novo grupo</translation>
+    </message>
+    <message>
+        <source>&amp;Edit group</source>
+        <translation>&amp;Editar grupo</translation>
+    </message>
+    <message>
+        <source>&amp;Delete group</source>
+        <translation>&amp;Apagar grupo</translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve database as</source>
+        <translation>Sal&amp;var base de dados como</translation>
+    </message>
+    <message>
+        <source>Change &amp;master key</source>
+        <translation>Alterar chave &amp;mestra</translation>
+    </message>
+    <message>
+        <source>&amp;Database settings</source>
+        <translation>&amp;Definições da base de dados</translation>
+    </message>
+    <message>
+        <source>&amp;Clone entry</source>
+        <translation>&amp;Clonar entrada</translation>
+    </message>
+    <message>
+        <source>Timed one-time password</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Setup TOTP</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Copy &amp;TOTP</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show TOTP</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Find</source>
+        <translation>&amp;Encontrar</translation>
+    </message>
+    <message>
+        <source>Copy &amp;username</source>
+        <translation>Copiar nome de &amp;usuário</translation>
+    </message>
+    <message>
+        <source>Cop&amp;y password</source>
+        <translation>Cop&amp;iar senha</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation>&amp;Configurações</translation>
+    </message>
+    <message>
+        <source>&amp;Perform Auto-Type</source>
+        <translation>&amp;Executar escrita automática</translation>
+    </message>
+    <message>
+        <source>&amp;Open URL</source>
+        <translation>&amp;Abrir URL</translation>
+    </message>
+    <message>
+        <source>&amp;Lock databases</source>
+        <translation>&amp;Trancar base de dados</translation>
+    </message>
+    <message>
+        <source>&amp;Title</source>
+        <translation>&amp;Título</translation>
+    </message>
+    <message>
+        <source>&amp;URL</source>
+        <translation>&amp;URL</translation>
+    </message>
+    <message>
+        <source>&amp;Notes</source>
+        <translation>&amp;Notas</translation>
+    </message>
+    <message>
+        <source>&amp;Export to CSV file</source>
+        <translation>&amp;Exportar para arquivo CSV</translation>
+    </message>
+    <message>
+        <source>Re&amp;pair database</source>
+        <translation>Re&amp;parar banco de dados</translation>
+    </message>
+    <message>
+        <source>Password Generator</source>
+        <translation>Gerador de Senha</translation>
+    </message>
+    <message>
+        <source>Clear history</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Database</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Import KeePass 1 database</source>
+        <translation>Importar banco de dados KeePass1</translation>
+    </message>
+    <message>
+        <source>Import CSV file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Empty recycle bin</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Access error for config file %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Quit KeePassXC</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Please touch the button on your YubiKey!</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>OptionDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation>Diálogo</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>Geral</translation>
+    </message>
+    <message>
+        <source>Sh&amp;ow a notification when credentials are requested</source>
+        <translation>M&amp;ostrar uma notificação quando as credenciais forem solicitadas</translation>
+    </message>
+    <message>
+        <source>Sort matching entries by &amp;username</source>
+        <translation>Ordenar entradas coincidentes por nome de &amp;usuário</translation>
+    </message>
+    <message>
+        <source>Re&amp;move all stored permissions from entries in active database</source>
+        <translation>R&amp;emover todas as permissões armazenadas de entradas na base de dados ativa</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation>Avançado</translation>
+    </message>
+    <message>
+        <source>Always allow &amp;access to entries</source>
+        <translation>Permitir sempre &amp;acesso as entradas</translation>
+    </message>
+    <message>
+        <source>Always allow &amp;updating entries</source>
+        <translation>Permitir sempre &amp;atualizar as entradas</translation>
+    </message>
+    <message>
+        <source>Searc&amp;h in all opened databases for matching entries</source>
+        <translation>Procurar em todas as base de dados abertas por entradas semel&amp;hantes</translation>
+    </message>
+    <message>
+        <source>HTTP Port:</source>
+        <translation>Porta HTTP:</translation>
+    </message>
+    <message>
+        <source>Default port: 19455</source>
+        <translation>Porta padrão: 19455</translation>
+    </message>
+    <message>
+        <source>Re&amp;quest to unlock the database if it is locked</source>
+        <translation>Pe&amp;dir para desbloquear a base de dados se estiver bloqueada</translation>
+    </message>
+    <message>
+        <source>Sort &amp;matching entries by title</source>
+        <translation>Ordenar &amp;entradas por título</translation>
+    </message>
+    <message>
+        <source>KeePassXC will listen to this port on 127.0.0.1</source>
+        <translation>KeePassXC irá escutar esta porta em 127.0.0.1</translation>
+    </message>
+    <message>
+        <source>Cannot bind to privileged ports</source>
+        <translation>Não é possível ligar a portas privilegiadas</translation>
+    </message>
+    <message>
+        <source>Cannot bind to privileged ports below 1024!
+Using default port 19455.</source>
+        <translation>Não é possível ligar a portas privilegiadas abaixo de 1024!
+Usando porta padrão 19455.</translation>
+    </message>
+    <message>
+        <source>R&amp;emove all shared encryption keys from active database</source>
+        <translation>R&amp;emover todas as chaves criptografadas compartilhadas da base de dados ativa</translation>
+    </message>
+    <message>
+        <source>&amp;Return advanced string fields which start with &quot;KPH: &quot;</source>
+        <translation>&amp;Mostrar também campos avançados que começam com &quot;KPH: &quot;</translation>
+    </message>
+    <message>
+        <source>Automatically creating or updating string fields is not supported.</source>
+        <translation>Criação automática ou atualizações não são suportadas para os valores dos campos.</translation>
+    </message>
+    <message>
+        <source>This is required for accessing your databases from ChromeIPass or PassIFox</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Enable KeePassHTTP server</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Only returns the best matches for a specific URL instead of all entries for the whole domain.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Return only best matching entries</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Only entries with the same scheme (http://, https://, ftp://, ...) are returned.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Match URL schemes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Password Generator</source>
+        <translation>Gerador de Senha</translation>
+    </message>
+    <message>
+        <source>Only the selected database has to be connected with a client.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>The following options can be dangerous!
+Change them only if you know what you are doing.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1088,10 +1742,6 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
     <message>
         <source>Password:</source>
         <translation>Senha:</translation>
-    </message>
-    <message>
-        <source>Length:</source>
-        <translation>Tamanho:</translation>
     </message>
     <message>
         <source>Character Types</source>
@@ -1118,70 +1768,160 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Excluir caracteres similares</translation>
     </message>
     <message>
-        <source>Ensure that the password contains characters from every group</source>
-        <translation>Assegurar que a senha contenha caracteres de todos os grupos</translation>
-    </message>
-    <message>
         <source>Accept</source>
         <translation>Aceitar</translation>
     </message>
+    <message>
+        <source>%p%</source>
+        <translation>%p%</translation>
+    </message>
+    <message>
+        <source>strength</source>
+        <translation>força</translation>
+    </message>
+    <message>
+        <source>entropy</source>
+        <translation>entropia</translation>
+    </message>
+    <message>
+        <source>&amp;Length:</source>
+        <translation>&amp;Tamanho:</translation>
+    </message>
+    <message>
+        <source>Pick characters from every group</source>
+        <translation>Selecione caracteres de todos os grupos</translation>
+    </message>
+    <message>
+        <source>Generate</source>
+        <translation>Gerar</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Fechar</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Aplicar</translation>
+    </message>
+    <message>
+        <source>Entropy: %1 bit</source>
+        <translation>Entropia: %1 bit</translation>
+    </message>
+    <message>
+        <source>Password Quality: %1</source>
+        <translation>Qualidade da senha: %1</translation>
+    </message>
+    <message>
+        <source>Poor</source>
+        <translation>Pobre</translation>
+    </message>
+    <message>
+        <source>Weak</source>
+        <translation>Fraco</translation>
+    </message>
+    <message>
+        <source>Good</source>
+        <translation>Bom</translation>
+    </message>
+    <message>
+        <source>Excellent</source>
+        <translation>Excelente</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>Senha</translation>
+    </message>
+    <message>
+        <source>Extended ASCII</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Passphrase</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Wordlist:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Word Count:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Word Separator:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
-    <name>QCommandLineParser</name>
+    <name>QObject</name>
     <message>
-        <source>Displays version information.</source>
-        <translation>Mostrar informações da versão.</translation>
+        <source>NULL device</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Displays this help.</source>
-        <translation>Mostrar esta ajuda.</translation>
+        <source>error reading from device</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Unknown option &apos;%1&apos;.</source>
-        <translation>Opção desconhecida &apos;%1&apos;.</translation>
+        <source>file empty !
+</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Unknown options: %1.</source>
-        <translation>Opções desconhecidas: %1.</translation>
+        <source>malformed string</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Missing value after &apos;%1&apos;.</source>
-        <translation>Falta valor após &apos;%1&apos;.</translation>
+        <source>missing closing quote</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>Unexpected value after &apos;%1&apos;.</source>
-        <translation>Valor inesperado após &apos;%1&apos;.</translation>
+        <source>INTERNAL - unget lower bound exceeded</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>[options]</source>
-        <translation>[opções]</translation>
+        <source>Group</source>
+        <translation>Grupo</translation>
     </message>
     <message>
-        <source>Usage: %1</source>
-        <translation>Utilização: %1</translation>
+        <source>Title</source>
+        <translation>Título</translation>
     </message>
     <message>
-        <source>Options:</source>
-        <translation>Opções:</translation>
+        <source>Username</source>
+        <translation>Nome de usuário</translation>
     </message>
     <message>
-        <source>Arguments:</source>
-        <translation>Argumentos:</translation>
-    </message>
-</context>
-<context>
-    <name>QSaveFile</name>
-    <message>
-        <source>Existing file %1 is not writable</source>
-        <translation>O arquivo existente %1 não é gravável</translation>
+        <source>Password</source>
+        <translation>Senha</translation>
     </message>
     <message>
-        <source>Writing canceled by application</source>
-        <translation>Escrita cancelada pelo aplicativo</translation>
+        <source>URL</source>
+        <translation>URL</translation>
     </message>
     <message>
-        <source>Partial write. Partition full?</source>
-        <translation>Escrita parcial. Partição cheia?</translation>
+        <source>Notes</source>
+        <translation>Notas</translation>
+    </message>
+    <message>
+        <source>Browser Integration</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>YubiKey[%1] Challenge Response - Slot %2 - %3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Press</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Passive</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1221,20 +1961,115 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
 <context>
     <name>SearchWidget</name>
     <message>
-        <source>Find:</source>
-        <translation>Localizar:</translation>
-    </message>
-    <message>
-        <source>Case sensitive</source>
+        <source>Case Sensitive</source>
         <translation>Diferenciar maiúsculas e minúsculas</translation>
     </message>
     <message>
-        <source>Current group</source>
-        <translation>Grupo atual</translation>
+        <source>Search</source>
+        <translation>Pesquisar</translation>
     </message>
     <message>
-        <source>Root group</source>
-        <translation>Grupo Raiz</translation>
+        <source>Clear</source>
+        <translation>Limpar</translation>
+    </message>
+    <message>
+        <source>Search...</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Limit search to selected group</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>Service</name>
+    <message>
+        <source>A shared encryption-key with the name &quot;%1&quot; already exists.
+Do you want to overwrite it?</source>
+        <translation>Já existe uma chave de criptografia compartilhada com o nome &quot;%1&quot;.
+Deseja substituí-la?</translation>
+    </message>
+    <message>
+        <source>Do you want to update the information in %1 - %2?</source>
+        <translation>Deseja atualizar as informações em %1 - %2?</translation>
+    </message>
+    <message>
+        <source>The active database is locked!
+Please unlock the selected database or choose another one which is unlocked.</source>
+        <translation>A base de dados ativa está bloqueada!
+Desbloqueie base de dados selecionada ou escolha outra que esteja desbloqueada.</translation>
+    </message>
+    <message>
+        <source>Successfully removed %1 encryption-%2 from KeePassX/Http Settings.</source>
+        <translation>Removido com sucesso %1 criptografia-%2 do KeePassX/Http Configurações.</translation>
+    </message>
+    <message>
+        <source>No shared encryption-keys found in KeePassHttp Settings.</source>
+        <translation>Nenhuma chave de criptografia compartilhada encontrada nas Configurações do KeePassHttp.</translation>
+    </message>
+    <message>
+        <source>The active database does not contain an entry of KeePassHttp Settings.</source>
+        <translation>A base de dados ativa não contém uma entrada de Configurações KeePassHttp.</translation>
+    </message>
+    <message>
+        <source>Removing stored permissions...</source>
+        <translation>Removendo permissões armazenadas...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Successfully removed permissions from %1 %2.</source>
+        <translation>Foram removidas com êxito as permissões de %1 %2.</translation>
+    </message>
+    <message>
+        <source>The active database does not contain an entry with permissions.</source>
+        <translation>A base de dados ativa não contém uma entrada com permissões.</translation>
+    </message>
+    <message>
+        <source>KeePassXC: New key association request</source>
+        <translation>KeePassXC: Nova associação de chaves requisitada</translation>
+    </message>
+    <message>
+        <source>You have received an association request for the above key.
+If you would like to allow it access to your KeePassXC database
+give it a unique name to identify and accept it.</source>
+        <translation>Recebeu uma solicitação de associação para a chave acima.
+Se quiser permitir o acesso a sua base de dados KeePassXC
+dar-lhe um nome único para identificá-lo e aceitá-lo.</translation>
+    </message>
+    <message>
+        <source>KeePassXC: Overwrite existing key?</source>
+        <translation>KeePassXC: Substituir chave existente?</translation>
+    </message>
+    <message>
+        <source>KeePassXC: Update Entry</source>
+        <translation>KeePassXC: Atualizar entrada</translation>
+    </message>
+    <message>
+        <source>KeePassXC: Database locked!</source>
+        <translation>KeePassXC: Banco de dados bloqueado!</translation>
+    </message>
+    <message>
+        <source>KeePassXC: Removed keys from database</source>
+        <translation>KeePassXC: Chaves removidas do banco de dados</translation>
+    </message>
+    <message>
+        <source>KeePassXC: No keys found</source>
+        <translation>KeePassXC: Nenhuma chave localizada</translation>
+    </message>
+    <message>
+        <source>KeePassXC: Settings not available!</source>
+        <translation>KeePassXC: Configurações não disponíveis!</translation>
+    </message>
+    <message>
+        <source>KeePassXC: Removed permissions</source>
+        <translation>KeePassXC: Permissões removidas</translation>
+    </message>
+    <message>
+        <source>KeePassXC: No entry with permissions found!</source>
+        <translation>KeePassXC: Nenhuma entrada com permissões localizada!</translation>
     </message>
 </context>
 <context>
@@ -1251,16 +2086,16 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <source>Security</source>
         <translation>Segurança</translation>
     </message>
+    <message>
+        <source>Access error for config file %1</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>SettingsWidgetGeneral</name>
     <message>
         <source>Remember last databases</source>
         <translation>Lembrar dos últimos bancos de dados</translation>
-    </message>
-    <message>
-        <source>Open previous databases on startup</source>
-        <translation>Abrir bancos de dados anteriores na inicialização</translation>
     </message>
     <message>
         <source>Automatically save on exit</source>
@@ -1283,10 +2118,6 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Atalho para Auto-Digitação Global</translation>
     </message>
     <message>
-        <source>Use entry title to match windows for global auto-type</source>
-        <translation>Usar título da entrada para comparar janelas para auto-digitação global</translation>
-    </message>
-    <message>
         <source>Language</source>
         <translation>Idioma</translation>
     </message>
@@ -1299,8 +2130,44 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Ocultar janela na bandeja de sistema quando minimizada</translation>
     </message>
     <message>
-        <source>Remember last key files</source>
-        <translation>Lembrar dos últimos arquivos-chave</translation>
+        <source>Load previous databases on startup</source>
+        <translation>Carregar bancos de dados anteriores na inicialização</translation>
+    </message>
+    <message>
+        <source>Automatically reload the database when modified externally</source>
+        <translation>Automaticamente recarregar o banco de dados quando houver modificações externas</translation>
+    </message>
+    <message>
+        <source>Hide window to system tray instead of app exit</source>
+        <translation>Ocultar janela na bandeja de sistema em vez de sair do programa</translation>
+    </message>
+    <message>
+        <source>Minimize window at application startup</source>
+        <translation>Iniciar programa com janela minimizada</translation>
+    </message>
+    <message>
+        <source>Basic Settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Remember last key files and security dongles</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Don&apos;t mark database as modified for non-data changes (e.g., expanding groups)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Auto-Type</source>
+        <translation>Auto-Digitação</translation>
+    </message>
+    <message>
+        <source>Use entry title and URL to match windows for global Auto-Type</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Always ask before performing Auto-Type</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1322,8 +2189,86 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
         <translation>Mostrar senhas em texto claro por padrão</translation>
     </message>
     <message>
-        <source>Always ask before performing auto-type</source>
-        <translation>Sempre perguntar antes de realizar auto-digitação</translation>
+        <source>Lock databases after minimizing the window</source>
+        <translation>Bloquear bancos de dados após minimizar a janela</translation>
+    </message>
+    <message>
+        <source>Don&apos;t require password repeat when it is visible</source>
+        <translation>Quando a senha for visível não pedir para repeti-la</translation>
+    </message>
+    <message>
+        <source>Timeouts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Convenience</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Lock databases when session is locked or lid is closed</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>SetupTotpDialog</name>
+    <message>
+        <source>Setup TOTP</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Key:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Use custom settings</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Note: Change these settings only if you know what you are doing.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Time step:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>8 digits</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>6 digits</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Code size:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source> sec</source>
+        <translation> seg</translation>
+    </message>
+</context>
+<context>
+    <name>TotpDialog</name>
+    <message>
+        <source>Timed Password</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>000000</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Expires in</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>seconds</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -1336,20 +2281,36 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
 <context>
     <name>WelcomeWidget</name>
     <message>
-        <source>Welcome!</source>
-        <translation>Bem-vindo!</translation>
+        <source>Welcome to KeePassXC</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Start storing your passwords securely in a KeePassXC database</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Create new database</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Open existing database</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Import from KeePass 1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Import from CSV</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Recent databases</source>
+        <translation>Bancos de dados recentes</translation>
     </message>
 </context>
 <context>
     <name>main</name>
-    <message>
-        <source>KeePassX - cross-platform password manager</source>
-        <translation>KeePassX - gerenciador de senhas multiplataforma</translation>
-    </message>
-    <message>
-        <source>filename of the password database to open (*.kdbx)</source>
-        <translation>nome de arquivo do banco de dados de senhas a ser aberto (*.kdbx)</translation>
-    </message>
     <message>
         <source>path to a custom config file</source>
         <translation>caminho para um arquivo de configuração personalizado</translation>
@@ -1357,6 +2318,82 @@ Esta é uma migração de uma via. Você não poderá abrir o banco de dados imp
     <message>
         <source>key file of the database</source>
         <translation>arquivo-chave do banco de dados</translation>
+    </message>
+    <message>
+        <source>KeePassXC - cross-platform password manager</source>
+        <translation>KeePassXC - gerenciador de senhas multiplataforma</translation>
+    </message>
+    <message>
+        <source>read password of the database from stdin</source>
+        <translation>ler a senha do banco de dados da entrada padrão</translation>
+    </message>
+    <message>
+        <source>filenames of the password databases to open (*.kdbx)</source>
+        <translation>nome de arquivo do banco de dados de senhas a ser aberto (*.kdbx)</translation>
+    </message>
+    <message>
+        <source>Copy a password to the clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Path of the database.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Use a GUI prompt unlocking the database.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Name of the entry to clip.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Extract and print the content of a database.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Path of the database to extract.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Name of the command to execute.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>List database entries.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Path of the group to list. Default is /</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Print the UUIDs of the entries and groups.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Merge two databases.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Path of the database to merge into.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Path of the database to merge from.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Use the same password for both database files.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Show a password.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Name of the entry to show.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 </TS>

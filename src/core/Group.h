@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2010 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +35,7 @@ class Group : public QObject
 
 public:
     enum TriState { Inherit, Enable, Disable };
+    enum MergeMode { ModeInherit, KeepBoth, KeepNewer, KeepExisting };
 
     struct GroupData
     {
@@ -46,6 +48,7 @@ public:
         QString defaultAutoTypeSequence;
         Group::TriState autoTypeEnabled;
         Group::TriState searchingEnabled;
+        Group::MergeMode mergeMode;
     };
 
     Group();
@@ -64,8 +67,10 @@ public:
     TimeInfo timeInfo() const;
     bool isExpanded() const;
     QString defaultAutoTypeSequence() const;
+    QString effectiveAutoTypeSequence() const;
     Group::TriState autoTypeEnabled() const;
     Group::TriState searchingEnabled() const;
+    Group::MergeMode mergeMode() const;
     bool resolveSearchingEnabled() const;
     bool resolveAutoTypeEnabled() const;
     Entry* lastTopVisibleEntry() const;
@@ -74,6 +79,11 @@ public:
     static const int DefaultIconNumber;
     static const int RecycleBinIconNumber;
 
+    Group* findChildByName(const QString& name);
+    Entry* findEntry(QString entryId);
+    Entry* findEntryByUuid(const Uuid& uuid);
+    Entry* findEntryByPath(QString entryPath, QString basePath = QString(""));
+    Group* findGroupByPath(QString groupPath, QString basePath = QString("/"));
     void setUuid(const Uuid& uuid);
     void setName(const QString& name);
     void setNotes(const QString& notes);
@@ -87,6 +97,7 @@ public:
     void setLastTopVisibleEntry(Entry* entry);
     void setExpires(bool value);
     void setExpiryTime(const QDateTime& dateTime);
+    void setMergeMode(MergeMode newMode);
 
     void setUpdateTimeinfo(bool value);
 
@@ -113,8 +124,10 @@ public:
      */
     Group* clone(Entry::CloneFlags entryFlags = Entry::CloneNewUuid | Entry::CloneResetTimeInfo) const;
     void copyDataFrom(const Group* other);
+    void merge(const Group* other);
+    QString print(bool printUuids = false, QString baseName = QString(""), int depth = 0);
 
-Q_SIGNALS:
+signals:
     void dataChanged(Group* group);
 
     void aboutToAdd(Group* group, int index);
@@ -142,6 +155,8 @@ private:
     void addEntry(Entry* entry);
     void removeEntry(Entry* entry);
     void setParent(Database* db);
+    void markOlderEntry(Entry* entry);
+    void resolveConflict(Entry* existingEntry, Entry* otherEntry);
 
     void recSetDatabase(Database* db);
     void cleanupParent();

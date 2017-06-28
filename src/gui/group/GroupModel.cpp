@@ -28,7 +28,7 @@
 
 GroupModel::GroupModel(Database* db, QObject* parent)
     : QAbstractItemModel(parent)
-    , m_db(Q_NULLPTR)
+    , m_db(nullptr)
 {
     changeDatabase(db);
 }
@@ -329,7 +329,7 @@ QStringList GroupModel::mimeTypes() const
 QMimeData* GroupModel::mimeData(const QModelIndexList& indexes) const
 {
     if (indexes.isEmpty()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     QMimeData* data = new QMimeData();
@@ -338,7 +338,7 @@ QMimeData* GroupModel::mimeData(const QModelIndexList& indexes) const
 
     QSet<Group*> seenGroups;
 
-    Q_FOREACH (const QModelIndex& index, indexes) {
+    for (const QModelIndex& index : indexes) {
         if (!index.isValid()) {
             continue;
         }
@@ -354,7 +354,7 @@ QMimeData* GroupModel::mimeData(const QModelIndexList& indexes) const
 
     if (seenGroups.isEmpty()) {
         delete data;
-        return Q_NULLPTR;
+        return nullptr;
     }
     else {
         data->setData(mimeTypes().at(0), encoded);
@@ -365,7 +365,7 @@ QMimeData* GroupModel::mimeData(const QModelIndexList& indexes) const
 void GroupModel::groupDataChanged(Group* group)
 {
     QModelIndex ix = index(group);
-    Q_EMIT dataChanged(ix, ix);
+    emit dataChanged(ix, ix);
 }
 
 void GroupModel::groupAboutToRemove(Group* group)

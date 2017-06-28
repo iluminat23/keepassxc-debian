@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2013 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,47 +21,65 @@
 
 #include <QWidget>
 #include <QComboBox>
+#include <QLabel>
 
-#include "core/Global.h"
 #include "core/PasswordGenerator.h"
+#include "core/PassphraseGenerator.h"
 
 namespace Ui {
     class PasswordGeneratorWidget;
 }
 
 class PasswordGenerator;
+class PassphraseGenerator;
 
 class PasswordGeneratorWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PasswordGeneratorWidget(QWidget* parent = Q_NULLPTR);
+    enum GeneratorTypes
+    {
+        Password = 0,
+        Diceware = 1
+    };
+    explicit PasswordGeneratorWidget(QWidget* parent = nullptr);
     ~PasswordGeneratorWidget();
     void loadSettings();
-    void reset();
-    void regeneratePassword();
-
-Q_SIGNALS:
-    void newPassword(const QString& password);
-
-private Q_SLOTS:
-    void updateApplyEnabled(const QString& password);
-
-    void emitNewPassword();
     void saveSettings();
-    void sliderMoved();
-    void spinBoxChanged();
+    void reset();
+    void setStandaloneMode(bool standalone);
+public Q_SLOTS:
+    void regeneratePassword();
+    
+signals:
+    void appliedPassword(const QString& password);
+    void dialogTerminated();
+
+private slots:
+    void applyPassword();
+    void copyPassword();
+    void updateButtonsEnabled(const QString& password);
+    void updatePasswordStrength(const QString& password);
+    void togglePasswordShown(bool hidden);
+
+    void passwordSliderMoved();
+    void passwordSpinBoxChanged();
+    void dicewareSliderMoved();
+    void dicewareSpinBoxChanged();
+    void colorStrengthIndicator(double entropy);
 
     void updateGenerator();
 
 private:
     bool m_updatingSpinBox;
+    bool m_standalone = false;
 
     PasswordGenerator::CharClasses charClasses();
     PasswordGenerator::GeneratorFlags generatorFlags();
 
-    const QScopedPointer<PasswordGenerator> m_generator;
+    const QScopedPointer<PasswordGenerator> m_passwordGenerator;
+    const QScopedPointer<PassphraseGenerator> m_dicewareGenerator;
     const QScopedPointer<Ui::PasswordGeneratorWidget> m_ui;
 };
 

@@ -22,7 +22,7 @@
 
 DatabaseWidgetStateSync::DatabaseWidgetStateSync(QObject* parent)
     : QObject(parent)
-    , m_activeDbWidget(Q_NULLPTR)
+    , m_activeDbWidget(nullptr)
     , m_blockUpdates(false)
 {
     m_splitterSizes = variantToIntList(config()->get("GUI/SplitterState"));
@@ -48,16 +48,13 @@ void DatabaseWidgetStateSync::setActive(DatabaseWidget* dbWidget)
     if (m_activeDbWidget) {
         m_blockUpdates = true;
 
-        if (!m_splitterSizes.isEmpty()) {
+        if (!m_splitterSizes.isEmpty())
             m_activeDbWidget->setSplitterSizes(m_splitterSizes);
-        }
 
-        if (m_activeDbWidget->isGroupSelected()) {
-            restoreListView();
-        }
-        else {
+        if (m_activeDbWidget->isInSearchMode())
             restoreSearchView();
-        }
+        else
+            restoreListView();
 
         m_blockUpdates = false;
 
@@ -124,10 +121,10 @@ void DatabaseWidgetStateSync::updateColumnSizes()
 
 QList<int> DatabaseWidgetStateSync::variantToIntList(const QVariant& variant)
 {
-    QVariantList list = variant.toList();
+    const QVariantList list = variant.toList();
     QList<int> result;
 
-    Q_FOREACH (const QVariant& var, list) {
+    for (const QVariant& var : list) {
         bool ok;
         int size = var.toInt(&ok);
         if (ok) {
@@ -146,9 +143,10 @@ QVariant DatabaseWidgetStateSync::intListToVariant(const QList<int>& list)
 {
     QVariantList result;
 
-    Q_FOREACH (int value, list) {
+    for (int value : list) {
         result.append(value);
     }
 
     return result;
 }
+
