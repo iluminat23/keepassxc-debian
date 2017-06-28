@@ -12,6 +12,7 @@ Build-Depends: debhelper (>= 10),
                libxtst-dev,
                libykpers-1-dev,
                libyubikey-dev,
+               libzxcvbn-dev,
                xvfb,
                xauth
 Standards-Version: 4.0.0

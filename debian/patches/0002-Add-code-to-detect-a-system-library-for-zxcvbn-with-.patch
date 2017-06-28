@@ -1,0 +1,90 @@
+From: Gianfranco Costamagna <costamagnagianfranco@yahoo.it>
+Date: Wed, 28 Jun 2017 14:58:29 +0200
+Subject: Add code to detect a system library for zxcvbn,
+ with fallback to the embedded one in case it is not found
+
+---
+ src/CMakeLists.txt             | 14 +++++++++++---
+ src/cli/CMakeLists.txt         |  2 +-
+ src/cli/EntropyMeter.cpp       |  2 +-
+ src/core/PasswordGenerator.cpp |  2 +-
+ 4 files changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7916855..9f25e20 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -27,6 +27,16 @@ if (NOT GIT_HEAD OR NOT GIT_DESCRIBE)
+     set(GIT_DESCRIBE "")
+ endif()
+ 
++find_library(ZXCVBN_FOUND zxcvbn)
++if(NOT ZXCVBN_FOUND)
++  add_library(zxcvbn STATIC zxcvbn/zxcvbn.cpp)
++  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/zxcvbn)
++  set(ZXCVBN_FOUND zxcvbn)
++else(NOT ZXCVBN_FOUND)
++  add_definitions(-DHAVE_ZXCVBN)
++endif(NOT ZXCVBN_FOUND)
++
++
+ configure_file(version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
+ 
+ set(keepassx_SOURCES
+@@ -203,9 +213,6 @@ else()
+   list(APPEND keepassx_SOURCES keys/drivers/YubiKeyStub.cpp)
+ endif()
+ 
+-add_library(zxcvbn STATIC zxcvbn/zxcvbn.cpp)
+-target_link_libraries(zxcvbn)
+-
+ add_library(autotype STATIC ${autotype_SOURCES})
+ target_link_libraries(autotype Qt5::Core Qt5::Widgets)
+ 
+@@ -218,6 +225,7 @@ target_link_libraries(keepassx_core
+                       ${keepasshttp_LIB}
+                       ${autotype_LIB}
+                       ${YUBIKEY_LIBRARIES}
++                      ${ZXCVBN_FOUND}
+                       zxcvbn
+                       Qt5::Core
+                       Qt5::Network
+diff --git a/src/cli/CMakeLists.txt b/src/cli/CMakeLists.txt
+index 86edb9c..4731f7b 100644
+--- a/src/cli/CMakeLists.txt
++++ b/src/cli/CMakeLists.txt
+@@ -38,7 +38,7 @@ target_link_libraries(keepassxc-cli
+                       ${GCRYPT_LIBRARIES}
+                       ${GPGERROR_LIBRARIES}
+                       ${ZLIB_LIBRARIES}
+-                      zxcvbn)
++                      ${ZXCVBN_FOUND})
+ 
+ install(TARGETS keepassxc-cli
+         BUNDLE DESTINATION . COMPONENT Runtime
+diff --git a/src/cli/EntropyMeter.cpp b/src/cli/EntropyMeter.cpp
+index a62cd30..5c531af 100644
+--- a/src/cli/EntropyMeter.cpp
++++ b/src/cli/EntropyMeter.cpp
+@@ -20,7 +20,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
+-#include "zxcvbn/zxcvbn.h"
++#include <zxcvbn.h>
+ 
+ /* For pre-compiled headers under windows */
+ #ifdef _WIN32
+diff --git a/src/core/PasswordGenerator.cpp b/src/core/PasswordGenerator.cpp
+index cdff204..21aa590 100644
+--- a/src/core/PasswordGenerator.cpp
++++ b/src/core/PasswordGenerator.cpp
+@@ -19,7 +19,7 @@
+ #include "PasswordGenerator.h"
+ 
+ #include "crypto/Random.h"
+-#include "zxcvbn/zxcvbn.h"
++#include <zxcvbn.h>
+ 
+ PasswordGenerator::PasswordGenerator()
+     : m_length(0)
