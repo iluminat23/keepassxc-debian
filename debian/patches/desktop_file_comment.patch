@@ -1,10 +1,10 @@
---- a/share/linux/keepassx.desktop
-+++ b/share/linux/keepassx.desktop
+--- a/share/linux/keepassxc.desktop
++++ b/share/linux/keepassxc.desktop
 @@ -5,6 +5,7 @@
  GenericName[es]=Gestor de contraseñas
  GenericName[fr]=Gestionnaire de mot de passe
  GenericName[ru]=менеджер паролей
 +Comment=Cross Platform Password Manager
- Exec=keepassx %f
- Icon=keepassx
+ Exec=keepassxc %f
+ Icon=keepassxc
  Terminal=false

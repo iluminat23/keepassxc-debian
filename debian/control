@@ -1,4 +1,4 @@
-Source: keepassx
+Source: keepassxc
 Section: utils
 Priority: optional
 Maintainer: Reinhard Tartler <siretart@tauware.de>
@@ -6,23 +6,24 @@ Uploaders: David Valot <ptitdav69@gmail.com>,
            Felix Geyer <fgeyer@debian.org>
 Build-Depends: debhelper (>= 9),
                cmake,
-               libqt4-dev,
+               qtbase5-dev,
+               qttools5-dev-tools,
                libgcrypt20-dev,
                zlib1g-dev,
                libxtst-dev,
                xvfb,
                xauth
 Standards-Version: 3.9.6
-Homepage: https://www.keepassx.org/
-Vcs-Git: https://anonscm.debian.org/git/collab-maint/keepassx.git
-Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/keepassx.git
+Homepage: https://www.keepassxc.org/
+Vcs-Git: https://anonscm.debian.org/git/collab-maint/keepassxc.git
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/keepassxc.git
 
-Package: keepassx
+Package: keepassxc
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends}
 Description: Cross Platform Password Manager
- KeePassX is a free/open-source password manager or safe which helps you
+ KeePassXC is a free/open-source password manager or safe which helps you
  to manage your passwords in a secure way. You can put all your
  passwords in one database, which is locked with one master key or a
  key-disk. So you only have to remember one single master password or

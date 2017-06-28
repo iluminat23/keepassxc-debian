@@ -15,4 +15,4 @@ override_dh_auto_test:
 
 override_dh_makeshlibs:
 	# keepassx only ships plugins
-	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/keepassx
+	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/keepassxc

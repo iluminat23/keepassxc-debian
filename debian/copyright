@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: KeePassX
-Source: https://www.keepassx.org/
+Source: https://www.keepassxc.org/
 
 Files: *
 Copyright: 2010-2012, Felix Geyer <debfx@fobos.de>
@@ -19,8 +19,8 @@ Copyright: 2011 Nikita Krupen'ko <krnekit@gmail.com>
            2011 Kitware, Inc.
 License: BSD-3-clause
 
-Files: share/icons/application/*/apps/keepassx.png
-       share/icons/application/scalable/apps/keepassx.svgz
+Files: share/icons/application/*/apps/keepassxc.png
+       share/icons/application/scalable/apps/keepassxc.svgz
 Copyright: 2006, Otto Salminen
            2009, Miguelito Vieira
            2011-2013, Felix Geyer <debfx@fobos.de>
