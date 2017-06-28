@@ -1,6 +1,7 @@
 /*
  *  Copyright (C) 2012 Tobias Tangemann
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,8 +21,10 @@
 #define KEEPASSX_APPLICATION_H
 
 #include <QApplication>
+#include <QtNetwork/QLocalServer>
+class QLockFile;
 
-#include "core/Global.h"
+class QSocketNotifier;
 
 class Application : public QApplication
 {
@@ -29,18 +32,37 @@ class Application : public QApplication
 
 public:
     Application(int& argc, char** argv);
+    QWidget* mainWindow() const;
+    ~Application();
     void setMainWindow(QWidget* mainWindow);
 
-    bool event(QEvent* event) Q_DECL_OVERRIDE;
-#ifdef Q_WS_X11
-    bool x11EventFilter(XEvent* event) Q_DECL_OVERRIDE;
-#endif
+    bool event(QEvent* event) override;
+    bool isAlreadyRunning() const;
 
-Q_SIGNALS:
+signals:
     void openFile(const QString& filename);
+    void anotherInstanceStarted();
+
+private slots:
+#if defined(Q_OS_UNIX)
+    void quitBySignal();
+#endif
 
 private:
     QWidget* m_mainWindow;
+    
+#if defined(Q_OS_UNIX)
+    /**
+     * Register Unix signals such as SIGINT and SIGTERM for clean shutdown.
+     */
+    void registerUnixSignals();
+    QSocketNotifier* m_unixSignalNotifier;
+    static void handleUnixSignal(int sig);
+    static int unixSignalSocket[2];
+#endif
+    bool alreadyRunning;
+    QLockFile* lock;
+    QLocalServer server;
 };
 
 #endif // KEEPASSX_APPLICATION_H

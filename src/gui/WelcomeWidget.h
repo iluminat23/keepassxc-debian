@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,8 +20,7 @@
 #define KEEPASSX_WELCOMEWIDGET_H
 
 #include <QWidget>
-
-#include "core/Global.h"
+#include <QListWidgetItem>
 
 namespace Ui {
     class WelcomeWidget;
@@ -31,8 +31,19 @@ class WelcomeWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit WelcomeWidget(QWidget* parent = Q_NULLPTR);
+    explicit WelcomeWidget(QWidget* parent = nullptr);
     ~WelcomeWidget();
+    void refreshLastDatabases();
+
+signals:
+    void newDatabase();
+    void openDatabase();
+    void openDatabaseFile(QString);
+    void importKeePass1Database();
+    void importCsv();
+
+private slots:
+    void openDatabaseFromFile(QListWidgetItem* item);
 
 private:
     const QScopedPointer<Ui::WelcomeWidget> m_ui;

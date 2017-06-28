@@ -20,8 +20,6 @@
 
 #include <QAbstractListModel>
 
-#include "core/Global.h"
-
 class EntryAttachments;
 
 class EntryAttachmentsModel : public QAbstractListModel
@@ -29,14 +27,14 @@ class EntryAttachmentsModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit EntryAttachmentsModel(QObject* parent = Q_NULLPTR);
+    explicit EntryAttachmentsModel(QObject* parent = nullptr);
     void setEntryAttachments(EntryAttachments* entry);
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QString keyByIndex(const QModelIndex& index) const;
 
-private Q_SLOTS:
+private slots:
     void attachmentChange(const QString& key);
     void attachmentAboutToAdd(const QString& key);
     void attachmentAdd();

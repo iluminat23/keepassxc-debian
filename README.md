@@ -1,129 +1,78 @@
-# KeePassX
+# <img src="https://keepassxc.org/logo.png" width="40" height="40"/> KeePassXC [![Travis Build Status](https://travis-ci.org/keepassxreboot/keepassxc.svg?branch=develop)](https://travis-ci.org/keepassxreboot/keepassxc)  [![Coverage Status](https://coveralls.io/repos/github/keepassxreboot/keepassxc/badge.svg)](https://coveralls.io/github/keepassxreboot/keepassxc)
+
+KeePass Cross-platform Community Edition
 
 ## About
+[KeePassXC](https://keepassxc.org) is a community fork of [KeePassX](https://www.keepassx.org/) with the goal to extend and improve it with new features and bugfixes to provide a feature-rich, fully cross-platform and modern open-source password manager.
 
-KeePassX is an application for people with extremely high demands on secure personal data management.
-It has a light interface, is cross platform and published under the terms of the GNU General Public License.
 
-KeePassX saves many different information e.g. user names, passwords, urls, attachments and comments in one single database.
-For a better management user-defined titles and icons can be specified for each single entry.
-Furthermore the entries are sorted in groups, which are customizable as well. The integrated search function allows to search in a single group or the complete database.
-KeePassX offers a little utility for secure password generation. The password generator is very customizable, fast and easy to use.
-Especially someone who generates passwords frequently will appreciate this feature.
+## Additional features compared to KeePassX
+- Auto-Type on all three major platforms (Linux, Windows, OS X)
+- Stand-alone password generator
+- Password strength meter
+- YubiKey HMAC-SHA1 authentication for unlocking databases
+- Using website favicons as entry icons
+- Merging of databases
+- Automatic reload when the database changed on disk
+- KeePassHTTP support for use with [PassIFox](https://addons.mozilla.org/en-us/firefox/addon/passifox/) in Mozilla Firefox and [chromeIPass](https://chrome.google.com/webstore/detail/chromeipass/ompiailgknfdndiefoaoiligalphfdae) in Google Chrome or Chromium, and [passafari](https://github.com/mmichaa/passafari.safariextension/) in Safari.
+- Many bug fixes
 
-The complete database is always encrypted with the AES (aka Rijndael) encryption algorithm using a 256 bit key.
-Therefore the saved information can be considered as quite safe. KeePassX uses a database format that is compatible with [KeePass Password Safe](http://keepass.info/).
-This makes the use of that application even more favorable.
+For a full list of features and changes, read the [CHANGELOG](CHANGELOG) document.
 
-## Install
+### Note about KeePassHTTP
+KeePassHTTP is not a highly secure protocol and has certain flaw which allow an attacker to decrypt your passwords when they manage to intercept communication between a KeePassHTTP server and PassIFox/chromeIPass over a network connection (see [here](https://github.com/pfn/keepasshttp/issues/258) and [here](https://github.com/keepassxreboot/keepassxc/issues/147)). KeePassXC therefore strictly limits communication between itself and the browser plugin to your local computer. As long as your computer is not compromised, your passwords are fairly safe that way, but use it at your own risk!
 
-KeePassX can be downloaded and installed using an assortment of installers available on the main [KeePassX website](http://www.keepassx.org).
-KeePassX can also be installed from the official repositories of many Linux repositories.
-If you wish to build KeePassX from source, rather than rely on the pre-compiled binaries, you may wish to read up on the _From Source_ section.
+### Installation
+Pre-compiled binaries can be found on the [downloads page](https://keepassxc.org/download).  Additionally, individual Linux distributions may ship their own versions, so please check out your distribution's package list to see if KeePassXC is available.
 
-### Debian
+### Building KeePassXC
 
-To install KeePassX from the Debian repository:
+*More detailed instructions are available in the INSTALL file or on the [Wiki page](https://github.com/keepassxreboot/keepassxc/wiki/Building-KeePassXC).*
 
-```bash
-sudo apt-get install keepassx
-```
+First, you must download the KeePassXC [source tarball](https://keepassxc.org/download#source) or check out the latest version from our [Git repository](https://github.com/keepassxreboot/keepassxc).
 
-### Red Hat
-
-Install KeePassX from the Red Hat (or CentOS) repository:
+To clone the project from Git, `cd` to a suitable location and run
 
 ```bash
-sudo yum install keepassx
+git clone https://github.com/keepassxreboot/keepassxc.git
 ```
 
-### Windows / Mac OS X
+This will clone the entire contents of the repository and check out the current `develop` branch.
 
-Download the installer from the KeePassX [download](https://www.keepassx.org/downloads) page.
-Once downloaded, double click on the file to execute the installer.
-
-### From Source
-
-#### Build Dependencies
-
-The following tools must exist within your PATH:
-
-* make
-* cmake (>= 2.6.4)
-* g++ or clang++
-
-The following libraries are required:
-
-* Qt 4 (>= 4.6)
-* libgcrypt
-* zlib
-* libxi, libxtst (optional for auto-type on X11)
-
-On Debian you can install them with:
-
-```bash
-sudo apt-get install build-essential cmake libqt4-dev libgcrypt11-dev zlib1g-dev libxi-dev libxtst-dev
-```
-
-#### Build Steps
-
-To compile from source:
-
-```bash
-mkdir build
-cd build
-cmake ..
-make [-jX]
-```
-
-You will have the compiled KeePassX binary inside the `./build/src/` directory.
-
-To install this binary execute the following:
-
-```bash
-sudo make install
-```
-
-More detailed instructions available in the INSTALL file.
-
-## Contribute
-
-Coordination of work between developers is handled through the [KeePassX development](https://www.keepassx.org/dev/) site.
-Requests for enhancements, or reports of bugs encountered, can also be reported through the KeePassX development site.
-However, members of the open-source community are encouraged to submit pull requests directly through GitHub.
-
-### Clone Repository
-
-Clone the repository to a suitable location where you can extend and build this project.
-
-```bash
-git clone https://github.com/keepassx/keepassx.git
-```
-
-**Note:** This will clone the entire contents of the repository at the HEAD revision.
-
-To update the project from within the project's folder you can run the following command:
+To update the project from within the project's folder, you can run the following command:
 
 ```bash
 git pull
 ```
 
-### Feature Requests
+Once you have downloaded the source code, you can `cd` into the source code directory, build and install KeePassXC:
 
-We're always looking for suggestions to improve our application. If you have a suggestion for improving an existing feature,
-or would like to suggest a completely new feature for KeePassX, please file a ticket on the [KeePassX development](https://www.keepassx.org/dev/) site.
+```bash
+mkdir build
+cd build
+cmake -DWITH_TESTS=OFF ..
+make -j8
+sudo make install
+```
 
-### Bug Reports
+cmake accepts the following options:
 
-Our software isn't always perfect, but we strive to always improve our work. You may file bug reports on the [KeePassX development](https://www.keepassx.org/dev/) site.
+```
+  -DWITH_XC_AUTOTYPE=[ON|OFF] Enable/Disable Auto-Type (default: ON)
+  -DWITH_XC_HTTP=[ON|OFF] Enable/Disable KeePassHTTP and custom icon downloads (default: OFF)
+  -DWITH_XC_YUBIKEY=[ON|OFF] Enable/Disable YubiKey HMAC-SHA1 authentication support (default: OFF)
 
-### Pull Requests
+  -DWITH_TESTS=[ON|OFF] Enable/Disable building of unit tests (default: ON)
+  -DWITH_GUI_TESTS=[ON|OFF] Enable/Disable building of GUI tests (default: OFF)
+  -DWITH_DEV_BUILD=[ON|OFF] Enable/Disable deprecated method warnings (default: OFF)
+  -DWITH_ASAN=[ON|OFF] Enable/Disable address sanitizer checks (Linux only) (default: OFF)
+  -DWITH_COVERAGE=[ON|OFF] Enable/Disable coverage tests (GCC only) (default: OFF)
+```
 
-Along with our desire to hear your feedback and suggestions, we're also interested in accepting direct assistance in the form of code.
+### Contributing
 
-Issue merge requests against our [GitHub repository](https://github.com/keepassx/keepassx).
+We are always looking for suggestions how to improve our application. If you find any bugs or have an idea for a new feature, please let us know by opening a report in our [issue tracker](https://github.com/keepassxreboot/keepassxc/issues) on GitHub or join us on IRC on freenode channels #keepassxc or #keepassxc-dev.
 
-### Translations
+You can of course also directly contribute your own code. We are happy to accept your pull requests.
 
-Translations are managed on [Transifex](https://www.transifex.com/projects/p/keepassx/) which offers a web interface.
-Please join an existing language team or request a new one if there is none.
+Please read the [CONTRIBUTING document](.github/CONTRIBUTING.md) for further information.

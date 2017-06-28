@@ -29,43 +29,6 @@ bool Crypto::m_initalized(false);
 QString Crypto::m_errorStr;
 QString Crypto::m_backendVersion;
 
-#if !defined(GCRYPT_VERSION_NUMBER) || (GCRYPT_VERSION_NUMBER < 0x010600)
-static int gcry_qt_mutex_init(void** p_sys)
-{
-    *p_sys = new QMutex();
-    return 0;
-}
-
-static int gcry_qt_mutex_destroy(void** p_sys)
-{
-    delete reinterpret_cast<QMutex*>(*p_sys);
-    return 0;
-}
-
-static int gcry_qt_mutex_lock(void** p_sys)
-{
-    reinterpret_cast<QMutex*>(*p_sys)->lock();
-    return 0;
-}
-
-static int gcry_qt_mutex_unlock(void** p_sys)
-{
-    reinterpret_cast<QMutex*>(*p_sys)->unlock();
-    return 0;
-}
-
-static const struct gcry_thread_cbs gcry_threads_qt =
-{
-    GCRY_THREAD_OPTION_USER,
-    0,
-    gcry_qt_mutex_init,
-    gcry_qt_mutex_destroy,
-    gcry_qt_mutex_lock,
-    gcry_qt_mutex_unlock,
-    0, 0, 0, 0, 0, 0, 0, 0
-};
-#endif
-
 Crypto::Crypto()
 {
 }
@@ -77,10 +40,6 @@ bool Crypto::init()
         return true;
     }
 
-    // libgcrypt >= 1.6 doesn't allow custom thread callbacks anymore.
-#if !defined(GCRYPT_VERSION_NUMBER) || (GCRYPT_VERSION_NUMBER < 0x010600)
-    gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_qt);
-#endif
     m_backendVersion = QString::fromLocal8Bit(gcry_check_version(0));
     gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0);
 
@@ -121,23 +80,21 @@ bool Crypto::backendSelfTest()
 
 bool Crypto::checkAlgorithms()
 {
-    if (gcry_cipher_algo_info(GCRY_CIPHER_AES256, GCRYCTL_TEST_ALGO, Q_NULLPTR, Q_NULLPTR) != 0) {
+    if (gcry_cipher_algo_info(GCRY_CIPHER_AES256, GCRYCTL_TEST_ALGO, nullptr, nullptr) != 0) {
         m_errorStr = "GCRY_CIPHER_AES256 not found.";
         qWarning("Crypto::checkAlgorithms: %s", qPrintable(m_errorStr));
         return false;
     }
-    if (gcry_cipher_algo_info(GCRY_CIPHER_TWOFISH, GCRYCTL_TEST_ALGO, Q_NULLPTR, Q_NULLPTR) != 0) {
+    if (gcry_cipher_algo_info(GCRY_CIPHER_TWOFISH, GCRYCTL_TEST_ALGO, nullptr, nullptr) != 0) {
         m_errorStr = "GCRY_CIPHER_TWOFISH not found.";
         qWarning("Crypto::checkAlgorithms: %s", qPrintable(m_errorStr));
         return false;
     }
-#ifdef GCRYPT_HAS_SALSA20
-    if (gcry_cipher_algo_info(GCRY_CIPHER_SALSA20, GCRYCTL_TEST_ALGO, Q_NULLPTR, Q_NULLPTR) != 0) {
+    if (gcry_cipher_algo_info(GCRY_CIPHER_SALSA20, GCRYCTL_TEST_ALGO, nullptr, nullptr) != 0) {
         m_errorStr = "GCRY_CIPHER_SALSA20 not found.";
         qWarning("Crypto::checkAlgorithms: %s", qPrintable(m_errorStr));
         return false;
     }
-#endif
     if (gcry_md_test_algo(GCRY_MD_SHA256) != 0) {
         m_errorStr = "GCRY_MD_SHA256 not found.";
         qWarning("Crypto::checkAlgorithms: %s", qPrintable(m_errorStr));
@@ -196,14 +153,14 @@ bool Crypto::testAes256Cbc()
         return false;
     }
 
-    SymmetricCipher aes256Descrypt(SymmetricCipher::Aes256, SymmetricCipher::Cbc, SymmetricCipher::Decrypt);
-    if (!aes256Descrypt.init(key, iv)) {
-        raiseError(aes256Descrypt.errorString());
+    SymmetricCipher aes256Decrypt(SymmetricCipher::Aes256, SymmetricCipher::Cbc, SymmetricCipher::Decrypt);
+    if (!aes256Decrypt.init(key, iv)) {
+        raiseError(aes256Decrypt.errorString());
         return false;
     }
-    QByteArray decryptedText = aes256Descrypt.process(cipherText, &ok);
+    QByteArray decryptedText = aes256Decrypt.process(cipherText, &ok);
     if (!ok) {
-        raiseError(aes256Descrypt.errorString());
+        raiseError(aes256Decrypt.errorString());
         return false;
     }
     if (decryptedText != plainText) {
@@ -239,14 +196,14 @@ bool Crypto::testAes256Ecb()
         return false;
     }
 
-    SymmetricCipher aes256Descrypt(SymmetricCipher::Aes256, SymmetricCipher::Ecb, SymmetricCipher::Decrypt);
-    if (!aes256Descrypt.init(key, iv)) {
-        raiseError(aes256Descrypt.errorString());
+    SymmetricCipher aes256Decrypt(SymmetricCipher::Aes256, SymmetricCipher::Ecb, SymmetricCipher::Decrypt);
+    if (!aes256Decrypt.init(key, iv)) {
+        raiseError(aes256Decrypt.errorString());
         return false;
     }
-    QByteArray decryptedText = aes256Descrypt.process(cipherText, &ok);
+    QByteArray decryptedText = aes256Decrypt.process(cipherText, &ok);
     if (!ok) {
-        raiseError(aes256Descrypt.errorString());
+        raiseError(aes256Decrypt.errorString());
         return false;
     }
     if (decryptedText != plainText) {

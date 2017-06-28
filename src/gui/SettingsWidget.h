@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,22 +26,34 @@ namespace Ui {
     class SettingsWidgetSecurity;
 }
 
+class ISettingsPage {
+public:
+    virtual ~ISettingsPage() {}
+    virtual QString name() = 0;
+    virtual QIcon icon() = 0;
+    virtual QWidget * createWidget() = 0;
+    virtual void loadSettings(QWidget * widget) = 0;
+    virtual void saveSettings(QWidget * widget) = 0;
+};
+
 class SettingsWidget : public EditWidget
 {
     Q_OBJECT
 
 public:
-    explicit SettingsWidget(QWidget* parent = Q_NULLPTR);
+    explicit SettingsWidget(QWidget* parent = nullptr);
     ~SettingsWidget();
+    void addSettingsPage(ISettingsPage * page);
     void loadSettings();
 
-Q_SIGNALS:
+signals:
     void editFinished(bool accepted);
 
-private Q_SLOTS:
+private slots:
     void saveSettings();
     void reject();
     void enableAutoSaveOnExit(bool checked);
+    void enableSystray(bool checked);
 
 private:
     QWidget* const m_secWidget;
@@ -49,6 +62,8 @@ private:
     const QScopedPointer<Ui::SettingsWidgetGeneral> m_generalUi;
     Qt::Key m_globalAutoTypeKey;
     Qt::KeyboardModifiers m_globalAutoTypeModifiers;
+    class ExtraPage;
+    QList<ExtraPage> m_extraPages;
 };
 
 #endif // KEEPASSX_SETTINGSWIDGET_H

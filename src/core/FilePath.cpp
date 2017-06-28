@@ -22,8 +22,9 @@
 #include <QLibrary>
 
 #include "config-keepassx.h"
+#include "core/Global.h"
 
-FilePath* FilePath::m_instance(Q_NULLPTR);
+FilePath* FilePath::m_instance(nullptr);
 
 QString FilePath::dataPath(const QString& name)
 {
@@ -40,12 +41,17 @@ QString FilePath::pluginPath(const QString& name)
     QStringList pluginPaths;
 
     QDir buildDir(QCoreApplication::applicationDirPath() + "/autotype");
-    Q_FOREACH (const QString& dir, buildDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+    const QStringList buildDirEntryList = buildDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const QString& dir : buildDirEntryList) {
         pluginPaths << QCoreApplication::applicationDirPath() + "/autotype/" + dir;
     }
 
     // for TestAutoType
     pluginPaths << QCoreApplication::applicationDirPath() + "/../src/autotype/test";
+
+#if defined(Q_OS_MAC) && defined(WITH_APP_BUNDLE)
+    pluginPaths << QCoreApplication::applicationDirPath() + "/../PlugIns";
+#endif
 
     pluginPaths << QCoreApplication::applicationDirPath();
 
@@ -68,10 +74,10 @@ QString FilePath::pluginPath(const QString& name)
     QStringList dirFilter;
     dirFilter << QString("*%1*").arg(name);
 
-    Q_FOREACH (const QString& path, pluginPaths) {
-        QStringList fileCandidates = QDir(path).entryList(dirFilter, QDir::Files);
+    for (const QString& path : asConst(pluginPaths)) {
+        const QStringList fileCandidates = QDir(path).entryList(dirFilter, QDir::Files);
 
-        Q_FOREACH (const QString& file, fileCandidates) {
+        for (const QString& file : fileCandidates) {
             QString filePath = path + "/" + file;
 
             if (QLibrary::isLibrary(filePath)) {
@@ -85,7 +91,17 @@ QString FilePath::pluginPath(const QString& name)
 
 QIcon FilePath::applicationIcon()
 {
-    return icon("apps", "keepassx");
+    return icon("apps", "keepassxc");
+}
+
+QIcon FilePath::trayIconLocked()
+{
+    return icon("apps", "keepassxc-locked");
+}
+
+QIcon FilePath::trayIconUnlocked()
+{
+    return icon("apps", "keepassxc-unlocked");
 }
 
 QIcon FilePath::icon(const QString& category, const QString& name, bool fromTheme)
@@ -103,10 +119,9 @@ QIcon FilePath::icon(const QString& category, const QString& name, bool fromThem
     }
 
     if (icon.isNull()) {
-        QList<int> pngSizes;
-        pngSizes << 16 << 22 << 24 << 32 << 48 << 64 << 128;
+        const QList<int> pngSizes = { 16, 22, 24, 32, 48, 64, 128 };
         QString filename;
-        Q_FOREACH (int size, pngSizes) {
+        for (int size : pngSizes) {
             filename = QString("%1/icons/application/%2x%2/%3.png").arg(m_dataPath, QString::number(size),
                                                                         combinedName);
             if (QFile::exists(filename)) {
@@ -148,10 +163,9 @@ QIcon FilePath::onOffIcon(const QString& category, const QString& name)
             stateName = "on";
         }
 
-        QList<int> pngSizes;
-        pngSizes << 16 << 22 << 24 << 32 << 48 << 64 << 128;
+        const QList<int> pngSizes = { 16, 22, 24, 32, 48, 64, 128 };
         QString filename;
-        Q_FOREACH (int size, pngSizes) {
+        for (int size : pngSizes) {
             filename = QString("%1/icons/application/%2x%2/%3-%4.png").arg(m_dataPath, QString::number(size),
                                                                            combinedName, stateName);
             if (QFile::exists(filename)) {
@@ -181,7 +195,7 @@ FilePath::FilePath()
     else if (testSetDir(QString(KEEPASSX_SOURCE_DIR) + "/share")) {
     }
 #endif
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
+#if defined(Q_OS_UNIX) && !(defined(Q_OS_MAC) && defined(WITH_APP_BUNDLE))
     else if (isDataDirAbsolute && testSetDir(KEEPASSX_DATA_DIR)) {
     }
     else if (!isDataDirAbsolute && testSetDir(QString("%1/../%2").arg(appDirPath, KEEPASSX_DATA_DIR))) {
@@ -189,7 +203,7 @@ FilePath::FilePath()
     else if (!isDataDirAbsolute && testSetDir(QString("%1/%2").arg(KEEPASSX_PREFIX_DIR, KEEPASSX_DATA_DIR))) {
     }
 #endif
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC) && defined(WITH_APP_BUNDLE)
     else if (testSetDir(appDirPath + "/../Resources")) {
     }
 #endif
@@ -197,6 +211,9 @@ FilePath::FilePath()
     else if (testSetDir(appDirPath + "/share")) {
     }
 #endif
+    // Last ditch test when running in the build directory (mainly for travis tests)
+    else if (testSetDir(QString(KEEPASSX_SOURCE_DIR) + "/share")) {
+    }
 
     if (m_dataPath.isEmpty()) {
         qWarning("FilePath::DataPath: can't find data dir");

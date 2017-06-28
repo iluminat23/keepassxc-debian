@@ -49,9 +49,9 @@ private:
 
 
 KeePass1Reader::KeePass1Reader()
-    : m_db(Q_NULLPTR)
-    , m_tmpParent(Q_NULLPTR)
-    , m_device(Q_NULLPTR)
+    : m_db(nullptr)
+    , m_tmpParent(nullptr)
+    , m_device(nullptr)
     , m_encryptionFlags(0)
     , m_transformRounds(0)
     , m_error(false)
@@ -72,16 +72,16 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
 
         if (keyfileData.isEmpty()) {
             raiseError(tr("Unable to read keyfile.").append("\n").append(keyfileDevice->errorString()));
-            return Q_NULLPTR;
+            return nullptr;
         }
         if (!keyfileDevice->seek(0)) {
             raiseError(tr("Unable to read keyfile.").append("\n").append(keyfileDevice->errorString()));
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         if (!newFileKey.load(keyfileDevice)) {
             raiseError(tr("Unable to read keyfile.").append("\n").append(keyfileDevice->errorString()));
-            return Q_NULLPTR;
+            return nullptr;
         }
     }
 
@@ -96,72 +96,72 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
     quint32 signature1 = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok || signature1 != KeePass1::SIGNATURE_1) {
         raiseError(tr("Not a KeePass database."));
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     quint32 signature2 = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok || signature2 != KeePass1::SIGNATURE_2) {
         raiseError(tr("Not a KeePass database."));
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     m_encryptionFlags = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok || !(m_encryptionFlags & KeePass1::Rijndael || m_encryptionFlags & KeePass1::Twofish)) {
         raiseError(tr("Unsupported encryption algorithm."));
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     quint32 version = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok || (version & KeePass1::FILE_VERSION_CRITICAL_MASK)
             != (KeePass1::FILE_VERSION & KeePass1::FILE_VERSION_CRITICAL_MASK)) {
         raiseError(tr("Unsupported KeePass database version."));
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     m_masterSeed = m_device->read(16);
     if (m_masterSeed.size() != 16) {
         raiseError("Unable to read master seed");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     m_encryptionIV = m_device->read(16);
     if (m_encryptionIV.size() != 16) {
         raiseError("Unable to read encryption IV");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     quint32 numGroups = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok) {
         raiseError("Invalid number of groups");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     quint32 numEntries = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok) {
         raiseError("Invalid number of entries");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     m_contentHashHeader = m_device->read(32);
     if (m_contentHashHeader.size() != 32) {
         raiseError("Invalid content hash size");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     m_transformSeed = m_device->read(32);
     if (m_transformSeed.size() != 32) {
         raiseError("Invalid transform seed size");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     m_transformRounds = Endian::readUInt32(m_device, KeePass1::BYTEORDER, &ok);
     if (!ok) {
         raiseError("Invalid number of transform rounds");
-        return Q_NULLPTR;
+        return nullptr;
     }
     if (!m_db->setTransformRounds(m_transformRounds)) {
         raiseError(tr("Unable to calculate master key"));
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     qint64 contentPos = m_device->pos();
@@ -169,14 +169,14 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
     QScopedPointer<SymmetricCipherStream> cipherStream(testKeys(password, keyfileData, contentPos));
 
     if (!cipherStream) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     QList<Group*> groups;
     for (quint32 i = 0; i < numGroups; i++) {
         Group* group = readGroup(cipherStream.data());
         if (!group) {
-            return Q_NULLPTR;
+            return nullptr;
         }
         groups.append(group);
     }
@@ -185,17 +185,17 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
     for (quint32 i = 0; i < numEntries; i++) {
         Entry* entry = readEntry(cipherStream.data());
         if (!entry) {
-            return Q_NULLPTR;
+            return nullptr;
         }
         entries.append(entry);
     }
 
     if (!constructGroupTree(groups)) {
         raiseError("Unable to construct group tree");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
-    Q_FOREACH (Entry* entry, entries) {
+    for (Entry* entry : asConst(entries)) {
         if (isMetaStream(entry)) {
             parseMetaStream(entry);
 
@@ -215,7 +215,8 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
 
     db->rootGroup()->setName(tr("Root"));
 
-    Q_FOREACH (Group* group, db->rootGroup()->children()) {
+    const QList<Group*> children = db->rootGroup()->children();
+    for (Group* group : children) {
         if (group->name() == "Backup") {
             group->setSearchingEnabled(Group::Disable);
             group->setAutoTypeEnabled(Group::Disable);
@@ -225,11 +226,12 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
     Q_ASSERT(m_tmpParent->children().isEmpty());
     Q_ASSERT(m_tmpParent->entries().isEmpty());
 
-    Q_FOREACH (Group* group, groups) {
+    for (Group* group : asConst(groups)) {
         group->setUpdateTimeinfo(true);
     }
 
-    Q_FOREACH (Entry* entry, m_db->rootGroup()->entriesRecursive()) {
+    const QList<Entry*> dbEntries = m_db->rootGroup()->entriesRecursive();
+    for (Entry* entry : dbEntries) {
         entry->setUpdateTimeinfo(true);
     }
 
@@ -243,7 +245,7 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
 
     if (!db->setKey(key)) {
         raiseError(tr("Unable to calculate master key"));
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     return db.take();
@@ -257,7 +259,7 @@ Database* KeePass1Reader::readDatabase(QIODevice* device, const QString& passwor
         keyFile.reset(new QFile(keyfileName));
         if (!keyFile->open(QFile::ReadOnly)) {
             raiseError(keyFile->errorString());
-            return Q_NULLPTR;
+            return nullptr;
         }
     }
 
@@ -272,14 +274,14 @@ Database* KeePass1Reader::readDatabase(const QString& filename, const QString& p
     QFile dbFile(filename);
     if (!dbFile.open(QFile::ReadOnly)) {
         raiseError(dbFile.errorString());
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     Database* db = readDatabase(&dbFile, password, keyfileName);
 
     if (dbFile.error() != QFile::NoError) {
         raiseError(dbFile.errorString());
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     return db;
@@ -298,15 +300,14 @@ QString KeePass1Reader::errorString()
 SymmetricCipherStream* KeePass1Reader::testKeys(const QString& password, const QByteArray& keyfileData,
                                                 qint64 contentPos)
 {
-    QList<PasswordEncoding> encodings;
-    encodings << Windows1252 << Latin1 << UTF8;
+    const QList<PasswordEncoding> encodings = { Windows1252, Latin1, UTF8 };
 
     QScopedPointer<SymmetricCipherStream> cipherStream;
     QByteArray passwordData;
     QTextCodec* codec = QTextCodec::codecForName("Windows-1252");
     QByteArray passwordDataCorrect = codec->fromUnicode(password);
 
-    Q_FOREACH (PasswordEncoding encoding, encodings) {
+    for (PasswordEncoding encoding : encodings) {
         if (encoding == Windows1252) {
             passwordData = passwordDataCorrect;
         }
@@ -337,7 +338,7 @@ SymmetricCipherStream* KeePass1Reader::testKeys(const QString& password, const Q
 
         QByteArray finalKey = key(passwordData, keyfileData);
         if (finalKey.isEmpty()) {
-            return Q_NULLPTR;
+            return nullptr;
         }
         if (m_encryptionFlags & KeePass1::Rijndael) {
             cipherStream.reset(new SymmetricCipherStream(m_device, SymmetricCipher::Aes256,
@@ -350,11 +351,11 @@ SymmetricCipherStream* KeePass1Reader::testKeys(const QString& password, const Q
 
         if (!cipherStream->init(finalKey, m_encryptionIV)) {
             raiseError(cipherStream->errorString());
-            return Q_NULLPTR;
+            return nullptr;
         }
         if (!cipherStream->open(QIODevice::ReadOnly)) {
             raiseError(cipherStream->errorString());
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         bool success = verifyKey(cipherStream.data());
@@ -368,7 +369,7 @@ SymmetricCipherStream* KeePass1Reader::testKeys(const QString& password, const Q
             }
             raiseError(msg);
 
-            return Q_NULLPTR;
+            return nullptr;
         }
         cipherStream->open(QIODevice::ReadOnly);
 
@@ -446,19 +447,19 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         quint16 fieldType = Endian::readUInt16(cipherStream, KeePass1::BYTEORDER, &ok);
         if (!ok) {
             raiseError("Invalid group field type number");
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         int fieldSize = static_cast<int>(Endian::readUInt32(cipherStream, KeePass1::BYTEORDER, &ok));
         if (!ok) {
             raiseError("Invalid group field size");
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         QByteArray fieldData = cipherStream->read(fieldSize);
         if (fieldData.size() != fieldSize) {
             raiseError("Read group field data doesn't match size");
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         switch (fieldType) {
@@ -468,7 +469,7 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         case 0x0001:
             if (fieldSize != 4) {
                 raiseError("Incorrect group id field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             groupId = Endian::bytesToUInt32(fieldData, KeePass1::BYTEORDER);
             groupIdSet = true;
@@ -480,7 +481,7 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         {
             if (fieldSize != 5) {
                 raiseError("Incorrect group creation time field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             QDateTime dateTime = dateFromPackedStruct(fieldData);
             if (dateTime.isValid()) {
@@ -492,7 +493,7 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         {
             if (fieldSize != 5) {
                 raiseError("Incorrect group modification time field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             QDateTime dateTime = dateFromPackedStruct(fieldData);
             if (dateTime.isValid()) {
@@ -527,7 +528,7 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         {
             if (fieldSize != 4) {
                 raiseError("Incorrect group icon field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             quint32 iconNumber = Endian::bytesToUInt32(fieldData, KeePass1::BYTEORDER);
             group->setIcon(iconNumber);
@@ -537,7 +538,7 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         {
             if (fieldSize != 2) {
                 raiseError("Incorrect group level field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             groupLevel = Endian::bytesToUInt16(fieldData, KeePass1::BYTEORDER);
             groupLevelSet = true;
@@ -552,13 +553,13 @@ Group* KeePass1Reader::readGroup(QIODevice* cipherStream)
         default:
             // invalid field
             raiseError("Invalid group field type");
-            return Q_NULLPTR;
+            return nullptr;
         }
     } while (!reachedEnd);
 
     if (!groupIdSet || !groupLevelSet) {
         raiseError("Missing group id or level");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     group->setUuid(Uuid::random());
@@ -584,19 +585,19 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         quint16 fieldType = Endian::readUInt16(cipherStream, KeePass1::BYTEORDER, &ok);
         if (!ok) {
             raiseError("Missing entry field type number");
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         int fieldSize = static_cast<int>(Endian::readUInt32(cipherStream, KeePass1::BYTEORDER, &ok));
         if (!ok) {
             raiseError("Invalid entry field size");
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         QByteArray fieldData = cipherStream->read(fieldSize);
         if (fieldData.size() != fieldSize) {
             raiseError("Read entry field data doesn't match size");
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         switch (fieldType) {
@@ -606,7 +607,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         case 0x0001:
             if (fieldSize != 16) {
                 raiseError("Invalid entry uuid field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             m_entryUuids.insert(fieldData, entry.data());
             break;
@@ -614,7 +615,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         {
             if (fieldSize != 4) {
                 raiseError("Invalid entry group id field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             quint32 groupId = Endian::bytesToUInt32(fieldData, KeePass1::BYTEORDER);
             m_entryGroupIds.insert(entry.data(), groupId);
@@ -624,7 +625,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         {
             if (fieldSize != 4) {
                 raiseError("Invalid entry icon field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             quint32 iconNumber = Endian::bytesToUInt32(fieldData, KeePass1::BYTEORDER);
             entry->setIcon(iconNumber);
@@ -649,7 +650,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         {
             if (fieldSize != 5) {
                 raiseError("Invalid entry creation time field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             QDateTime dateTime = dateFromPackedStruct(fieldData);
             if (dateTime.isValid()) {
@@ -661,7 +662,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         {
             if (fieldSize != 5) {
                 raiseError("Invalid entry modification time field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             QDateTime dateTime = dateFromPackedStruct(fieldData);
             if (dateTime.isValid()) {
@@ -673,7 +674,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         {
             if (fieldSize != 5) {
                 raiseError("Invalid entry creation time field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             QDateTime dateTime = dateFromPackedStruct(fieldData);
             if (dateTime.isValid()) {
@@ -685,7 +686,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         {
             if (fieldSize != 5) {
                 raiseError("Invalid entry expiry time field size");
-                return Q_NULLPTR;
+                return nullptr;
             }
             QDateTime dateTime = dateFromPackedStruct(fieldData);
             if (dateTime.isValid()) {
@@ -708,7 +709,7 @@ Entry* KeePass1Reader::readEntry(QIODevice* cipherStream)
         default:
             // invalid field
             raiseError("Invalid entry field type");
-            return Q_NULLPTR;
+            return nullptr;
         }
     } while (!reachedEnd);
 
@@ -727,7 +728,8 @@ void KeePass1Reader::parseNotes(const QString& rawNotes, Entry* entry)
     QStringList notes;
 
     bool lastLineAutoType = false;
-    Q_FOREACH (QString line, rawNotes.split("\n")) {
+    const QStringList rawNotesLines = rawNotes.split("\n");
+    for (QString line : rawNotesLines) {
         line.remove("\r");
 
         if (sequenceRegexp.exactMatch(line)) {
@@ -769,8 +771,9 @@ void KeePass1Reader::parseNotes(const QString& rawNotes, Entry* entry)
         i.next();
 
         QString sequence = sequences.value(i.key());
+        const QStringList windowList = i.value();
 
-        Q_FOREACH (const QString& window, i.value()) {
+        for (const QString& window : windowList) {
             AutoTypeAssociations::Association assoc;
             assoc.window = window;
             assoc.sequence = sequence;

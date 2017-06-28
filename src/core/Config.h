@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2011 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +22,6 @@
 #include <QScopedPointer>
 #include <QVariant>
 
-#include "core/Global.h"
-
 class QSettings;
 
 class Config : public QObject
@@ -33,7 +32,9 @@ public:
     ~Config();
     QVariant get(const QString& key);
     QVariant get(const QString& key, const QVariant& defaultValue);
+    QString getFileName();
     void set(const QString& key, const QVariant& value);
+    bool hasAccessError();
 
     static Config* instance();
     static void createConfigFromFile(const QString& file);

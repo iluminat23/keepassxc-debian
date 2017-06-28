@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2013 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +23,6 @@
 #include <QString>
 #include <QVector>
 
-#include "core/Global.h"
-
 typedef QVector<QChar> PasswordGroup;
 
 class PasswordGenerator
@@ -34,7 +33,8 @@ public:
         LowerLetters      = 0x1,
         UpperLetters      = 0x2,
         Numbers           = 0x4,
-        SpecialCharacters = 0x8
+        SpecialCharacters = 0x8,
+        EASCII            = 0x10
     };
     Q_DECLARE_FLAGS(CharClasses, CharClass)
 
@@ -48,6 +48,7 @@ public:
 public:
     PasswordGenerator();
 
+    double calculateEntropy(QString password);
     void setLength(int length);
     void setCharClasses(const CharClasses& classes);
     void setFlags(const GeneratorFlags& flags);
@@ -55,6 +56,7 @@ public:
     bool isValid() const;
 
     QString generatePassword() const;
+    int getbits() const;
 
 private:
     QVector<PasswordGroup> passwordGroups() const;

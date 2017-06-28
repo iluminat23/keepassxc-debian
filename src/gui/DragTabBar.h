@@ -20,23 +20,21 @@
 
 #include <QTabBar>
 
-#include "core/Global.h"
-
 class DragTabBar : public QTabBar
 {
     Q_OBJECT
 
 public:
-    explicit DragTabBar(QWidget* parent = Q_NULLPTR);
+    explicit DragTabBar(QWidget* parent = nullptr);
 
 protected:
-    void dragEnterEvent(QDragEnterEvent* event) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent* event) Q_DECL_OVERRIDE;
-    void dragLeaveEvent(QDragLeaveEvent* event) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent* event) Q_DECL_OVERRIDE;
-    void tabLayoutChange() Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dragMoveEvent(QDragMoveEvent* event) override;
+    void dragLeaveEvent(QDragLeaveEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
+    void tabLayoutChange() override;
 
-private Q_SLOTS:
+private slots:
     void dragSwitchTab();
 
 private:

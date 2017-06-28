@@ -19,7 +19,7 @@
 
 AutoTypeAssociationsModel::AutoTypeAssociationsModel(QObject* parent)
     : QAbstractListModel(parent)
-    , m_autoTypeAssociations(Q_NULLPTR)
+    , m_autoTypeAssociations(nullptr)
 {
 }
 
@@ -103,7 +103,7 @@ QVariant AutoTypeAssociationsModel::data(const QModelIndex& index, int role) con
 
 void AutoTypeAssociationsModel::associationChange(int i)
 {
-    Q_EMIT dataChanged(index(i, 0), index(i, columnCount() - 1));
+    emit dataChanged(index(i, 0), index(i, columnCount() - 1));
 }
 
 void AutoTypeAssociationsModel::associationAboutToAdd(int i)

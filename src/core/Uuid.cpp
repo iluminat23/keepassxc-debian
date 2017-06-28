@@ -22,6 +22,8 @@
 #include "crypto/Random.h"
 
 const int Uuid::Length = 16;
+const QRegExp Uuid::HexRegExp = QRegExp(QString("^[0-9A-F]{%1}$").arg(QString::number(Uuid::Length * 2)),
+                                        Qt::CaseInsensitive);
 
 Uuid::Uuid()
     : m_data(Length, 0)
@@ -89,6 +91,12 @@ Uuid Uuid::fromBase64(const QString& str)
     return Uuid(data);
 }
 
+Uuid Uuid::fromHex(const QString& str)
+{
+    QByteArray data = QByteArray::fromHex(str.toLatin1());
+    return Uuid(data);
+}
+
 uint qHash(const Uuid& key)
 {
     return qHash(key.toByteArray());
@@ -108,4 +116,9 @@ QDataStream& operator>>(QDataStream& stream, Uuid& uuid)
     }
 
     return stream;
+}
+
+bool Uuid::isUuid(const QString& uuid)
+{
+  return Uuid::HexRegExp.exactMatch(uuid);
 }

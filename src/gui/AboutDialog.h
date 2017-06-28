@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +22,6 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-#include "core/Global.h"
-
 namespace Ui {
     class AboutDialog;
 }
@@ -32,8 +31,11 @@ class AboutDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AboutDialog(QWidget* parent = Q_NULLPTR);
+    explicit AboutDialog(QWidget* parent = nullptr);
     ~AboutDialog();
+
+protected slots:
+    void copyToClipboard();
 
 private:
     QScopedPointer<Ui::AboutDialog> m_ui;

@@ -17,6 +17,8 @@
 
 #include "SignalMultiplexer.h"
 
+#include "core/Global.h"
+
 SignalMultiplexer::SignalMultiplexer()
 {
 }
@@ -24,7 +26,7 @@ SignalMultiplexer::SignalMultiplexer()
 SignalMultiplexer::~SignalMultiplexer()
 {
     // disconnect all connections
-    setCurrentObject(Q_NULLPTR);
+    setCurrentObject(nullptr);
 }
 
 QObject* SignalMultiplexer::currentObject() const
@@ -34,7 +36,7 @@ QObject* SignalMultiplexer::currentObject() const
 
 void SignalMultiplexer::setCurrentObject(QObject* object)
 {
-    // remove all Connections from the list whoes senders/receivers have been deleted
+    // remove all Connections from the list whose senders/receivers have been deleted
     QMutableListIterator<Connection> i = m_connections;
     while (i.hasNext()) {
         const Connection& con = i.next();
@@ -45,7 +47,7 @@ void SignalMultiplexer::setCurrentObject(QObject* object)
     }
 
     if (m_currentObject) {
-        Q_FOREACH (const Connection& con, m_connections) {
+        for (const Connection& con : asConst(m_connections)) {
             disconnect(con);
         }
     }
@@ -53,7 +55,7 @@ void SignalMultiplexer::setCurrentObject(QObject* object)
     m_currentObject = object;
 
     if (object) {
-        Q_FOREACH (const Connection& con, m_connections) {
+        for (const Connection& con : asConst(m_connections)) {
             connect(con);
         }
     }

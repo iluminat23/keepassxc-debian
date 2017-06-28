@@ -19,6 +19,7 @@
 #include "ui_EditGroupWidgetMain.h"
 
 #include "core/Metadata.h"
+#include "core/FilePath.h"
 #include "gui/EditWidgetIcons.h"
 #include "gui/EditWidgetProperties.h"
 
@@ -28,21 +29,25 @@ EditGroupWidget::EditGroupWidget(QWidget* parent)
     , m_editGroupWidgetMain(new QWidget())
     , m_editGroupWidgetIcons(new EditWidgetIcons())
     , m_editWidgetProperties(new EditWidgetProperties())
-    , m_group(Q_NULLPTR)
-    , m_database(Q_NULLPTR)
+    , m_group(nullptr)
+    , m_database(nullptr)
 {
     m_mainUi->setupUi(m_editGroupWidgetMain);
 
-    add(tr("Group"), m_editGroupWidgetMain);
-    add(tr("Icon"), m_editGroupWidgetIcons);
-    add(tr("Properties"), m_editWidgetProperties);
+    addPage(tr("Group"), FilePath::instance()->icon("actions", "document-edit"), m_editGroupWidgetMain);
+    addPage(tr("Icon"), FilePath::instance()->icon("apps", "preferences-desktop-icons"), m_editGroupWidgetIcons);
+    addPage(tr("Properties"), FilePath::instance()->icon("actions", "document-properties"), m_editWidgetProperties);
 
     connect(m_mainUi->expireCheck, SIGNAL(toggled(bool)), m_mainUi->expireDatePicker, SLOT(setEnabled(bool)));
     connect(m_mainUi->autoTypeSequenceCustomRadio, SIGNAL(toggled(bool)),
             m_mainUi->autoTypeSequenceCustomEdit, SLOT(setEnabled(bool)));
 
+    connect(this, SIGNAL(apply()), SLOT(apply()));
     connect(this, SIGNAL(accepted()), SLOT(save()));
     connect(this, SIGNAL(rejected()), SLOT(cancel()));
+
+    connect(m_editGroupWidgetIcons, SIGNAL(messageEditEntry(QString, MessageWidget::MessageType)), SLOT(showMessage(QString, MessageWidget::MessageType)));
+    connect(m_editGroupWidgetIcons, SIGNAL(messageEditEntryDismiss()), SLOT(hideMessage()));
 }
 
 EditGroupWidget::~EditGroupWidget()
@@ -82,7 +87,7 @@ void EditGroupWidget::loadGroup(Group* group, bool create, Database* database)
     else {
         m_mainUi->autoTypeSequenceCustomRadio->setChecked(true);
     }
-    m_mainUi->autoTypeSequenceCustomEdit->setText(group->defaultAutoTypeSequence());
+    m_mainUi->autoTypeSequenceCustomEdit->setText(group->effectiveAutoTypeSequence());
 
     IconStruct iconStruct;
     iconStruct.uuid = group->iconUuid();
@@ -91,12 +96,19 @@ void EditGroupWidget::loadGroup(Group* group, bool create, Database* database)
 
     m_editWidgetProperties->setFields(group->timeInfo(), group->uuid());
 
-    setCurrentRow(0);
+    setCurrentPage(0);
 
     m_mainUi->editName->setFocus();
 }
 
 void EditGroupWidget::save()
+{
+    apply();
+    clear();
+    emit editFinished(true);
+}
+
+void EditGroupWidget::apply()
 {
     m_group->setName(m_mainUi->editName->text());
     m_group->setNotes(m_mainUi->editNotes->toPlainText());
@@ -113,7 +125,7 @@ void EditGroupWidget::save()
         m_group->setDefaultAutoTypeSequence(m_mainUi->autoTypeSequenceCustomEdit->text());
     }
 
-    IconStruct iconStruct = m_editGroupWidgetIcons->save();
+    IconStruct iconStruct = m_editGroupWidgetIcons->state();
 
     if (iconStruct.number < 0) {
         m_group->setIcon(Group::DefaultIconNumber);
@@ -124,9 +136,6 @@ void EditGroupWidget::save()
     else {
         m_group->setIcon(iconStruct.uuid);
     }
-
-    clear();
-    Q_EMIT editFinished(true);
 }
 
 void EditGroupWidget::cancel()
@@ -137,13 +146,14 @@ void EditGroupWidget::cancel()
     }
 
     clear();
-    Q_EMIT editFinished(false);
+    emit editFinished(false);
 }
 
 void EditGroupWidget::clear()
 {
-    m_group = Q_NULLPTR;
-    m_database = Q_NULLPTR;
+    m_group = nullptr;
+    m_database = nullptr;
+    m_editGroupWidgetIcons->reset();
 }
 
 void EditGroupWidget::addTriStateItems(QComboBox* comboBox, bool inheritDefault)

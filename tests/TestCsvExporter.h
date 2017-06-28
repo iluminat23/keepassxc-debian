@@ -31,10 +31,10 @@ class TestCsvExporter : public QObject
 public:
     static const QString ExpectedHeaderLine;
 
-private Q_SLOTS:
+private slots:
     void init();
     void initTestCase();
-    void cleanUp();
+    void cleanup();
     void testExport();
     void testEmptyDatabase();
     void testNestedGroups();
@@ -42,7 +42,6 @@ private Q_SLOTS:
 private:
     Database* m_db;
     CsvExporter* m_csvExporter;
-
 };
 
 #endif // KEEPASSX_TESTCSVEXPORTER_H

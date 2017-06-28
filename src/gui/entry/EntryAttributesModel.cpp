@@ -20,9 +20,11 @@
 #include "core/Entry.h"
 #include "core/Tools.h"
 
+#include <algorithm>
+
 EntryAttributesModel::EntryAttributesModel(QObject* parent)
     : QAbstractListModel(parent)
-    , m_entryAttributes(Q_NULLPTR)
+    , m_entryAttributes(nullptr)
     , m_nextRenameDataChange(false)
 {
 }
@@ -145,14 +147,14 @@ void EntryAttributesModel::attributeChange(const QString& key)
 {
     int row = m_attributes.indexOf(key);
     Q_ASSERT(row != -1);
-    Q_EMIT dataChanged(index(row, 0), index(row, columnCount()-1));
+    emit dataChanged(index(row, 0), index(row, columnCount()-1));
 }
 
 void EntryAttributesModel::attributeAboutToAdd(const QString& key)
 {
     QList<QString> rows = m_attributes;
     rows.append(key);
-    qSort(rows);
+    std::sort(rows.begin(), rows.end());
     int row = rows.indexOf(key);
     beginInsertRows(QModelIndex(), row, row);
 }
@@ -182,7 +184,7 @@ void EntryAttributesModel::attributeAboutToRename(const QString& oldKey, const Q
     QList<QString> rows = m_attributes;
     rows.removeOne(oldKey);
     rows.append(newKey);
-    qSort(rows);
+    std::sort(rows.begin(), rows.end());
     int newRow = rows.indexOf(newKey);
     if (newRow > oldRow) {
         newRow++;
@@ -211,7 +213,7 @@ void EntryAttributesModel::attributeRename(const QString& oldKey, const QString&
         m_nextRenameDataChange = false;
 
         QModelIndex keyIndex = index(m_attributes.indexOf(newKey), 0);
-        Q_EMIT dataChanged(keyIndex, keyIndex);
+        emit dataChanged(keyIndex, keyIndex);
     }
 }
 
@@ -230,7 +232,8 @@ void EntryAttributesModel::updateAttributes()
 {
     m_attributes.clear();
 
-    Q_FOREACH (const QString& key, m_entryAttributes->keys()) {
+    const QList<QString> attributesKeyList = m_entryAttributes->keys();
+    for (const QString& key : attributesKeyList) {
         if (!EntryAttributes::isDefaultAttribute(key)) {
             m_attributes.append(key);
         }

@@ -21,7 +21,6 @@
 #include <QTest>
 
 #include "modeltest.h"
-#include "tests.h"
 #include "core/Database.h"
 #include "core/Group.h"
 #include "crypto/Crypto.h"
@@ -132,7 +131,7 @@ void TestGroupModel::test()
     QCOMPARE(spyMoved.count(), 3);
     QVERIFY(index12.isValid());
     QCOMPARE(model->data(index12).toString(), QString("group12"));
-    QCOMPARE(model->data(index12.child(0, 0)).toString(), QString("group121"));
+    QCOMPARE(model->data(index12.model()->index(0, 0, index12)).toString(), QString("group121"));
 
     delete group12;
     QCOMPARE(spyAboutToAdd.count(), 1);

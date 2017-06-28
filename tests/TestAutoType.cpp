@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +21,6 @@
 #include <QPluginLoader>
 #include <QTest>
 
-#include "tests.h"
 #include "core/Config.h"
 #include "core/FilePath.h"
 #include "core/Entry.h"
@@ -91,6 +91,26 @@ void TestAutoType::init()
     association.window = "//^REGEX3-([rd]\\d){2}$//";
     association.sequence = "regex3";
     m_entry3->autoTypeAssociations()->add(association);
+
+    m_entry4 = new Entry();
+    m_entry4->setGroup(m_group);
+    m_entry4->setPassword("custom_attr");
+    m_entry4->attributes()->set("CUSTOM","Attribute",false);
+    association.window = "//^CustomAttr1$//";
+    association.sequence = "{PASSWORD}:{S:CUSTOM}";
+    m_entry4->autoTypeAssociations()->add(association);
+    association.window = "//^CustomAttr2$//";
+    association.sequence = "{S:CuStOm}";
+    m_entry4->autoTypeAssociations()->add(association);
+    association.window = "//^CustomAttr3$//";
+    association.sequence = "{PaSSworD}";
+    m_entry4->autoTypeAssociations()->add(association);
+    
+    m_entry5 = new Entry();
+    m_entry5->setGroup(m_group);
+    m_entry5->setPassword("example5");
+    m_entry5->setTitle("some title");
+    m_entry5->setUrl("http://example.org");
 }
 
 void TestAutoType::cleanup()
@@ -108,7 +128,7 @@ void TestAutoType::testInternal()
 
 void TestAutoType::testAutoTypeWithoutSequence()
 {
-    m_autoType->performAutoType(m_entry1, Q_NULLPTR);
+    m_autoType->performAutoType(m_entry1, nullptr);
 
     QCOMPARE(m_test->actionCount(), 14);
     QCOMPARE(m_test->actionChars(),
@@ -119,7 +139,7 @@ void TestAutoType::testAutoTypeWithoutSequence()
 
 void TestAutoType::testAutoTypeWithSequence()
 {
-    m_autoType->performAutoType(m_entry1, Q_NULLPTR, "{Username}abc{PaSsWoRd}");
+    m_autoType->performAutoType(m_entry1, nullptr, "{Username}abc{PaSsWoRd}");
 
     QCOMPARE(m_test->actionCount(), 15);
     QCOMPARE(m_test->actionChars(),
@@ -159,6 +179,28 @@ void TestAutoType::testGlobalAutoTypeTitleMatch()
              QString("%1%2").arg(m_entry2->password(), m_test->keyToString(Qt::Key_Enter)));
 }
 
+void TestAutoType::testGlobalAutoTypeUrlMatch()
+{
+    config()->set("AutoTypeEntryTitleMatch", true);
+
+    m_test->setActiveWindowTitle("Dummy - http://example.org/ - <My Browser>");
+    m_autoType->performGlobalAutoType(m_dbList);
+
+    QCOMPARE(m_test->actionChars(),
+             QString("%1%2").arg(m_entry5->password(), m_test->keyToString(Qt::Key_Enter)));
+}
+
+void TestAutoType::testGlobalAutoTypeUrlSubdomainMatch()
+{
+    config()->set("AutoTypeEntryTitleMatch", true);
+
+    m_test->setActiveWindowTitle("Dummy - http://sub.example.org/ - <My Browser>");
+    m_autoType->performGlobalAutoType(m_dbList);
+
+    QCOMPARE(m_test->actionChars(),
+             QString("%1%2").arg(m_entry5->password(), m_test->keyToString(Qt::Key_Enter)));
+}
+
 void TestAutoType::testGlobalAutoTypeTitleMatchDisabled()
 {
     m_test->setActiveWindowTitle("An Entry Title!");
@@ -192,5 +234,23 @@ void TestAutoType::testGlobalAutoTypeRegExp()
     m_test->setActiveWindowTitle("REGEX3-R2D2");
     m_autoType->performGlobalAutoType(m_dbList);
     QCOMPARE(m_test->actionChars(), QString("regex3"));
+    m_test->clearActions();
+
+    // with custom attributes
+    m_test->setActiveWindowTitle("CustomAttr1");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString("custom_attr:Attribute"));
+    m_test->clearActions();
+
+    // with (non uppercase) undefined custom attributes
+    m_test->setActiveWindowTitle("CustomAttr2");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString(""));
+    m_test->clearActions();
+
+    // with mixedcase default attributes
+    m_test->setActiveWindowTitle("CustomAttr3");
+    m_autoType->performGlobalAutoType(m_dbList);
+    QCOMPARE(m_test->actionChars(), QString("custom_attr"));
     m_test->clearActions();
 }

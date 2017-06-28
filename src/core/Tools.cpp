@@ -1,5 +1,7 @@
 /*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 Lennart Glauer <mail@lennart-glauer.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,14 +25,11 @@
 #include <QLocale>
 #include <QStringList>
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 7, 0)
 #include <QElapsedTimer>
-#else
-#include <QTime>
-#endif
 
 #ifdef Q_OS_WIN
-#include <windows.h> // for Sleep(), SetDllDirectoryA() and SetSearchPathMode()
+#include <windows.h> // for Sleep(), SetDllDirectoryA(), SetSearchPathMode(), ...
+#include <aclapi.h>  // for SetSecurityInfo()
 #endif
 
 #ifdef Q_OS_UNIX
@@ -75,7 +74,9 @@ bool hasChild(const QObject* parent, const QObject* child)
     if (!parent || !child) {
         return false;
     }
-    Q_FOREACH (QObject* c, parent->children()) {
+
+    const QObjectList children = parent->children();
+    for (QObject* c : children) {
         if (child == c || hasChild(c, child)) {
             return true;
         }
@@ -122,21 +123,12 @@ bool readAllFromDevice(QIODevice* device, QByteArray& data)
     }
 }
 
-QDateTime currentDateTimeUtc()
-{
-#if QT_VERSION >= QT_VERSION_CHECK(4, 7, 0)
-     return QDateTime::currentDateTimeUtc();
-#else
-     return QDateTime::currentDateTime().toUTC();
-#endif
-}
-
 QString imageReaderFilter()
 {
-    QList<QByteArray> formats = QImageReader::supportedImageFormats();
+    const QList<QByteArray> formats = QImageReader::supportedImageFormats();
     QStringList formatsStringList;
 
-    Q_FOREACH (const QByteArray& format, formats) {
+    for (const QByteArray& format : formats) {
         for (int i = 0; i < format.size(); i++) {
             if (!QChar(format.at(i)).isLetterOrNumber()) {
                 continue;
@@ -151,7 +143,7 @@ QString imageReaderFilter()
 
 bool isHex(const QByteArray& ba)
 {
-    Q_FOREACH (char c, ba) {
+    for (char c : ba) {
         if ( !( (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') ) ) {
             return false;
         }
@@ -184,7 +176,7 @@ void sleep(int ms)
     timespec ts;
     ts.tv_sec = ms / 1000;
     ts.tv_nsec = (ms % 1000) * 1000 * 1000;
-    nanosleep(&ts, Q_NULLPTR);
+    nanosleep(&ts, nullptr);
 #endif
 }
 
@@ -196,11 +188,7 @@ void wait(int ms)
         return;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 7, 0)
     QElapsedTimer timer;
-#else
-    QTime timer;
-#endif
     timer.start();
 
     if (ms <= 50) {
@@ -215,21 +203,8 @@ void wait(int ms)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, timeLeft);
                 sleep(10);
             }
-        } while (timer.elapsed() < ms);
+        } while (!timer.hasExpired(ms));
     }
-}
-
-QString platform()
-{
-#if defined(Q_WS_X11)
-    return "x11";
-#elif defined(Q_WS_MAC)
-    return "mac";
-#elif defined(Q_WS_WIN)
-    return "win";
-#else
-    return QString();
-#endif
 }
 
 void disableCoreDumps()
@@ -254,6 +229,10 @@ void disableCoreDumps()
     success = success && (ptrace(PT_DENY_ATTACH, 0, 0, 0) == 0);
 #endif
 
+#ifdef Q_OS_WIN
+    success = success && createWindowsDACL();
+#endif
+
     if (!success) {
         qWarning("Unable to disable core dumps.");
     }
@@ -266,6 +245,116 @@ void setupSearchPaths()
     SetDllDirectoryA("");
     SetSearchPathMode(BASE_SEARCH_PATH_ENABLE_SAFE_SEARCHMODE);
 #endif
+}
+
+//
+// This function grants the user associated with the process token minimal access rights and
+// denies everything else on Windows. This includes PROCESS_QUERY_INFORMATION and
+// PROCESS_VM_READ access rights that are required for MiniDumpWriteDump() or ReadProcessMemory().
+// We do this using a discretionary access control list (DACL). Effectively this prevents
+// crash dumps and disallows other processes from accessing our memory. This works as long
+// as you do not have admin privileges, since then you are able to grant yourself the
+// SeDebugPrivilege or SeTakeOwnershipPrivilege and circumvent the DACL.
+//
+bool createWindowsDACL()
+{
+    bool bSuccess = false;
+
+#ifdef Q_OS_WIN
+    // Process token and user
+    HANDLE hToken = nullptr;
+    PTOKEN_USER pTokenUser = nullptr;
+    DWORD cbBufferSize = 0;
+
+    // Access control list
+    PACL pACL = nullptr;
+    DWORD cbACL = 0;
+
+    // Open the access token associated with the calling process
+    if (!OpenProcessToken(
+        GetCurrentProcess(),
+        TOKEN_QUERY,
+        &hToken
+    )) {
+        goto Cleanup;
+    }
+
+    // Retrieve the token information in a TOKEN_USER structure
+    GetTokenInformation(
+        hToken,
+        TokenUser,
+        nullptr,
+        0,
+        &cbBufferSize
+    );
+
+    pTokenUser = static_cast<PTOKEN_USER>(HeapAlloc(GetProcessHeap(), 0, cbBufferSize));
+    if (pTokenUser == nullptr) {
+        goto Cleanup;
+    }
+
+    if (!GetTokenInformation(
+        hToken,
+        TokenUser,
+        pTokenUser,
+        cbBufferSize,
+        &cbBufferSize
+    )) {
+        goto Cleanup;
+    }
+
+    if (!IsValidSid(pTokenUser->User.Sid)) {
+        goto Cleanup;
+    }
+
+    // Calculate the amount of memory that must be allocated for the DACL
+    cbACL = sizeof(ACL)
+        + sizeof(ACCESS_ALLOWED_ACE) + GetLengthSid(pTokenUser->User.Sid);
+
+    // Create and initialize an ACL
+    pACL = static_cast<PACL>(HeapAlloc(GetProcessHeap(), 0, cbACL));
+    if (pACL == nullptr) {
+        goto Cleanup;
+    }
+
+    if (!InitializeAcl(pACL, cbACL, ACL_REVISION)) {
+        goto Cleanup;
+    }
+
+    // Add allowed access control entries, everything else is denied
+    if (!AddAccessAllowedAce(
+        pACL,
+        ACL_REVISION,
+        SYNCHRONIZE | PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_TERMINATE,    // same as protected process
+        pTokenUser->User.Sid                                                    // pointer to the trustee's SID
+    )) {
+        goto Cleanup;
+    }
+
+    // Set discretionary access control list
+    bSuccess = ERROR_SUCCESS == SetSecurityInfo(
+        GetCurrentProcess(),        // object handle
+        SE_KERNEL_OBJECT,           // type of object
+        DACL_SECURITY_INFORMATION,  // change only the objects DACL
+        nullptr, nullptr,           // do not change owner or group
+        pACL,                       // DACL specified
+        nullptr                     // do not change SACL
+    );
+
+Cleanup:
+
+    if (pACL != nullptr) {
+        HeapFree(GetProcessHeap(), 0, pACL);
+    }
+    if (pTokenUser != nullptr) {
+        HeapFree(GetProcessHeap(), 0, pTokenUser);
+    }
+    if (hToken != nullptr) {
+        CloseHandle(hToken);
+    }
+#endif
+
+    return bSuccess;
 }
 
 } // namespace Tools

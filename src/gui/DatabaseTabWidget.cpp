@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2011 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,14 +19,16 @@
 #include "DatabaseTabWidget.h"
 
 #include <QFileInfo>
+#include <QLockFile>
 #include <QTabWidget>
+#include <QPushButton>
 
 #include "autotype/AutoType.h"
 #include "core/Config.h"
+#include "core/Global.h"
 #include "core/Database.h"
 #include "core/Group.h"
 #include "core/Metadata.h"
-#include "core/qsavefile.h"
 #include "format/CsvExporter.h"
 #include "gui/Clipboard.h"
 #include "gui/DatabaseWidget.h"
@@ -35,10 +38,11 @@
 #include "gui/MessageBox.h"
 #include "gui/entry/EntryView.h"
 #include "gui/group/GroupView.h"
+#include "gui/UnlockDatabaseDialog.h"
 
 DatabaseManagerStruct::DatabaseManagerStruct()
-    : dbWidget(Q_NULLPTR)
-    , lockFile(Q_NULLPTR)
+    : dbWidget(nullptr)
+    , lockFile(nullptr)
     , saveToFilename(false)
     , modified(false)
     , readOnly(false)
@@ -50,7 +54,7 @@ const int DatabaseTabWidget::LastDatabasesCount = 5;
 
 DatabaseTabWidget::DatabaseTabWidget(QWidget* parent)
     : QTabWidget(parent)
-    , m_dbWidgetSateSync(new DatabaseWidgetStateSync(this))
+    , m_dbWidgetStateSync(new DatabaseWidgetStateSync(this))
 {
     DragTabBar* tabBar = new DragTabBar(this);
     setTabBar(tabBar);
@@ -58,7 +62,7 @@ DatabaseTabWidget::DatabaseTabWidget(QWidget* parent)
 
     connect(this, SIGNAL(tabCloseRequested(int)), SLOT(closeDatabase(int)));
     connect(this, SIGNAL(currentChanged(int)), SLOT(emitActivateDatabaseChanged()));
-    connect(this, SIGNAL(activateDatabaseChanged(DatabaseWidget*)), m_dbWidgetSateSync, SLOT(setActive(DatabaseWidget*)));
+    connect(this, SIGNAL(activateDatabaseChanged(DatabaseWidget*)), m_dbWidgetStateSync, SLOT(setActive(DatabaseWidget*)));
     connect(autoType(), SIGNAL(globalShortcutTriggered()), SLOT(performGlobalAutoType()));
 }
 
@@ -74,14 +78,9 @@ DatabaseTabWidget::~DatabaseTabWidget()
 void DatabaseTabWidget::toggleTabbar()
 {
     if (count() > 1) {
-        if (!tabBar()->isVisible()) {
-            tabBar()->show();
-        }
-    }
-    else {
-        if (tabBar()->isVisible()) {
-            tabBar()->hide();
-        }
+        tabBar()->show();
+    } else {
+        tabBar()->hide();
     }
 }
 
@@ -91,10 +90,18 @@ void DatabaseTabWidget::newDatabase()
     Database* db = new Database();
     db->rootGroup()->setName(tr("Root"));
     dbStruct.dbWidget = new DatabaseWidget(db, this);
+    
+    CompositeKey emptyKey;
+    db->setKey(emptyKey);
 
     insertDatabase(db, dbStruct);
+    
+    if (!saveDatabaseAs(db)) {
+        closeDatabase(db);
+        return;
+    }
 
-    dbStruct.dbWidget->switchToMasterKeyChange();
+    dbStruct.dbWidget->switchToMasterKeyChange(true);
 }
 
 void DatabaseTabWidget::openDatabase()
@@ -113,7 +120,7 @@ void DatabaseTabWidget::openDatabase(const QString& fileName, const QString& pw,
     QFileInfo fileInfo(fileName);
     QString canonicalFilePath = fileInfo.canonicalFilePath();
     if (canonicalFilePath.isEmpty()) {
-        MessageBox::warning(this, tr("Warning"), tr("File not found!"));
+        emit messageGlobal(tr("File not found!"), MessageWidget::Error);
         return;
     }
 
@@ -133,8 +140,9 @@ void DatabaseTabWidget::openDatabase(const QString& fileName, const QString& pw,
     QFile file(fileName);
     if (!file.open(QIODevice::ReadWrite)) {
         if (!file.open(QIODevice::ReadOnly)) {
-            MessageBox::warning(this, tr("Error"), tr("Unable to open the database.").append("\n")
-                                .append(file.errorString()));
+            // can't open
+            emit messageGlobal(
+                tr("Unable to open the database.").append("\n").append(file.errorString()), MessageWidget::Error);
             return;
         }
         else {
@@ -151,21 +159,29 @@ void DatabaseTabWidget::openDatabase(const QString& fileName, const QString& pw,
         // for now silently ignore if we can't create a lock file
         // due to lack of permissions
         if (lockFile->error() != QLockFile::PermissionError) {
-            QMessageBox::StandardButton result = MessageBox::question(this, tr("Open database"),
-                tr("The database you are trying to open is locked by another instance of KeePassX.\n"
-                   "Do you want to open it anyway? Alternatively the database is opened read-only."),
-                QMessageBox::Yes | QMessageBox::No);
+            QMessageBox msgBox;
+            msgBox.setWindowTitle(tr("Database already opened"));
+            msgBox.setText(tr("The database you are trying to open is locked by another instance of KeePassXC.\n\n"
+                              "Do you want to open it anyway?"));
+            msgBox.setIcon(QMessageBox::Question);
+            msgBox.addButton(QMessageBox::Yes);
+            msgBox.addButton(QMessageBox::No);
+            auto readOnlyButton = msgBox.addButton(tr("Open read-only"), QMessageBox::NoRole);
+            msgBox.setDefaultButton(readOnlyButton);
+            msgBox.setEscapeButton(QMessageBox::No);
+            auto result = msgBox.exec();
 
-            if (result == QMessageBox::No) {
+            if (msgBox.clickedButton() == readOnlyButton) {
                 dbStruct.readOnly = true;
                 delete lockFile;
-                lockFile = Q_NULLPTR;
-            }
-            else {
+                lockFile = nullptr;
+            } else if (result == QMessageBox::Yes) {
                 // take over the lock file if possible
                 if (lockFile->removeStaleLockFile()) {
                     lockFile->tryLock();
                 }
+            } else {
+                return;
             }
         }
     }
@@ -181,6 +197,10 @@ void DatabaseTabWidget::openDatabase(const QString& fileName, const QString& pw,
 
     insertDatabase(db, dbStruct);
 
+    if (dbStruct.readOnly) {
+        emit messageTab(tr("File opened in read only mode."), MessageWidget::Warning);
+    }
+
     updateLastDatabases(dbStruct.filePath);
 
     if (!pw.isNull() || !keyFile.isEmpty()) {
@@ -189,6 +209,39 @@ void DatabaseTabWidget::openDatabase(const QString& fileName, const QString& pw,
     else {
         dbStruct.dbWidget->switchToOpenDatabase(dbStruct.filePath);
     }
+    emit messageDismissGlobal();
+}
+
+void DatabaseTabWidget::importCsv()
+{
+    QString fileName = fileDialog()->getOpenFileName(this, tr("Open CSV file"), QString(),
+            tr("CSV file") + " (*.csv);;" + tr("All files (*)"));
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    Database* db = new Database();
+    DatabaseManagerStruct dbStruct;
+    dbStruct.dbWidget = new DatabaseWidget(db, this);
+
+    insertDatabase(db, dbStruct);
+    dbStruct.dbWidget->switchToImportCsv(fileName);
+}
+
+void DatabaseTabWidget::mergeDatabase()
+{
+    QString filter = QString("%1 (*.kdbx);;%2 (*)").arg(tr("KeePass 2 Database"), tr("All files"));
+    const QString fileName = fileDialog()->getOpenFileName(this, tr("Merge database"), QString(),
+                                                       filter);
+    if (!fileName.isEmpty()) {
+        mergeDatabase(fileName);
+    }
+}
+
+void DatabaseTabWidget::mergeDatabase(const QString& fileName)
+{
+    currentDatabaseWidget()->switchToOpenMergeDatabase(fileName);
 }
 
 void DatabaseTabWidget::importKeePass1Database()
@@ -203,6 +256,7 @@ void DatabaseTabWidget::importKeePass1Database()
     Database* db = new Database();
     DatabaseManagerStruct dbStruct;
     dbStruct.dbWidget = new DatabaseWidget(db, this);
+    dbStruct.dbWidget->databaseModified();
     dbStruct.modified = true;
 
     insertDatabase(db, dbStruct);
@@ -218,15 +272,16 @@ bool DatabaseTabWidget::closeDatabase(Database* db)
     int index = databaseIndex(db);
     Q_ASSERT(index != -1);
 
+    dbStruct.dbWidget->closeUnlockDialog();
     QString dbName = tabText(index);
     if (dbName.right(1) == "*") {
         dbName.chop(1);
     }
-    if (dbStruct.dbWidget->isInEditMode() && db->hasKey()) {
+    if (dbStruct.dbWidget->isInEditMode() && db->hasKey() && dbStruct.dbWidget->isEditWidgetModified()) {
         QMessageBox::StandardButton result =
             MessageBox::question(
             this, tr("Close?"),
-            tr("\"%1\" is in edit mode.\nDiscard changes and close anyway?").arg(dbName),
+            tr("\"%1\" is in edit mode.\nDiscard changes and close anyway?").arg(dbName.toHtmlEscaped()),
             QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
         if (result == QMessageBox::Cancel) {
             return false;
@@ -242,7 +297,7 @@ bool DatabaseTabWidget::closeDatabase(Database* db)
             QMessageBox::StandardButton result =
                 MessageBox::question(
                 this, tr("Save changes?"),
-                tr("\"%1\" was modified.\nSave changes?").arg(dbName),
+                tr("\"%1\" was modified.\nSave changes?").arg(dbName.toHtmlEscaped()),
                 QMessageBox::Yes | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Yes);
             if (result == QMessageBox::Yes) {
                 if (!saveDatabase(db)) {
@@ -276,7 +331,7 @@ void DatabaseTabWidget::deleteDatabase(Database* db)
     delete db;
 
     if (emitDatabaseWithFileClosed) {
-        Q_EMIT databaseWithFileClosed(filePath);
+        emit databaseWithFileClosed(filePath);
     }
 }
 
@@ -295,119 +350,103 @@ bool DatabaseTabWidget::saveDatabase(Database* db)
     DatabaseManagerStruct& dbStruct = m_dbList[db];
 
     if (dbStruct.saveToFilename) {
-        QSaveFile saveFile(dbStruct.canonicalFilePath);
-        if (saveFile.open(QIODevice::WriteOnly)) {
-            m_writer.writeDatabase(&saveFile, db);
-            if (m_writer.hasError()) {
-                MessageBox::critical(this, tr("Error"), tr("Writing the database failed.") + "\n\n"
-                                     + m_writer.errorString());
-                return false;
-            }
-            if (!saveFile.commit()) {
-                MessageBox::critical(this, tr("Error"), tr("Writing the database failed.") + "\n\n"
-                                     + saveFile.errorString());
-                return false;
-            }
-        }
-        else {
-            MessageBox::critical(this, tr("Error"), tr("Writing the database failed.") + "\n\n"
-                                 + saveFile.errorString());
+
+        dbStruct.dbWidget->blockAutoReload(true);
+        QString errorMessage = db->saveToFile(dbStruct.canonicalFilePath);
+        dbStruct.dbWidget->blockAutoReload(false);
+
+        if (errorMessage.isEmpty()) {
+            // successfully saved database file
+            dbStruct.modified = false;
+            dbStruct.dbWidget->databaseSaved();
+            updateTabName(db);
+            emit messageDismissTab();
+            return true;
+        } else {
+            emit messageTab(tr("Writing the database failed.").append("\n").append(errorMessage),
+                            MessageWidget::Error);
             return false;
         }
 
-        dbStruct.modified = false;
-        updateTabName(db);
-        return true;
-    }
-    else {
+    } else {
         return saveDatabaseAs(db);
     }
 }
 
 bool DatabaseTabWidget::saveDatabaseAs(Database* db)
 {
-    DatabaseManagerStruct& dbStruct = m_dbList[db];
-    QString oldFileName;
-    if (dbStruct.saveToFilename) {
-        oldFileName = dbStruct.filePath;
-    }
-    else {
-        oldFileName = tr("New database").append(".kdbx");
-    }
-    QString fileName = fileDialog()->getSaveFileName(this, tr("Save database as"),
-                                                     oldFileName, tr("KeePass 2 Database").append(" (*.kdbx)"),
-                                                     Q_NULLPTR, 0, "kdbx");
-    if (!fileName.isEmpty()) {
-        QFileInfo fileInfo(fileName);
-        QString lockFilePath;
-        if (fileInfo.exists()) {
-            // returns empty string when file doesn't exist
-            lockFilePath = fileInfo.canonicalPath();
+    while (true) {
+        DatabaseManagerStruct& dbStruct = m_dbList[db];
+        QString oldFileName;
+        if (dbStruct.saveToFilename) {
+            oldFileName = dbStruct.filePath;
+        } else {
+            oldFileName = tr("Passwords").append(".kdbx");
         }
-        else {
-            lockFilePath = fileInfo.absolutePath();
-        }
-        QString lockFileName = QString("%1/.%2.lock").arg(lockFilePath, fileInfo.fileName());
-        QScopedPointer<QLockFile> lockFile(new QLockFile(lockFileName));
-        lockFile->setStaleLockTime(0);
-        if (!lockFile->tryLock()) {
-            // for now silently ignore if we can't create a lock file
-            // due to lack of permissions
-            if (lockFile->error() != QLockFile::PermissionError) {
-                QMessageBox::StandardButton result = MessageBox::question(this, tr("Save database as"),
-                    tr("The database you are trying to save as is locked by another instance of KeePassX.\n"
-                       "Do you want to save it anyway?"),
-                    QMessageBox::Yes | QMessageBox::No);
+        QString fileName = fileDialog()->getSaveFileName(this, tr("Save database as"),
+                                                        oldFileName, tr("KeePass 2 Database").append(" (*.kdbx)"),
+                                                        nullptr, 0, "kdbx");
+        if (!fileName.isEmpty()) {
+            QFileInfo fileInfo(fileName);
+            QString lockFilePath;
+            if (fileInfo.exists()) {
+                // returns empty string when file doesn't exist
+                lockFilePath = fileInfo.canonicalPath();
+            } else {
+                lockFilePath = fileInfo.absolutePath();
+            }
+            QString lockFileName = QString("%1/.%2.lock").arg(lockFilePath, fileInfo.fileName());
+            QScopedPointer<QLockFile> lockFile(new QLockFile(lockFileName));
+            lockFile->setStaleLockTime(0);
+            if (!lockFile->tryLock()) {
+                // for now silently ignore if we can't create a lock file
+                // due to lack of permissions
+                if (lockFile->error() != QLockFile::PermissionError) {
+                    QMessageBox::StandardButton result = MessageBox::question(this, tr("Save database as"),
+                        tr("The database you are trying to save as is locked by another instance of KeePassXC.\n"
+                        "Do you want to save it anyway?"),
+                        QMessageBox::Yes | QMessageBox::No);
 
-                if (result == QMessageBox::No) {
-                    return false;
-                }
-                else {
-                    // take over the lock file if possible
-                    if (lockFile->removeStaleLockFile()) {
-                        lockFile->tryLock();
+                    if (result == QMessageBox::No) {
+                        return false;
+                    } else {
+                        // take over the lock file if possible
+                        if (lockFile->removeStaleLockFile()) {
+                            lockFile->tryLock();
+                        }
                     }
                 }
             }
-        }
 
-        QSaveFile saveFile(fileName);
-        if (!saveFile.open(QIODevice::WriteOnly)) {
-            MessageBox::critical(this, tr("Error"), tr("Writing the database failed.") + "\n\n"
-                                 + saveFile.errorString());
+            // setup variables so saveDatabase succeeds
+            dbStruct.saveToFilename = true;
+            dbStruct.canonicalFilePath = fileName;
+
+            if (!saveDatabase(db)) {
+                // failed to save, revert back
+                dbStruct.saveToFilename = false;
+                dbStruct.canonicalFilePath = oldFileName;
+                continue;
+            }
+
+            // refresh fileinfo since the file didn't exist before
+            fileInfo.refresh();
+
+            dbStruct.modified = false;
+            dbStruct.saveToFilename = true;
+            dbStruct.readOnly = false;
+            dbStruct.filePath = fileInfo.absoluteFilePath();
+            dbStruct.canonicalFilePath = fileInfo.canonicalFilePath();
+            dbStruct.fileName = fileInfo.fileName();
+            dbStruct.dbWidget->updateFilename(dbStruct.filePath);
+            delete dbStruct.lockFile;
+            dbStruct.lockFile = lockFile.take();
+            updateTabName(db);
+            updateLastDatabases(dbStruct.filePath);
+            return true;
+        } else {
             return false;
         }
-
-        m_writer.writeDatabase(&saveFile, db);
-        if (m_writer.hasError()) {
-            MessageBox::critical(this, tr("Error"), tr("Writing the database failed.") + "\n\n"
-                                 + m_writer.errorString());
-            return false;
-        }
-        if (!saveFile.commit()) {
-            MessageBox::critical(this, tr("Error"), tr("Writing the database failed.") + "\n\n"
-                                 + saveFile.errorString());
-            return false;
-        }
-
-        // refresh fileinfo since the file didn't exist before
-        fileInfo.refresh();
-
-        dbStruct.modified = false;
-        dbStruct.saveToFilename = true;
-        dbStruct.readOnly = false;
-        dbStruct.filePath = fileInfo.absoluteFilePath();
-        dbStruct.canonicalFilePath = fileInfo.canonicalFilePath();
-        dbStruct.fileName = fileInfo.fileName();
-        dbStruct.dbWidget->updateFilename(dbStruct.filePath);
-        delete dbStruct.lockFile;
-        dbStruct.lockFile = lockFile.take();
-        updateTabName(db);
-        updateLastDatabases(dbStruct.filePath);
-        return true;
-    }
-    else {
-        return false;
     }
 }
 
@@ -460,15 +499,16 @@ void DatabaseTabWidget::exportToCsv()
 
     QString fileName = fileDialog()->getSaveFileName(this, tr("Export database to CSV file"),
                                                      QString(), tr("CSV file").append(" (*.csv)"),
-                                                     Q_NULLPTR, 0, "csv");
+                                                     nullptr, 0, "csv");
     if (fileName.isEmpty()) {
         return;
     }
 
     CsvExporter csvExporter;
     if (!csvExporter.exportDatabase(fileName, db)) {
-        MessageBox::critical(this, tr("Error"), tr("Writing the CSV file failed.") + "\n\n"
-                             + csvExporter.errorString());
+        emit messageGlobal(
+            tr("Writing the CSV file failed.").append("\n")
+            .append(csvExporter.errorString()), MessageWidget::Error);
     }
 }
 
@@ -490,6 +530,25 @@ bool DatabaseTabWidget::readOnly(int index)
 
     return indexDatabaseManagerStruct(index).readOnly;
 }
+
+bool DatabaseTabWidget::isModified(int index)
+{
+    if (index == -1) {
+        index = currentIndex();
+    }
+
+    return indexDatabaseManagerStruct(index).modified;
+}
+
+QString DatabaseTabWidget::databasePath(int index)
+{
+    if (index == -1) {
+        index = currentIndex();
+    }
+
+    return indexDatabaseManagerStruct(index).filePath;
+}
+
 
 void DatabaseTabWidget::updateTabName(Database* db)
 {
@@ -528,7 +587,7 @@ void DatabaseTabWidget::updateTabName(Database* db)
     }
 
     setTabText(index, tabName);
-    Q_EMIT tabNameChanged();
+    emit tabNameChanged();
 }
 
 void DatabaseTabWidget::updateTabNameFromDbSender()
@@ -565,7 +624,7 @@ Database* DatabaseTabWidget::indexDatabase(int index)
         }
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 DatabaseManagerStruct DatabaseTabWidget::indexDatabaseManagerStruct(int index)
@@ -593,7 +652,7 @@ Database* DatabaseTabWidget::databaseFromDatabaseWidget(DatabaseWidget* dbWidget
         }
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 void DatabaseTabWidget::insertDatabase(Database* db, const DatabaseManagerStruct& dbStruct)
@@ -607,8 +666,9 @@ void DatabaseTabWidget::insertDatabase(Database* db, const DatabaseManagerStruct
     setCurrentIndex(index);
     connectDatabase(db);
     connect(dbStruct.dbWidget, SIGNAL(closeRequest()), SLOT(closeDatabaseFromSender()));
-    connect(dbStruct.dbWidget, SIGNAL(databaseChanged(Database*)), SLOT(changeDatabase(Database*)));
+    connect(dbStruct.dbWidget, SIGNAL(databaseChanged(Database*, bool)), SLOT(changeDatabase(Database*, bool)));
     connect(dbStruct.dbWidget, SIGNAL(unlockedDatabase()), SLOT(updateTabNameFromDbWidgetSender()));
+    connect(dbStruct.dbWidget, SIGNAL(unlockedDatabase()), SLOT(emitDatabaseUnlockedFromDbWidgetSender()));
 }
 
 DatabaseWidget* DatabaseTabWidget::currentDatabaseWidget()
@@ -618,7 +678,7 @@ DatabaseWidget* DatabaseTabWidget::currentDatabaseWidget()
         return m_dbList[db].dbWidget;
     }
     else {
-        return Q_NULLPTR;
+        return nullptr;
     }
 }
 
@@ -656,7 +716,7 @@ void DatabaseTabWidget::lockDatabases()
         // show the correct tab widget before we are asking questions about it
         setCurrentWidget(dbWidget);
 
-        if (mode == DatabaseWidget::EditMode) {
+        if (mode == DatabaseWidget::EditMode && dbWidget->isEditWidgetModified()) {
             QMessageBox::StandardButton result =
                 MessageBox::question(
                     this, tr("Lock database"),
@@ -696,6 +756,7 @@ void DatabaseTabWidget::lockDatabases()
             }
             else if (result == QMessageBox::Discard) {
                 m_dbList[db].modified = false;
+                m_dbList[db].dbWidget->databaseSaved();
             }
             else if (result == QMessageBox::Cancel) {
                 continue;
@@ -705,6 +766,8 @@ void DatabaseTabWidget::lockDatabases()
         dbWidget->lock();
         // database has changed so we can't use the db variable anymore
         updateTabName(dbWidget->database());
+
+        emit databaseLocked(dbWidget);
     }
 }
 
@@ -722,6 +785,7 @@ void DatabaseTabWidget::modified()
 
     if (!dbStruct.modified) {
         dbStruct.modified = true;
+        dbStruct.dbWidget->databaseModified();
         updateTabName(db);
     }
 }
@@ -743,7 +807,7 @@ void DatabaseTabWidget::updateLastDatabases(const QString& filename)
     }
 }
 
-void DatabaseTabWidget::changeDatabase(Database* newDb)
+void DatabaseTabWidget::changeDatabase(Database* newDb, bool unsavedChanges)
 {
     Q_ASSERT(sender());
     Q_ASSERT(!m_dbList.contains(newDb));
@@ -751,6 +815,7 @@ void DatabaseTabWidget::changeDatabase(Database* newDb)
     DatabaseWidget* dbWidget = static_cast<DatabaseWidget*>(sender());
     Database* oldDb = databaseFromDatabaseWidget(dbWidget);
     DatabaseManagerStruct dbStruct = m_dbList[oldDb];
+    dbStruct.modified = unsavedChanges;
     m_dbList.remove(oldDb);
     m_dbList.insert(newDb, dbStruct);
 
@@ -760,7 +825,12 @@ void DatabaseTabWidget::changeDatabase(Database* newDb)
 
 void DatabaseTabWidget::emitActivateDatabaseChanged()
 {
-    Q_EMIT activateDatabaseChanged(currentDatabaseWidget());
+    emit activateDatabaseChanged(currentDatabaseWidget());
+}
+
+void DatabaseTabWidget::emitDatabaseUnlockedFromDbWidgetSender()
+{
+    emit databaseUnlocked(static_cast<DatabaseWidget*>(sender()));
 }
 
 void DatabaseTabWidget::connectDatabase(Database* newDb, Database* oldDb)
@@ -788,5 +858,9 @@ void DatabaseTabWidget::performGlobalAutoType()
         }
     }
 
-    autoType()->performGlobalAutoType(unlockedDatabases);
+    if (unlockedDatabases.size() > 0) {
+        autoType()->performGlobalAutoType(unlockedDatabases);
+    } else if (m_dbList.size() > 0){
+        indexDatabaseManagerStruct(0).dbWidget->showUnlockDialog();
+    }
 }

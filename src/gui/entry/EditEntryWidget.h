@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2010 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -52,7 +53,7 @@ class EditEntryWidget : public EditWidget
     Q_OBJECT
 
 public:
-    explicit EditEntryWidget(QWidget* parent = Q_NULLPTR);
+    explicit EditEntryWidget(QWidget* parent = nullptr);
     ~EditEntryWidget();
 
     void loadEntry(Entry* entry, bool create, bool history, const QString& parentName,
@@ -61,12 +62,14 @@ public:
     void createPresetsMenu(QMenu* expirePresetsMenu);
     QString entryTitle() const;
     void clear();
+    bool hasBeenModified() const;
 
-Q_SIGNALS:
+signals:
     void editFinished(bool accepted);
     void historyEntryActivated(Entry* entry);
 
-private Q_SLOTS:
+private slots:
+    void acceptEntry();
     void saveEntry();
     void cancel();
     void togglePasswordGeneratorButton(bool checked);
@@ -75,6 +78,8 @@ private Q_SLOTS:
     void editCurrentAttribute();
     void removeCurrentAttribute();
     void updateCurrentAttribute();
+    void protectCurrentAttribute(bool state);
+    void revealCurrentAttribute();
     void insertAttachment();
     void saveCurrentAttachment();
     void openAttachment(const QModelIndex& index);
@@ -107,6 +112,9 @@ private:
     bool passwordsEqual();
     void setForms(const Entry* entry, bool restore = false);
     QMenu* createPresetsMenu();
+    void updateEntryData(Entry* entry) const;
+
+    void displayAttribute(QModelIndex index, bool showProtected);
 
     Entry* m_entry;
     Database* m_database;

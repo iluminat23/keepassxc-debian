@@ -21,14 +21,12 @@
 #include <QMap>
 #include <QObject>
 
-#include "core/Global.h"
-
 class EntryAttachments : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit EntryAttachments(QObject* parent = Q_NULLPTR);
+    explicit EntryAttachments(QObject* parent = nullptr);
     QList<QString> keys() const;
     bool hasKey(const QString& key) const;
     QList<QByteArray> values() const;
@@ -40,7 +38,7 @@ public:
     bool operator==(const EntryAttachments& other) const;
     bool operator!=(const EntryAttachments& other) const;
 
-Q_SIGNALS:
+signals:
     void modified();
     void keyModified(const QString& key);
     void aboutToBeAdded(const QString& key);

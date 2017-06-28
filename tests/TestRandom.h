@@ -18,7 +18,6 @@
 #ifndef KEEPASSX_TESTRANDOM_H
 #define KEEPASSX_TESTRANDOM_H
 
-#include "core/Global.h"
 #include "crypto/Random.h"
 
 #include <QObject>
@@ -27,7 +26,7 @@ class RandomBackendTest : public RandomBackend
 {
 public:
     RandomBackendTest();
-    void randomize(void* data, int len) Q_DECL_OVERRIDE;
+    void randomize(void* data, int len) override;
     void setNextBytes(const QByteArray& nextBytes);
 
 private:
@@ -39,7 +38,7 @@ class TestRandom : public QObject
 {
     Q_OBJECT
 
-private Q_SLOTS:
+private slots:
     void initTestCase();
     void testUInt();
     void testUIntRange();

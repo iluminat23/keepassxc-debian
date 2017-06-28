@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2010 Felix Geyer <debfx@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,8 +20,8 @@
 
 #include "core/Config.h"
 #include "core/DatabaseIcons.h"
+#include "core/Global.h"
 #include "core/Metadata.h"
-#include "core/Tools.h"
 
 const int Group::DefaultIconNumber = 48;
 const int Group::RecycleBinIconNumber = 43;
@@ -32,25 +33,26 @@ Group::Group()
     m_data.isExpanded = true;
     m_data.autoTypeEnabled = Inherit;
     m_data.searchingEnabled = Inherit;
+    m_data.mergeMode = ModeInherit;
 }
 
 Group::~Group()
 {
     // Destroy entries and children manually so DeletedObjects can be added
     // to database.
-    QList<Entry*> entries = m_entries;
-    Q_FOREACH (Entry* entry, entries) {
+    const QList<Entry*> entries = m_entries;
+    for (Entry* entry : entries) {
         delete entry;
     }
 
-    QList<Group*> children = m_children;
-    Q_FOREACH (Group* group, children) {
+    const QList<Group*> children = m_children;
+    for (Group* group : children) {
         delete group;
     }
 
     if (m_db && m_parent) {
         DeletedObject delGroup;
-        delGroup.deletionTime = Tools::currentDateTimeUtc();
+        delGroup.deletionTime = QDateTime::currentDateTimeUtc();
         delGroup.uuid = m_uuid;
         m_db->addDeletedObject(delGroup);
     }
@@ -73,7 +75,7 @@ template <class P, class V> inline bool Group::set(P& property, const V& value) 
     if (property != value) {
         property = value;
         updateTimeinfo();
-        Q_EMIT modified();
+        emit modified();
         return true;
     }
     else {
@@ -84,8 +86,8 @@ template <class P, class V> inline bool Group::set(P& property, const V& value) 
 void Group::updateTimeinfo()
 {
     if (m_updateTimeinfo) {
-        m_data.timeInfo.setLastModificationTime(Tools::currentDateTimeUtc());
-        m_data.timeInfo.setLastAccessTime(Tools::currentDateTimeUtc());
+        m_data.timeInfo.setLastModificationTime(QDateTime::currentDateTimeUtc());
+        m_data.timeInfo.setLastAccessTime(QDateTime::currentDateTimeUtc());
     }
 }
 
@@ -186,6 +188,27 @@ QString Group::defaultAutoTypeSequence() const
     return m_data.defaultAutoTypeSequence;
 }
 
+QString Group::effectiveAutoTypeSequence() const
+{
+    QString sequence;
+
+    const Group* group = this;
+    do {
+        if (group->autoTypeEnabled() == Group::Disable) {
+            return QString();
+        }
+
+        sequence = group->defaultAutoTypeSequence();
+        group = group->parentGroup();
+    } while (group && sequence.isEmpty());
+
+    if (sequence.isEmpty()) {
+        sequence = "{USERNAME}{TAB}{PASSWORD}{ENTER}";
+    }
+
+    return sequence;
+}
+
 Group::TriState Group::autoTypeEnabled() const
 {
     return m_data.autoTypeEnabled;
@@ -196,6 +219,19 @@ Group::TriState Group::searchingEnabled() const
     return m_data.searchingEnabled;
 }
 
+Group::MergeMode Group::mergeMode() const
+{
+    if (m_data.mergeMode == Group::MergeMode::ModeInherit) {
+        if (m_parent) {
+            return m_parent->mergeMode();
+        } else {
+            return Group::MergeMode::KeepNewer; // fallback
+        }
+    } else {
+        return m_data.mergeMode;
+    }
+}
+
 Entry* Group::lastTopVisibleEntry() const
 {
     return m_lastTopVisibleEntry;
@@ -203,7 +239,7 @@ Entry* Group::lastTopVisibleEntry() const
 
 bool Group::isExpired() const
 {
-    return m_data.timeInfo.expires() && m_data.timeInfo.expiryTime() < Tools::currentDateTimeUtc();
+    return m_data.timeInfo.expires() && m_data.timeInfo.expiryTime() < QDateTime::currentDateTimeUtc();
 }
 
 void Group::setUuid(const Uuid& uuid)
@@ -214,7 +250,7 @@ void Group::setUuid(const Uuid& uuid)
 void Group::setName(const QString& name)
 {
     if (set(m_data.name, name)) {
-        Q_EMIT dataChanged(this);
+        emit dataChanged(this);
     }
 }
 
@@ -232,8 +268,8 @@ void Group::setIcon(int iconNumber)
         m_data.customIcon = Uuid();
 
         updateTimeinfo();
-        Q_EMIT modified();
-        Q_EMIT dataChanged(this);
+        emit modified();
+        emit dataChanged(this);
     }
 }
 
@@ -246,8 +282,8 @@ void Group::setIcon(const Uuid& uuid)
         m_data.iconNumber = 0;
 
         updateTimeinfo();
-        Q_EMIT modified();
-        Q_EMIT dataChanged(this);
+        emit modified();
+        emit dataChanged(this);
     }
 }
 
@@ -261,7 +297,10 @@ void Group::setExpanded(bool expanded)
     if (m_data.isExpanded != expanded) {
         m_data.isExpanded = expanded;
         updateTimeinfo();
-        Q_EMIT modified();
+        if (config()->get("IgnoreGroupExpansion").toBool()) {
+            return;
+        }
+        emit modified();
     }
 }
 
@@ -290,7 +329,7 @@ void Group::setExpires(bool value)
     if (m_data.timeInfo.expires() != value) {
         m_data.timeInfo.setExpires(value);
         updateTimeinfo();
-        Q_EMIT modified();
+        emit modified();
     }
 }
 
@@ -299,8 +338,13 @@ void Group::setExpiryTime(const QDateTime& dateTime)
     if (m_data.timeInfo.expiryTime() != dateTime) {
         m_data.timeInfo.setExpiryTime(dateTime);
         updateTimeinfo();
-        Q_EMIT modified();
+        emit modified();
     }
+}
+
+void Group::setMergeMode(MergeMode newMode)
+{
+    set(m_data.mergeMode, newMode);
 }
 
 Group* Group::parentGroup()
@@ -351,12 +395,12 @@ void Group::setParent(Group* parent, int index)
             recSetDatabase(parent->m_db);
         }
         QObject::setParent(parent);
-        Q_EMIT aboutToAdd(this, index);
+        emit aboutToAdd(this, index);
         Q_ASSERT(index <= parent->m_children.size());
         parent->m_children.insert(index, this);
     }
     else {
-        Q_EMIT aboutToMove(this, parent, index);
+        emit aboutToMove(this, parent, index);
         m_parent->m_children.removeAll(this);
         m_parent = parent;
         QObject::setParent(parent);
@@ -365,16 +409,16 @@ void Group::setParent(Group* parent, int index)
     }
 
     if (m_updateTimeinfo) {
-        m_data.timeInfo.setLocationChanged(Tools::currentDateTimeUtc());
+        m_data.timeInfo.setLocationChanged(QDateTime::currentDateTimeUtc());
     }
 
-    Q_EMIT modified();
+    emit modified();
 
     if (!moveWithinDatabase) {
-        Q_EMIT added();
+        emit added();
     }
     else {
-        Q_EMIT moved();
+        emit moved();
     }
 }
 
@@ -385,7 +429,7 @@ void Group::setParent(Database* db)
 
     cleanupParent();
 
-    m_parent = Q_NULLPTR;
+    m_parent = nullptr;
     recSetDatabase(db);
 
     QObject::setParent(db);
@@ -428,16 +472,142 @@ QList<Entry*> Group::entriesRecursive(bool includeHistoryItems) const
     entryList.append(m_entries);
 
     if (includeHistoryItems) {
-        Q_FOREACH (Entry* entry, m_entries) {
+        for (Entry* entry : m_entries) {
             entryList.append(entry->historyItems());
         }
     }
 
-    Q_FOREACH (Group* group, m_children) {
+    for (Group* group : m_children) {
         entryList.append(group->entriesRecursive(includeHistoryItems));
     }
 
     return entryList;
+}
+
+Entry* Group::findEntry(QString entryId)
+{
+    Q_ASSERT(!entryId.isNull());
+
+    if (Uuid::isUuid(entryId)) {
+        Uuid entryUuid = Uuid::fromHex(entryId);
+        for (Entry* entry : entriesRecursive(false)) {
+            if (entry->uuid() == entryUuid) {
+                return entry;
+            }
+        }
+    }
+
+    Entry* entry = findEntryByPath(entryId);
+    if (entry) {
+      return entry;
+    }
+
+    for (Entry* entry : entriesRecursive(false)) {
+        if (entry->title() == entryId) {
+            return entry;
+        }
+    }
+
+    return nullptr;
+}
+
+Entry* Group::findEntryByUuid(const Uuid& uuid)
+{
+    Q_ASSERT(!uuid.isNull());
+    for (Entry* entry : asConst(m_entries)) {
+        if (entry->uuid() == uuid) {
+            return entry;
+        }
+    }
+
+    return nullptr;
+}
+
+Entry* Group::findEntryByPath(QString entryPath, QString basePath)
+{
+
+    Q_ASSERT(!entryPath.isNull());
+
+    for (Entry* entry : asConst(m_entries)) {
+        QString currentEntryPath = basePath + entry->title();
+        if (entryPath == currentEntryPath || entryPath == QString("/" + currentEntryPath)) {
+            return entry;
+        }
+    }
+
+    for (Group* group : asConst(m_children)) {
+        Entry* entry = group->findEntryByPath(entryPath, basePath + group->name() + QString("/"));
+        if (entry != nullptr) {
+            return entry;
+        }
+    }
+
+    return nullptr;
+}
+
+Group* Group::findGroupByPath(QString groupPath, QString basePath)
+{
+
+    Q_ASSERT(!groupPath.isNull());
+
+    QStringList possiblePaths;
+    possiblePaths << groupPath;
+    if (!groupPath.startsWith("/")) {
+        possiblePaths << QString("/" + groupPath);
+    }
+    if (!groupPath.endsWith("/")) {
+        possiblePaths << QString(groupPath + "/");
+    }
+    if (!groupPath.endsWith("/") && !groupPath.endsWith("/")) {
+        possiblePaths << QString("/" + groupPath + "/");
+    }
+
+    if (possiblePaths.contains(basePath)) {
+        return this;
+    }
+
+    for (Group* innerGroup : children()) {
+        QString innerBasePath = basePath + innerGroup->name() + "/";
+        Group* group = innerGroup->findGroupByPath(groupPath, innerBasePath);
+        if (group != nullptr) {
+            return group;
+        }
+    }
+
+    return nullptr;
+
+}
+
+QString Group::print(bool printUuids, QString baseName, int depth)
+{
+
+    QString response;
+    QString indentation = QString("  ").repeated(depth);
+
+    if (entries().isEmpty() && children().isEmpty()) {
+        response += indentation + "[empty]\n";
+        return response;
+    }
+
+    for (Entry* entry : entries()) {
+        response += indentation + entry->title();
+        if (printUuids) {
+            response += " " + entry->uuid().toHex();
+        }
+        response += "\n";
+    }
+
+    for (Group* innerGroup : children()) {
+        QString newBaseName = baseName + innerGroup->name() + "/";
+        response += indentation + newBaseName;
+        if (printUuids) {
+            response += " " + innerGroup->uuid().toHex();
+        }
+        response += "\n";
+        response += innerGroup->print(printUuids, newBaseName, depth + 1);
+    }
+
+    return response;
 }
 
 QList<const Group*> Group::groupsRecursive(bool includeSelf) const
@@ -447,7 +617,7 @@ QList<const Group*> Group::groupsRecursive(bool includeSelf) const
         groupList.append(this);
     }
 
-    Q_FOREACH (const Group* group, m_children) {
+    for (const Group* group : m_children) {
         groupList.append(group->groupsRecursive(true));
     }
 
@@ -461,7 +631,7 @@ QList<Group*> Group::groupsRecursive(bool includeSelf)
         groupList.append(this);
     }
 
-    Q_FOREACH (Group* group, m_children) {
+    for (Group* group : asConst(m_children)) {
         groupList.append(group->groupsRecursive(true));
     }
 
@@ -476,17 +646,56 @@ QSet<Uuid> Group::customIconsRecursive() const
         result.insert(iconUuid());
     }
 
-    Q_FOREACH (Entry* entry, entriesRecursive(true)) {
+    const QList<Entry*> entryList = entriesRecursive(true);
+    for (Entry* entry : entryList) {
         if (!entry->iconUuid().isNull()) {
             result.insert(entry->iconUuid());
         }
     }
 
-    Q_FOREACH (Group* group, m_children) {
+    for (Group* group : m_children) {
         result.unite(group->customIconsRecursive());
     }
 
     return result;
+}
+
+void Group::merge(const Group* other)
+{
+    // merge entries
+    const QList<Entry*> dbEntries = other->entries();
+    for (Entry* entry : dbEntries) {
+        // entries are searched by uuid
+        if (!findEntryByUuid(entry->uuid())) {
+            entry->clone(Entry::CloneNoFlags)->setGroup(this);
+        } else {
+            resolveConflict(findEntryByUuid(entry->uuid()), entry);
+        }
+    }
+
+    // merge groups (recursively)
+    const QList<Group*> dbChildren = other->children();
+    for (Group* group : dbChildren) {
+        // groups are searched by name instead of uuid
+        if (findChildByName(group->name())) {
+            findChildByName(group->name())->merge(group);
+        } else {
+            group->setParent(this);
+        }
+    }
+
+    emit modified();
+}
+
+Group* Group::findChildByName(const QString& name)
+{
+    for (Group* group : asConst(m_children)) {
+        if (group->name() == name) {
+            return group;
+        }
+    }
+
+    return nullptr;
 }
 
 Group* Group::clone(Entry::CloneFlags entryFlags) const
@@ -498,19 +707,21 @@ Group* Group::clone(Entry::CloneFlags entryFlags) const
     clonedGroup->setUuid(Uuid::random());
     clonedGroup->m_data = m_data;
 
-    Q_FOREACH (Entry* entry, entries()) {
+    const QList<Entry*> entryList = entries();
+    for (Entry* entry : entryList) {
         Entry* clonedEntry = entry->clone(entryFlags);
         clonedEntry->setGroup(clonedGroup);
     }
 
-    Q_FOREACH (Group* groupChild, children()) {
+    const QList<Group*> childrenGroups = children();
+    for (Group* groupChild : childrenGroups) {
         Group* clonedGroupChild = groupChild->clone(entryFlags);
         clonedGroupChild->setParent(clonedGroup);
     }
 
     clonedGroup->setUpdateTimeinfo(true);
 
-    QDateTime now = Tools::currentDateTimeUtc();
+    QDateTime now = QDateTime::currentDateTimeUtc();
     clonedGroup->m_data.timeInfo.setCreationTime(now);
     clonedGroup->m_data.timeInfo.setLastModificationTime(now);
     clonedGroup->m_data.timeInfo.setLastAccessTime(now);
@@ -530,7 +741,7 @@ void Group::addEntry(Entry* entry)
     Q_ASSERT(entry);
     Q_ASSERT(!m_entries.contains(entry));
 
-    Q_EMIT entryAboutToAdd(entry);
+    emit entryAboutToAdd(entry);
 
     m_entries << entry;
     connect(entry, SIGNAL(dataChanged(Entry*)), SIGNAL(entryDataChanged(Entry*)));
@@ -538,23 +749,23 @@ void Group::addEntry(Entry* entry)
         connect(entry, SIGNAL(modified()), m_db, SIGNAL(modifiedImmediate()));
     }
 
-    Q_EMIT modified();
-    Q_EMIT entryAdded(entry);
+    emit modified();
+    emit entryAdded(entry);
 }
 
 void Group::removeEntry(Entry* entry)
 {
     Q_ASSERT(m_entries.contains(entry));
 
-    Q_EMIT entryAboutToRemove(entry);
+    emit entryAboutToRemove(entry);
 
     entry->disconnect(this);
     if (m_db) {
         entry->disconnect(m_db);
     }
     m_entries.removeAll(entry);
-    Q_EMIT modified();
-    Q_EMIT entryRemoved(entry);
+    emit modified();
+    emit entryRemoved(entry);
 }
 
 void Group::recSetDatabase(Database* db)
@@ -570,7 +781,7 @@ void Group::recSetDatabase(Database* db)
         disconnect(SIGNAL(modified()), m_db);
     }
 
-    Q_FOREACH (Entry* entry, m_entries) {
+    for (Entry* entry : asConst(m_entries)) {
         if (m_db) {
             entry->disconnect(m_db);
         }
@@ -592,7 +803,7 @@ void Group::recSetDatabase(Database* db)
 
     m_db = db;
 
-    Q_FOREACH (Group* group, m_children) {
+    for (Group* group : asConst(m_children)) {
         group->recSetDatabase(db);
     }
 }
@@ -600,25 +811,33 @@ void Group::recSetDatabase(Database* db)
 void Group::cleanupParent()
 {
     if (m_parent) {
-        Q_EMIT aboutToRemove(this);
+        emit aboutToRemove(this);
         m_parent->m_children.removeAll(this);
-        Q_EMIT modified();
-        Q_EMIT removed();
+        emit modified();
+        emit removed();
     }
 }
 
 void Group::recCreateDelObjects()
 {
     if (m_db) {
-        Q_FOREACH (Entry* entry, m_entries) {
+        for (Entry* entry : asConst(m_entries)) {
             m_db->addDeletedObject(entry->uuid());
         }
 
-        Q_FOREACH (Group* group, m_children) {
+        for (Group* group : asConst(m_children)) {
             group->recCreateDelObjects();
         }
         m_db->addDeletedObject(m_uuid);
     }
+}
+
+void Group::markOlderEntry(Entry* entry)
+{
+    entry->attributes()->set(
+        "merged",
+        QString("older entry merged from database \"%1\"").arg(entry->group()->database()->metadata()->name())
+    );
 }
 
 bool Group::resolveSearchingEnabled() const
@@ -658,5 +877,41 @@ bool Group::resolveAutoTypeEnabled() const
     default:
         Q_ASSERT(false);
         return false;
+    }
+}
+
+void Group::resolveConflict(Entry* existingEntry, Entry* otherEntry)
+{
+    const QDateTime timeExisting = existingEntry->timeInfo().lastModificationTime();
+    const QDateTime timeOther = otherEntry->timeInfo().lastModificationTime();
+
+    Entry* clonedEntry;
+
+    switch(mergeMode()) {
+        case KeepBoth:
+            // if one entry is newer, create a clone and add it to the group
+            if (timeExisting > timeOther) {
+                clonedEntry = otherEntry->clone(Entry::CloneNoFlags);
+                clonedEntry->setGroup(this);
+                markOlderEntry(clonedEntry);
+            } else if (timeExisting < timeOther) {
+                clonedEntry = otherEntry->clone(Entry::CloneNoFlags);
+                clonedEntry->setGroup(this);
+                markOlderEntry(existingEntry);
+            }
+            break;
+        case KeepNewer:
+            if (timeExisting < timeOther) {
+                // only if other entry is newer, replace existing one
+                removeEntry(existingEntry);
+                addEntry(otherEntry->clone(Entry::CloneNoFlags));
+            }
+
+            break;
+        case KeepExisting:
+            break;
+        default:
+            // do nothing
+            break;
     }
 }

@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2014 Florian Geyer <blueice@fobos.de>
+ *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +20,8 @@
 
 #include "core/Group.h"
 
-QList<Entry*> EntrySearcher::search(const QString &searchTerm, const Group* group, Qt::CaseSensitivity caseSensitivity)
+QList<Entry*> EntrySearcher::search(const QString& searchTerm, const Group* group,
+                                    Qt::CaseSensitivity caseSensitivity)
 {
     if (!group->resolveSearchingEnabled()) {
         return QList<Entry*>();
@@ -28,26 +30,35 @@ QList<Entry*> EntrySearcher::search(const QString &searchTerm, const Group* grou
     return searchEntries(searchTerm, group, caseSensitivity);
 }
 
-QList<Entry*> EntrySearcher::searchEntries(const QString& searchTerm, const Group* group, Qt::CaseSensitivity caseSensitivity)
+QList<Entry*> EntrySearcher::searchEntries(const QString& searchTerm, const Group* group,
+                                           Qt::CaseSensitivity caseSensitivity)
 {
     QList<Entry*> searchResult;
 
-    Q_FOREACH (Entry* entry, group->entries()) {
-        searchResult.append(matchEntry(searchTerm, entry, caseSensitivity));
+    const QList<Entry*> entryList = group->entries();
+    for (Entry* entry : entryList) {
+       searchResult.append(matchEntry(searchTerm, entry, caseSensitivity));
     }
-    Q_FOREACH (Group* childGroup, group->children()) {
+
+    const QList<Group*> children = group->children();
+    for (Group* childGroup : children) {
         if (childGroup->searchingEnabled() != Group::Disable) {
-            searchResult.append(searchEntries(searchTerm, childGroup, caseSensitivity));
+            if (matchGroup(searchTerm, childGroup, caseSensitivity)) {
+                searchResult.append(childGroup->entriesRecursive());
+            } else {
+                searchResult.append(searchEntries(searchTerm, childGroup, caseSensitivity));
+            }
         }
     }
 
     return searchResult;
 }
 
-QList<Entry*> EntrySearcher::matchEntry(const QString& searchTerm, Entry* entry, Qt::CaseSensitivity caseSensitivity)
+QList<Entry*> EntrySearcher::matchEntry(const QString& searchTerm, Entry* entry,
+                                        Qt::CaseSensitivity caseSensitivity)
 {
-    QStringList wordList = searchTerm.split(QRegExp("\\s"), QString::SkipEmptyParts);
-    Q_FOREACH (const QString& word, wordList) {
+    const QStringList wordList = searchTerm.split(QRegExp("\\s"), QString::SkipEmptyParts);
+    for (const QString& word : wordList) {
         if (!wordMatch(word, entry, caseSensitivity)) {
             return QList<Entry*>();
         }
@@ -58,8 +69,26 @@ QList<Entry*> EntrySearcher::matchEntry(const QString& searchTerm, Entry* entry,
 
 bool EntrySearcher::wordMatch(const QString& word, Entry* entry, Qt::CaseSensitivity caseSensitivity)
 {
-    return entry->title().contains(word, caseSensitivity) ||
-            entry->username().contains(word, caseSensitivity) ||
-            entry->url().contains(word, caseSensitivity) ||
-            entry->notes().contains(word, caseSensitivity);
+    return entry->resolvePlaceholder(entry->title()).contains(word, caseSensitivity) ||
+            entry->resolvePlaceholder(entry->username()).contains(word, caseSensitivity) ||
+            entry->resolvePlaceholder(entry->url()).contains(word, caseSensitivity) ||
+            entry->resolvePlaceholder(entry->notes()).contains(word, caseSensitivity);
+}
+
+bool EntrySearcher::matchGroup(const QString& searchTerm, const Group* group, Qt::CaseSensitivity caseSensitivity)
+{
+    const QStringList wordList = searchTerm.split(QRegExp("\\s"), QString::SkipEmptyParts);
+    for (const QString& word : wordList) {
+        if (!wordMatch(word, group, caseSensitivity)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool EntrySearcher::wordMatch(const QString& word, const Group* group, Qt::CaseSensitivity caseSensitivity)
+{
+    return group->name().contains(word, caseSensitivity) ||
+            group->notes().contains(word, caseSensitivity);
 }

@@ -19,7 +19,6 @@
 
 #include <QTest>
 
-#include "tests.h"
 #include "autotype/WildcardMatcher.h"
 
 QTEST_GUILESS_MAIN(TestWildcardMatcher)
@@ -56,11 +55,17 @@ void TestWildcardMatcher::testMatcher()
 
     initMatcher(text);
     verifyMatchResult(pattern, match);
+    cleanupMatcher();
 }
 
 void TestWildcardMatcher::initMatcher(QString text)
 {
     m_matcher = new WildcardMatcher(text);
+}
+
+void TestWildcardMatcher::cleanupMatcher()
+{
+    delete m_matcher;
 }
 
 void TestWildcardMatcher::verifyMatchResult(QString pattern, bool expected)
