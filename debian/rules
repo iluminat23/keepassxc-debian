@@ -4,6 +4,7 @@
 include /usr/share/dpkg/architecture.mk
 
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+export LC_ALL := C.UTF-8
 
 %:
 	dh $@ --parallel

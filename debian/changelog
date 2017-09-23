@@ -1,8 +1,20 @@
 keepassxc (2.2.0-1) unstable; urgency=medium
 
-  * Initial upstream version 2.2.0 (Closes: #855173)
+  * Initial KeePassXC upstream version 2.2.0 (Closes: #855173)
+  * Packaging changes since keepassx 2.0.3-1:
+    - debian: Switch to keepassxc and Qt5
+    - Enable HTTP and YubiKey features
+    - desktop_file_comment.patch: Refresh using gbp pq
+    - Bump Standards-Version and use debhelper 10
+    - debian/control: Update maintainer
+    - Use system zxcvbn.
+      Thanks to Gianfranco Costamagna for providing the patch
+    - Depend on libqt5x11extras5-dev
+    - Turn on hardening
+    - debian/copyright: Update
+    - export LC_ALL=C.UTF-8 in debian/rules
 
- -- Julian Andres Klode <jak@debian.org>  Sat, 23 Sep 2017 20:37:28 +0200
+ -- Julian Andres Klode <jak@debian.org>  Sat, 23 Sep 2017 21:17:51 +0200
 
 keepassx (2.0.3-1) unstable; urgency=medium
 
