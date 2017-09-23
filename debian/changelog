@@ -1,8 +1,8 @@
 keepassxc (2.2.0-1) unstable; urgency=medium
 
-  * Initial upstream version 2.2.0
+  * Initial upstream version 2.2.0 (Closes: #855173)
 
- -- Julian Andres Klode <jak@debian.org>  Wed, 28 Jun 2017 08:44:11 +0200
+ -- Julian Andres Klode <jak@debian.org>  Sat, 23 Sep 2017 20:37:28 +0200
 
 keepassx (2.0.3-1) unstable; urgency=medium
 
