@@ -1,10 +1,10 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: KeePassX
+Upstream-Name: KeePassXC
 Source: https://www.keepassxc.org/
 
 Files: *
-Copyright: 2010-2012, Felix Geyer <debfx@fobos.de>
-           2011-2012, Florian Geyer <blueice@fobos.de>
+Copyright: 2010-2015, Felix Geyer <debfx@fobos.de>
+           2011-2015, Florian Geyer <blueice@fobos.de>
            2012, Tobias Tangemann
            2007, Trolltech ASA <info@trolltech.com>
            2012, Intel Corporation
@@ -12,6 +12,17 @@ Copyright: 2010-2012, Felix Geyer <debfx@fobos.de>
            2000-2008, Tom Sato <VEF00200@nifty.ne.jp>
            2013, Laszlo Papp <lpapp@kde.org>
            2013, David Faure <faure@kde.org>
+           2014, Kyle Manna <kyle@kylemanna.com>
+           2017, KeePassXC Team <team@keepassxc.org>
+           2015-2016, Enrico Mariotti <enricomariotti@yahoo.it>
+           2017, Vladimir Svyatski <v.unreal@gmail.com>
+           2016, Danny Su <contact@dannysu.com>
+           2017, Weslly Honorato <weslly@protonmail.com>
+           2016-2017, Lennart Glauer <mail@lennart-glauer.de>
+           2015, Pedro Alves <devel@pgalves.com>
+           2012, Tobias Tangemann
+           2016, Jonathan White <support@dmapps.us>
+           2013, Francois Ferrand
 License: GPL-2 or GPL-3
 
 Files: cmake/GNUInstallDirs.cmake
@@ -21,17 +32,24 @@ License: BSD-3-clause
 
 Files: share/icons/application/*/apps/keepassxc.png
        share/icons/application/scalable/apps/keepassxc.svgz
-Copyright: 2006, Otto Salminen
-           2009, Miguelito Vieira
-           2011-2013, Felix Geyer <debfx@fobos.de>
-           2012, Tobias Tangemann <tobiastangemann@gmail.com>
-License: GPL-2
+       share/icons/application/*/apps/keepassxc-dark.png
+       share/icons/application/scalable/apps/keepassxc-dark.svgz
+       share/icons/application/*/apps/keepassxc-locked.png
+       share/icons/application/scalable/apps/keepassxc-locked.svgz
+       share/icons/application/*/apps/keepassxc-unlocked.png
+       share/icons/application/scalable/apps/keepassxc-unlocked.svgz
+       share/icons/application/*/mimetypes/application-x-keepassxc.png
+       share/icons/application/scalable/mimetypes/application-x-keepassxc.svgz
+Copyright: 2016, Lorenzo Stella <lorenzo.stl@gmail.com>
+License: LGPL-2
 
 Files: share/icons/application/*/actions/auto-type.png
        share/icons/application/*/actions/database-change-key.png
        share/icons/application/*/actions/entry-clone.png
        share/icons/application/*/actions/entry-edit.png
        share/icons/application/*/actions/entry-new.png
+       share/icons/application/*/actions/group-empty-trash.png
+       share/icons/application/*/actions/help-about.png
        share/icons/application/*/actions/password-generate.png
        share/icons/database/C00_Password.png
        share/icons/database/C01_Package_Network.png
@@ -117,17 +135,25 @@ Files: share/icons/application/*/actions/application-exit.png
        share/icons/application/*/actions/document-encrypt.png
        share/icons/application/*/actions/document-new.png
        share/icons/application/*/actions/document-open.png
+       share/icons/application/*/actions/document-properties.png
        share/icons/application/*/actions/document-save.png
        share/icons/application/*/actions/document-save-as.png
        share/icons/application/*/actions/edit-clear-locationbar-ltr.png
        share/icons/application/*/actions/edit-clear-locationbar-rtl.png
+       share/icons/application/*/actions/key-enter.png
+       share/icons/application/*/actions/password-generator.png
        share/icons/application/*/actions/password-copy.png
        share/icons/application/*/actions/password-show-*.png
        share/icons/application/*/actions/system-search.png
        share/icons/application/*/actions/username-copy.png
+       share/icons/application/*/actions/view-history.png
+       share/icons/application/*/apps/internet-web-browser.png
+       share/icons/application/*/apps/preferences-desktop-icons.png
+       share/icons/application/*/categories/preferences-other.png
        share/icons/application/*/status/dialog-error.png
        share/icons/application/*/status/dialog-information.png
        share/icons/application/*/status/dialog-warning.png
+       share/icons/application/*/status/security-high.png
        share/icons/svg/*.svgz
 Copyright: 2007, Nuno Pinheiro <nuno@oxygen-icons.org>
            2007, David Vignoni <david@icon-king.com>
@@ -169,11 +195,58 @@ Files: src/streams/qtiocompressor.*
        src/streams/QtIOCompressor
        tests/modeltest.*
 Copyright: 2009-2012, Nokia Corporation and/or its subsidiary(-ies)
+           Copyright (C) 2015 The Qt Company Ltd.
 License: LGPL-2.1 or GPL-3
+
+Files: cmake/CodeCoverage.cmake
+Copyright: 2012 - 2015, Lars Bilke
+License: BSD-3-clause-CopyrightHolders
+
+Files: cmake/GenerateProductVersion.cmake
+Copyright: 2015, by [halex2005](mailto:akharlov@gmail.com)
+License: Expat
 
 Files: cmake/GetGitRevisionDescription.cmake*
 Copyright: 2009-2010, Iowa State University
 License: Boost-1.0
+
+Files: src/zxcvbn/*
+Copyright: 2015, Tony Evans
+License: BSD-3-clause-CopyrightHolders
+
+Files: src/http/qhttp/*
+Copyright: 2014-2016, Amir Zamani
+License: Expat
+
+Files: src/http/qhttp/http-parser/*
+Copyright: 2002-2013, Igor Sysoev
+           2011-2013, Nginx, Inc.
+           Joyent, Inc. and other Node contributor
+License: Expat and BSD-2-Clause
+Comment:
+ The original header of the nginx file started with:
+ /* 
+  * Copyright (C) 2002-2013 Igor Sysoev
+  * Copyright (C) 2011-2013 Nginx, Inc.
+  * All rights reserved.
+ before the BSD-2-Clause license. This was apparently wrongfully removed at some
+ point, probably by Node.js contributors. By listing the copyright statements
+ here, we still retain them (albeit in a different file)
+
+Files: src/http/qhttp/http-parser/http_parser.h
+Copyright: Joyent, Inc. and other Node contributor
+License: Expat
+
+Files: src/gui/KMessageWidget.*
+Copyright: 2011, Aurélien Gâteau <agateau@kde.org>
+           2014, Dominik Haumann <dhaumann@kde.org>
+License: LGPL-2.1+
+
+Files: src/totp/base32.*
+Copyright: 2010, Google Inc.
+           2017, KeePassXC team <team@keepassxc.org>
+License: Apache-2.0
+
 
 License: GPL-2
  This program is free software; you can redistribute it
@@ -252,6 +325,9 @@ License: LGPL-2.1
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ .
+ On Debian systems, the full text of the license can be found in the file
+ `/usr/share/common-licenses/LGPL-2.1'.
 
 License: LGPL-3+
  This library is free software; you can redistribute it and/or
@@ -423,3 +499,104 @@ License: Boost-1.0
  FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
+
+License: BSD-3-clause-CopyrightHolders
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+ .
+ 1. Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+ .
+ 3. Neither the name of the copyright holder nor the names of its contributors
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ 02110-1301  USA
+ .
+ On Debian systems, the full text of the license can be found in the file
+ `/usr/share/common-licenses/LGPL-2.1'.
+ 
+License: Apache-2.0
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ .
+      http://www.apache.org/licenses/LICENSE-2.0
+ .
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ .
+ On Debian systems, the full text of the license can be found in the file
+ `/usr/share/common-licenses/Apache-2.0'.
+
+License: BSD-2-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
