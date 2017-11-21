@@ -11,7 +11,7 @@ Subject: Add code to detect a system library for zxcvbn,
  4 files changed, 14 insertions(+), 6 deletions(-)
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7916855..9f25e20 100644
+index 5255186..19635a3 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -27,6 +27,16 @@ if (NOT GIT_HEAD OR NOT GIT_DESCRIBE)
