@@ -22,7 +22,7 @@ endif()
 
 project(KeePassXC)
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1.0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -49,8 +49,20 @@ set(CMAKE_AUTOUIC ON)
 
 set(KEEPASSXC_VERSION_MAJOR "2")
 set(KEEPASSXC_VERSION_MINOR "2")
-set(KEEPASSXC_VERSION_PATCH "0")
+set(KEEPASSXC_VERSION_PATCH "2")
 set(KEEPASSXC_VERSION "${KEEPASSXC_VERSION_MAJOR}.${KEEPASSXC_VERSION_MINOR}.${KEEPASSXC_VERSION_PATCH}")
+
+# Distribution info
+set(KEEPASSXC_DIST True)
+set(KEEPASSXC_DIST_TYPE "Other" CACHE STRING "KeePassXC Distribution type")
+set_property(CACHE KEEPASSXC_DIST_TYPE PROPERTY STRINGS Snap AppImage Other)
+if(KEEPASSXC_DIST_TYPE STREQUAL "Snap")
+  set(KEEPASSXC_DIST_SNAP True)
+elseif(KEEPASSXC_DIST_TYPE STREQUAL "AppImage")
+  set(KEEPASSXC_DIST_APPIMAGE True)
+elseif(KEEPASSXC_DIST_TYPE STREQUAL "Other")
+  unset(KEEPASSXC_DIST)
+endif()
 
 if("${CMAKE_C_COMPILER}" MATCHES "clang$" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_COMPILER_IS_CLANG 1)
@@ -224,6 +236,8 @@ find_package(LibGPGError REQUIRED)
 find_package(Gcrypt 1.6.0 REQUIRED)
 
 find_package(ZLIB REQUIRED)
+
+set(CMAKE_REQUIRED_INCLUDES ${ZLIB_INCLUDE_DIR})
 
 check_cxx_source_compiles("
   #include <zlib.h>
