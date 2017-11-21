@@ -5,6 +5,7 @@ Maintainer: Julian Andres Klode <jak@debian.org>
 Build-Depends: debhelper (>= 10),
                cmake,
                qtbase5-dev,
+               qttools5-dev,
                qttools5-dev-tools,
                libgcrypt20-dev,
                zlib1g-dev,
