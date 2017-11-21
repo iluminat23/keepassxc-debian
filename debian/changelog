@@ -1,3 +1,12 @@
+keepassxc (2.2.2-1) unstable; urgency=medium
+
+  * New upstream version 2.2.2
+  * Add missing dependency on qttools5-dev (Closes: #882306)
+  * Drop desktop_file_comment.patch and rebase others
+  * Bump Standards-Version to 4.1.1
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 21 Nov 2017 11:12:12 +0100
+
 keepassxc (2.2.0-1) unstable; urgency=medium
 
   * Initial KeePassXC upstream version 2.2.0 (Closes: #855173)
