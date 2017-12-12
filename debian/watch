@@ -1,4 +1,6 @@
 version=3
 opts=pgpsigurlmangle=s/$/.sig/,\
-dversionmangle=s/\+dfsg\.\d$//,repacksuffix=+dfsg.1" \
-  https://www.keepassx.org/releases/([\d\.]+)/keepassx-([\d\.]+).tar.gz
+filenamemangle=s%(.*)keepassxc-(.*)-src.tar.xz%keepassxc-$2.tar.xz%,\
+dversionmangle=s/\+dfsg\.\d$//,repacksuffix=+dfsg.1 \
+  https://github.com/keepassxreboot/keepassxc/releases \
+  (?:.*?/)keepassxc-(\d[\d.]*)-src\.tar\.xz debian uupdate
