@@ -1,3 +1,14 @@
+keepassxc (2.2.3+dfsg.1-1) unstable; urgency=medium
+
+  * Repack upstream tarball to remove src/zxcvbn.
+    The file src/zxcvbn/dict-src.h has no source code, and the embedded
+    copy is unused anway.
+  * Update watch and signing-key to point to KeePassXC
+  * New upstream version 2.2.3+dfsg.1
+    - Fixes 16x16 message-close icon
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 12 Dec 2017 13:07:49 +0100
+
 keepassxc (2.2.2-1) unstable; urgency=medium
 
   * New upstream version 2.2.2
