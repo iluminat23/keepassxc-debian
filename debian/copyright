@@ -1,6 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: KeePassXC
 Source: https://www.keepassxc.org/
+Files-Excluded: src/zxcvbn
 
 Files: *
 Copyright: 2010-2015, Felix Geyer <debfx@fobos.de>

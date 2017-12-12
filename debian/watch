@@ -1,3 +1,4 @@
 version=3
-opts=pgpsigurlmangle=s/$/.sig/ \
+opts=pgpsigurlmangle=s/$/.sig/,\
+dversionmangle=s/\+dfsg\.\d$//,repacksuffix=+dfsg.1" \
   https://www.keepassx.org/releases/([\d\.]+)/keepassx-([\d\.]+).tar.gz
