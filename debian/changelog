@@ -1,3 +1,11 @@
+keepassxc (2.2.4+dfsg.1-1) unstable; urgency=medium
+
+  * debian/watch: Drop uupdate
+  * New upstream version 2.2.4+dfsg.1
+    - Fixes AppStream metadata
+
+ -- Julian Andres Klode <jak@debian.org>  Fri, 15 Dec 2017 13:19:23 +0100
+
 keepassxc (2.2.3+dfsg.1-1) unstable; urgency=medium
 
   * Repack upstream tarball to remove src/zxcvbn.
