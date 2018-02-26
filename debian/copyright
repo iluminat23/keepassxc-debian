@@ -226,7 +226,7 @@ Copyright: 2002-2013, Igor Sysoev
 License: Expat and BSD-2-Clause
 Comment:
  The original header of the nginx file started with:
- /* 
+ /*
   * Copyright (C) 2002-2013 Igor Sysoev
   * Copyright (C) 2011-2013 Nginx, Inc.
   * All rights reserved.
@@ -581,7 +581,7 @@ License: LGPL-2.1+
  .
  On Debian systems, the full text of the license can be found in the file
  `/usr/share/common-licenses/LGPL-2.1'.
- 
+
 License: Apache-2.0
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
