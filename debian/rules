@@ -13,9 +13,7 @@ override_dh_auto_configure:
 	if [ -e src/zxcvbn/ ]; then rm -r src/zxcvbn/ ; fi
 	dh_auto_configure --  -DWITH_TESTS=ON \
 	                      -DWITH_GUI_TESTS=ON \
-	                      -DWITH_XC_AUTOTYPE=ON \
-	                      -DWITH_XC_HTTP=ON \
-	                      -DWITH_XC_YUBIKEY=ON
+	                      -DWITH_XC_ALL=ON
 
 override_dh_auto_test:
 	dh_auto_test -- ARGS+="-E testgui"
