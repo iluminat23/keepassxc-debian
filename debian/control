@@ -5,6 +5,7 @@ Maintainer: Julian Andres Klode <jak@debian.org>
 Build-Depends: cmake,
                debhelper (>= 10),
                libargon2-0-dev,
+               libcurl4-gnutls-dev,
                libgcrypt20-dev,
                libmicrohttpd-dev,
                libqt5x11extras5-dev,
