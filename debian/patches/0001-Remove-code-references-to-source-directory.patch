@@ -1,0 +1,35 @@
+From: Julian Andres Klode <jak@debian.org>
+Date: Thu, 30 Aug 2018 21:32:27 +0200
+Subject: Remove code references to source directory
+
+Bug-Debian: https://bugs.debian.org/890486
+Forwarded: not-needed
+---
+ src/core/FilePath.cpp | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/src/core/FilePath.cpp b/src/core/FilePath.cpp
+index c6f1907..26c56c3 100644
+--- a/src/core/FilePath.cpp
++++ b/src/core/FilePath.cpp
+@@ -223,10 +223,6 @@ FilePath::FilePath()
+ 
+     if (false) {
+     }
+-#ifdef QT_DEBUG
+-    else if (testSetDir(QString(KEEPASSX_SOURCE_DIR) + "/share")) {
+-    }
+-#endif
+ #if defined(Q_OS_UNIX) && !(defined(Q_OS_MAC) && defined(WITH_APP_BUNDLE))
+     else if (isDataDirAbsolute && testSetDir(KEEPASSX_DATA_DIR)) {
+     }
+@@ -243,9 +239,6 @@ FilePath::FilePath()
+     else if (testSetDir(appDirPath + "/share")) {
+     }
+ #endif
+-    // Last ditch test when running in the build directory (mainly for travis tests)
+-    else if (testSetDir(QString(KEEPASSX_SOURCE_DIR) + "/share")) {
+-    }
+ 
+     if (m_dataPath.isEmpty()) {
+         qWarning("FilePath::DataPath: can't find data dir");
