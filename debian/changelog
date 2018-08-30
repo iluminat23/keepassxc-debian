@@ -1,3 +1,12 @@
+keepassxc (2.3.4+dfsg.1-1) unstable; urgency=medium
+
+  * New upstream version 2.3.4+dfsg.1 (Closes: #898979)
+    - fix missing include for Qt 5.11 (Closes: #906659)
+  * Remove code references to source directory.
+    Thanks to Chris Lamb for initial patch (Closes: #890486)
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 30 Aug 2018 21:36:31 +0200
+
 keepassxc (2.3.1+dfsg.1-1) unstable; urgency=medium
 
   * New upstream version 2.3.1
