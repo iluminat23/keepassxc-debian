@@ -1,6 +1,7 @@
 keepassxc (2.3.4+dfsg.1-2) UNRELEASED; urgency=medium
 
   * d/copyright: Use https protocol in Format field
+  * d/changelog: Remove trailing whitespaces
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 10:16:08 +0200
 
@@ -205,10 +206,10 @@ keepassx (0.3.4-1) experimental; urgency=low
 
 keepassx (0.3.3-1) experimental; urgency=low
 
-  * new upstream release. Closes: #492423 
+  * new upstream release. Closes: #492423
   * add Vcs-Bzr header.
   * build and install translations. Closes: #475073
-  * add galician translation. Thanks to damufo <damufo@gmail.com> 
+  * add galician translation. Thanks to damufo <damufo@gmail.com>
     Closes: #499097
   * install files using dh_install instead of 'cp'
   * no longer install our own .desktop file, the one provided by upstream
@@ -220,7 +221,7 @@ keepassx (0.3.3-1) experimental; urgency=low
 
 keepassx (0.3.3-0ubuntu1) intrepid; urgency=low
 
-  * New upstream release (LP: #250299). 
+  * New upstream release (LP: #250299).
 
  -- Nick Ellery <nick.ellery@ubuntu.com>  Fri, 26 Sep 2008 16:48:37 -0700
 
