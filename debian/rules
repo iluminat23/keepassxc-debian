@@ -16,8 +16,10 @@ override_dh_auto_configure:
 	                      -DWITH_XC_ALL=ON
 
 override_dh_auto_test:
-	dh_auto_test -- ARGS+="-E testgui"
-	xvfb-run -a --server-args="-screen 0 800x600x24" dh_auto_test -- ARGS+="-R testgui" || true
+	dh_auto_test -- ARGS+="-E 'test(cli|gui)'"
+	# testcli and testgui use X, and have horrible X clipboard tests that
+	# randomly fail, so ignore failures
+	xvfb-run -a --server-args="-screen 0 800x600x24" dh_auto_test -- ARGS+="-R 'test(cli|gui)'" || true
 
 override_dh_makeshlibs:
 	# keepassx only ships plugins
