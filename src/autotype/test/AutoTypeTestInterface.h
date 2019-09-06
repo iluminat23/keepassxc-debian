@@ -23,7 +23,10 @@
 class AutoTypeTestInterface
 {
 public:
-    virtual ~AutoTypeTestInterface() {}
+    virtual ~AutoTypeTestInterface()
+    {
+    }
+    virtual void triggerGlobalAutoType() = 0;
     virtual void setActiveWindowTitle(const QString& title) = 0;
 
     virtual QString actionChars() = 0;

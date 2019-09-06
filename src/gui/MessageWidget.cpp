@@ -18,11 +18,12 @@
 
 #include "MessageWidget.h"
 
-#include <QTimer>
 #include <QDesktopServices>
+#include <QTimer>
 #include <QUrl>
 
 const int MessageWidget::DefaultAutoHideTimeout = 6000;
+const int MessageWidget::LongAutoHideTimeout = 15000;
 const int MessageWidget::DisableAutoHide = -1;
 
 MessageWidget::MessageWidget(QWidget* parent)
@@ -45,7 +46,7 @@ void MessageWidget::showMessage(const QString& text, MessageWidget::MessageType 
     showMessage(text, type, m_autoHideTimeout);
 }
 
-void MessageWidget::showMessage(const QString &text, KMessageWidget::MessageType type, int autoHideTimeout)
+void MessageWidget::showMessage(const QString& text, KMessageWidget::MessageType type, int autoHideTimeout)
 {
     setMessageType(type);
     setText(text);

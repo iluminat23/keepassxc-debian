@@ -19,15 +19,17 @@
 #ifndef KEEPASSX_EDITENTRYWIDGET_H
 #define KEEPASSX_EDITENTRYWIDGET_H
 
-#include <QModelIndex>
-#include <QScopedPointer>
 #include <QButtonGroup>
+#include <QModelIndex>
+#include <QPointer>
+#include <QScopedPointer>
 
-#include "gui/EditWidget.h"
 #include "config-keepassx.h"
+#include "gui/EditWidget.h"
 
 class AutoTypeAssociations;
 class AutoTypeAssociationsModel;
+class CustomData;
 class Database;
 class EditWidgetIcons;
 class EditWidgetProperties;
@@ -38,20 +40,20 @@ class EntryHistoryModel;
 class QButtonGroup;
 class QMenu;
 class QSortFilterProxyModel;
-class QStackedLayout;
 #ifdef WITH_XC_SSHAGENT
 #include "sshagent/KeeAgentSettings.h"
 class OpenSSHKey;
 #endif
 
-namespace Ui {
+namespace Ui
+{
     class EditEntryWidgetAdvanced;
     class EditEntryWidgetAutoType;
     class EditEntryWidgetSSHAgent;
     class EditEntryWidgetMain;
     class EditEntryWidgetHistory;
     class EditWidget;
-}
+} // namespace Ui
 
 class EditEntryWidget : public EditWidget
 {
@@ -59,15 +61,13 @@ class EditEntryWidget : public EditWidget
 
 public:
     explicit EditEntryWidget(QWidget* parent = nullptr);
-    ~EditEntryWidget();
+    ~EditEntryWidget() override;
 
-    void loadEntry(Entry* entry, bool create, bool history, const QString& parentName,
-                   Database* database);
+    void
+    loadEntry(Entry* entry, bool create, bool history, const QString& parentName, QSharedPointer<Database> database);
 
-    void createPresetsMenu(QMenu* expirePresetsMenu);
     QString entryTitle() const;
     void clear();
-    bool hasBeenModified() const;
 
 signals:
     void editFinished(bool accepted);
@@ -79,6 +79,9 @@ private slots:
     void cancel();
     void togglePasswordGeneratorButton(bool checked);
     void setGeneratedPassword(const QString& password);
+#ifdef WITH_XC_NETWORKING
+    void updateFaviconButtonEnable(const QString& url);
+#endif
     void insertAttribute();
     void editCurrentAttribute();
     void removeCurrentAttribute();
@@ -86,6 +89,7 @@ private slots:
     void protectCurrentAttribute(bool state);
     void revealCurrentAttribute();
     void updateAutoTypeEnabled();
+    void openAutotypeHelp();
     void insertAutoTypeAssoc();
     void removeAutoTypeAssoc();
     void loadCurrentAssoc(const QModelIndex& current);
@@ -123,10 +127,11 @@ private:
 #endif
     void setupProperties();
     void setupHistory();
+    void setupEntryUpdate();
     void setupColorButton(bool foreground, const QColor& color);
 
     bool passwordsEqual();
-    void setForms(const Entry* entry, bool restore = false);
+    void setForms(Entry* entry, bool restore = false);
     QMenu* createPresetsMenu();
     void updateEntryData(Entry* entry) const;
 #ifdef WITH_XC_SSHAGENT
@@ -136,12 +141,11 @@ private:
 
     void displayAttribute(QModelIndex index, bool showProtected);
 
-    Entry* m_entry;
-    Database* m_database;
+    QPointer<Entry> m_entry;
+    QSharedPointer<Database> m_db;
 
     bool m_create;
     bool m_history;
-    bool m_saved;
 #ifdef WITH_XC_SSHAGENT
     bool m_sshAgentEnabled;
     KeeAgentSettings m_sshAgentSettings;
@@ -151,11 +155,15 @@ private:
     const QScopedPointer<Ui::EditEntryWidgetAutoType> m_autoTypeUi;
     const QScopedPointer<Ui::EditEntryWidgetSSHAgent> m_sshAgentUi;
     const QScopedPointer<Ui::EditEntryWidgetHistory> m_historyUi;
+    const QScopedPointer<CustomData> m_customData;
+
     QWidget* const m_mainWidget;
     QWidget* const m_advancedWidget;
     EditWidgetIcons* const m_iconsWidget;
     QWidget* const m_autoTypeWidget;
+#ifdef WITH_XC_SSHAGENT
     QWidget* const m_sshAgentWidget;
+#endif
     EditWidgetProperties* const m_editWidgetProperties;
     QWidget* const m_historyWidget;
     EntryAttributes* const m_entryAttributes;

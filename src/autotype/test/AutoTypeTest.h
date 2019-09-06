@@ -20,13 +20,11 @@
 
 #include <QtPlugin>
 
-#include "autotype/AutoTypePlatformPlugin.h"
 #include "autotype/AutoTypeAction.h"
+#include "autotype/AutoTypePlatformPlugin.h"
 #include "autotype/test/AutoTypeTestInterface.h"
 
-class AutoTypePlatformTest : public QObject,
-                             public AutoTypePlatformInterface,
-                             public AutoTypeTestInterface
+class AutoTypePlatformTest : public QObject, public AutoTypePlatformInterface, public AutoTypeTestInterface
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.keepassx.AutoTypePlatformInterface")
@@ -45,11 +43,12 @@ public:
     bool raiseWindow(WId window) override;
     AutoTypeExecutor* createExecutor() override;
 
-#if defined(Q_OS_MAC)
-    bool raiseLastActiveWindow() override;
+#if defined(Q_OS_MACOS)
+    bool hideOwnWindow() override;
     bool raiseOwnWindow() override;
 #endif
 
+    void triggerGlobalAutoType() override;
     void setActiveWindowTitle(const QString& title) override;
 
     QString actionChars() override;

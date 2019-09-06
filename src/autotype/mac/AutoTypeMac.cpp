@@ -17,6 +17,7 @@
  */
 
 #include "AutoTypeMac.h"
+#include "gui/macutils/MacUtils.h"
 
 #include <ApplicationServices/ApplicationServices.h>
 
@@ -25,8 +26,7 @@
 #define INVALID_KEYCODE 0xFFFF
 
 AutoTypePlatformMac::AutoTypePlatformMac()
-    : m_appkit(new AppKit())
-    , m_hotkeyRef(nullptr)
+    : m_hotkeyRef(nullptr)
     , m_hotkeyId({ 'kpx2', HOTKEY_ID })
 {
     EventTypeSpec eventSpec;
@@ -79,7 +79,7 @@ QStringList AutoTypePlatformMac::windowTitles()
 //
 WId AutoTypePlatformMac::activeWindow()
 {
-    return m_appkit->activeProcessId();
+    return macUtils()->activeWindow();
 }
 
 //
@@ -159,15 +159,15 @@ AutoTypeExecutor* AutoTypePlatformMac::createExecutor()
 //
 bool AutoTypePlatformMac::raiseWindow(WId pid)
 {
-    return m_appkit->activateProcess(pid);
+    return macUtils()->raiseWindow(pid);
 }
 
 //
 // Activate last active window
 //
-bool AutoTypePlatformMac::raiseLastActiveWindow()
+bool AutoTypePlatformMac::hideOwnWindow()
 {
-    return m_appkit->activateProcess(m_appkit->lastActiveProcessId());
+    return macUtils()->hideOwnWindow();
 }
 
 //
@@ -175,7 +175,7 @@ bool AutoTypePlatformMac::raiseLastActiveWindow()
 //
 bool AutoTypePlatformMac::raiseOwnWindow()
 {
-    return m_appkit->activateProcess(m_appkit->ownProcessId());
+    return macUtils()->raiseOwnWindow();
 }
 
 //

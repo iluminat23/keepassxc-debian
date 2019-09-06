@@ -22,8 +22,8 @@
 #include <QDir>
 #include <QLibraryInfo>
 #include <QLocale>
-#include <QTranslator>
 #include <QRegularExpression>
+#include <QTranslator>
 
 #include "config-keepassx.h"
 #include "core/Config.h"
@@ -34,29 +34,30 @@
  */
 void Translator::installTranslators()
 {
+    QLocale locale;
     QString language = config()->get("GUI/Language").toString();
-    if (language == "system" || language.isEmpty()) {
-        language = QLocale::system().name();
-    }
-    if (language == "en") {
+    if (!language.isEmpty() && language != "system") {
         // use actual English translation instead of the English locale source language
-        language = "en_US";
+        if (language == "en") {
+            language = "en_US";
+        }
+        locale = QLocale(language);
     }
 
     const QStringList paths = {
 #ifdef QT_DEBUG
         QString("%1/share/translations").arg(KEEPASSX_BINARY_DIR),
 #endif
-        filePath()->dataPath("translations")
-    };
+        filePath()->dataPath("translations")};
 
     bool translationsLoaded = false;
     for (const QString& path : paths) {
-        translationsLoaded |= installTranslator(language, path) || installTranslator("en_US", path);
+        translationsLoaded |= installTranslator(locale, path) || installTranslator(QLocale("en_US"), path);
         if (!installQtTranslator(language, path)) {
-            installQtTranslator("en", path);
+            installQtTranslator(QLocale("en"), path);
         }
     }
+
     if (!translationsLoaded) {
         // couldn't load configured language or fallback
         qWarning("Couldn't load translations.");
@@ -72,10 +73,9 @@ QList<QPair<QString, QString>> Translator::availableLanguages()
 #ifdef QT_DEBUG
         QString("%1/share/translations").arg(KEEPASSX_BINARY_DIR),
 #endif
-        filePath()->dataPath("translations")
-    };
+        filePath()->dataPath("translations")};
 
-    QList<QPair<QString, QString> > languages;
+    QList<QPair<QString, QString>> languages;
     languages.append(QPair<QString, QString>("system", "System default"));
 
     QRegularExpression regExp("^keepassx_([a-zA-Z_]+)\\.qm$", QRegularExpression::CaseInsensitiveOption);
@@ -116,10 +116,10 @@ QList<QPair<QString, QString>> Translator::availableLanguages()
  * @param path local search path
  * @return true on success
  */
-bool Translator::installTranslator(const QString& language, const QString& path)
+bool Translator::installTranslator(const QLocale& locale, const QString& path)
 {
     QScopedPointer<QTranslator> translator(new QTranslator(qApp));
-    if (translator->load(QString("keepassx_%1").arg(language), path)) {
+    if (translator->load(locale, "keepassx_", "", path)) {
         return QCoreApplication::installTranslator(translator.take());
     }
     return false;
@@ -133,12 +133,12 @@ bool Translator::installTranslator(const QString& language, const QString& path)
  * @param path local search path
  * @return true on success
  */
-bool Translator::installQtTranslator(const QString& language, const QString& path)
+bool Translator::installQtTranslator(const QLocale& locale, const QString& path)
 {
     QScopedPointer<QTranslator> qtTranslator(new QTranslator(qApp));
-    if (qtTranslator->load(QString("qtbase_%1").arg(language), path)) {
+    if (qtTranslator->load(locale, "qtbase_", "", path)) {
         return QCoreApplication::installTranslator(qtTranslator.take());
-    } else if (qtTranslator->load(QString("qtbase_%1").arg(language), QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+    } else if (qtTranslator->load(locale, "qtbase_", "", QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
         return QCoreApplication::installTranslator(qtTranslator.take());
     }
     return false;
