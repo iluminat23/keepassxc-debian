@@ -9,10 +9,10 @@ Forwarded: not-needed
  1 file changed, 7 deletions(-)
 
 diff --git a/src/core/FilePath.cpp b/src/core/FilePath.cpp
-index c6f1907..26c56c3 100644
+index 5b03227..e62d196 100644
 --- a/src/core/FilePath.cpp
 +++ b/src/core/FilePath.cpp
-@@ -223,10 +223,6 @@ FilePath::FilePath()
+@@ -219,10 +219,6 @@ FilePath::FilePath()
  
      if (false) {
      }
@@ -20,10 +20,10 @@ index c6f1907..26c56c3 100644
 -    else if (testSetDir(QString(KEEPASSX_SOURCE_DIR) + "/share")) {
 -    }
 -#endif
- #if defined(Q_OS_UNIX) && !(defined(Q_OS_MAC) && defined(WITH_APP_BUNDLE))
+ #if defined(Q_OS_UNIX) && !(defined(Q_OS_MACOS) && defined(WITH_APP_BUNDLE))
      else if (isDataDirAbsolute && testSetDir(KEEPASSX_DATA_DIR)) {
-     }
-@@ -243,9 +239,6 @@ FilePath::FilePath()
+     } else if (!isDataDirAbsolute && testSetDir(QString("%1/../%2").arg(appDirPath, KEEPASSX_DATA_DIR))) {
+@@ -237,9 +233,6 @@ FilePath::FilePath()
      else if (testSetDir(appDirPath + "/share")) {
      }
  #endif
