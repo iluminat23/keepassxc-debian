@@ -13,6 +13,7 @@ override_dh_auto_configure:
 	if [ -e src/zxcvbn/ ]; then rm -r src/zxcvbn/ ; fi
 	dh_auto_configure --  -DWITH_TESTS=ON \
 	                      -DWITH_GUI_TESTS=ON \
+	                      -DWITH_XC_UPDATECHECK=OFF \
 	                      -DWITH_XC_ALL=ON
 
 override_dh_auto_test:
