@@ -1,0 +1,48 @@
+From: Julian Andres Klode <jak@debian.org>
+Date: Fri, 6 Sep 2019 21:37:21 +0200
+Subject: tests: Adjust entropy for system-wide zxcvbn
+
+---
+ tests/gui/TestGui.cpp | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tests/gui/TestGui.cpp b/tests/gui/TestGui.cpp
+index 0db2a5d..0e70c5c 100644
+--- a/tests/gui/TestGui.cpp
++++ b/tests/gui/TestGui.cpp
+@@ -658,17 +658,17 @@ void TestGui::testPasswordEntryEntropy()
+ 
+     editNewPassword->setText("");
+     QTest::keyClicks(editNewPassword, "hello");
+-    QCOMPARE(entropyLabel->text(), QString("Entropy: 6.38 bit"));
++    QCOMPARE(entropyLabel->text(), QString("Entropy: 5.78 bit"));
+     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+ 
+     editNewPassword->setText("");
+     QTest::keyClicks(editNewPassword, "helloworld");
+-    QCOMPARE(entropyLabel->text(), QString("Entropy: 13.10 bit"));
++    QCOMPARE(entropyLabel->text(), QString("Entropy: 12.51 bit"));
+     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+ 
+     editNewPassword->setText("");
+     QTest::keyClicks(editNewPassword, "password1");
+-    QCOMPARE(entropyLabel->text(), QString("Entropy: 4.00 bit"));
++    QCOMPARE(entropyLabel->text(), QString("Entropy: 3.00 bit"));
+     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+ 
+     editNewPassword->setText("");
+@@ -678,12 +678,12 @@ void TestGui::testPasswordEntryEntropy()
+ 
+     editNewPassword->setText("");
+     QTest::keyClicks(editNewPassword, "Tr0ub4dour&3");
+-    QCOMPARE(entropyLabel->text(), QString("Entropy: 30.87 bit"));
++    QCOMPARE(entropyLabel->text(), QString("Entropy: 30.89 bit"));
+     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+ 
+     editNewPassword->setText("");
+     QTest::keyClicks(editNewPassword, "correcthorsebatterystaple");
+-    QCOMPARE(entropyLabel->text(), QString("Entropy: 47.98 bit"));
++    QCOMPARE(entropyLabel->text(), QString("Entropy: 47.43 bit"));
+     QCOMPARE(strengthLabel->text(), QString("Password Quality: Weak"));
+ 
+     editNewPassword->setText("");
