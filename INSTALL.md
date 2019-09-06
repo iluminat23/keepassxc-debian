@@ -25,9 +25,8 @@ The following libraries are required:
 * zlib
 * libmicrohttpd
 * libxi, libxtst, qtx11extras (optional for auto-type on X11)
-* libsodium (>= 1.0.12, optional for KeePassXC-Browser support)
+* libsodium (>= 1.0.12)
 * libargon2
-
 
 Prepare the Building Environment
 ================================
@@ -60,13 +59,19 @@ To update the project from within the project's folder, you can run the followin
 git pull
 ```
 
+For a stable build, it is recommended to checkout the master branch.
+
+```bash
+git checkout master
+```
+
 Navigate to the directory where you have downloaded KeePassXC and type these commands:
 
 ```
 cd directory-where-sources-live
 mkdir build
 cd build
-cmake -DWITH_TESTS=OFF ...and other options - see below...
+cmake -DWITH_XC_ALL=ON ..
 make
 ```
 
@@ -90,15 +95,28 @@ These steps place the compiled KeePassXC binary inside the `./build/src/` direct
 
 	```
 	  -DWITH_XC_AUTOTYPE=[ON|OFF] Enable/Disable Auto-Type (default: ON)
-	  -DWITH_XC_HTTP=[ON|OFF] Enable/Disable KeePassHTTP and custom icon downloads (default: OFF)
 	  -DWITH_XC_YUBIKEY=[ON|OFF] Enable/Disable YubiKey HMAC-SHA1 authentication support (default: OFF)
 	  -DWITH_XC_BROWSER=[ON|OFF] Enable/Disable KeePassXC-Browser extension support (default: OFF)
+	  -DWITH_XC_NETWORKING=[ON|OFF] Enable/Disable Networking support (e.g., favicon downloading) (default: OFF)
+	  -DWITH_XC_SSHAGENT=[ON|OFF] Enable/Disable SSHAgent support (default: OFF)
+	  -DWITH_XC_TOUCHID=[ON|OFF] (macOS Only) Enable/Disable Touch ID unlock (default:OFF)
+	  -DWITH_XC_KEESHARE=[ON|OFF] Enable/Disable KeeShare group synchronization extension (default: OFF)
+	  -DWITH_XC_KEESHARE_SECURE=[ON|OFF] Enable/Disable KeeShare signed containers, requires libquazip5 (default: OFF)
+	  -DWITH_XC_ALL=[ON|OFF] Enable/Disable compiling all plugins above (default: OFF)
+	  
+	  -DWITH_XC_UPDATECHECK=[ON|OFF] Enable/Disable automatic updating checking (requires WITH_XC_NETWORKING) (default: ON)
 
 	  -DWITH_TESTS=[ON|OFF] Enable/Disable building of unit tests (default: ON)
 	  -DWITH_GUI_TESTS=[ON|OFF] Enable/Disable building of GUI tests (default: OFF)
 	  -DWITH_DEV_BUILD=[ON|OFF] Enable/Disable deprecated method warnings (default: OFF)
 	  -DWITH_ASAN=[ON|OFF] Enable/Disable address sanitizer checks (Linux / macOS only) (default: OFF)
 	  -DWITH_COVERAGE=[ON|OFF] Enable/Disable coverage tests (GCC only) (default: OFF)
+	  -DWITH_APP_BUNDLE=[ON|OFF] Enable Application Bundle for macOS (default: ON)
+
+	  -DKEEPASSXC_BUILD_TYPE=[Snapshot|PreRelease|Release] Set the build type to show/hide stability warnings (default: "Snapshot")
+	  -DKEEPASSXC_DIST_TYPE=[Snap|AppImage|Other] Specify the distribution method (default: "Other")
+	  -DOVERRIDE_VERSION=[X.X.X] Specify a version number when building. Used with snapshot builds (default: "")
+	  -DGIT_HEAD_OVERRIDE=[XXXXXXX] Specify the 7 digit git commit ref for this build. Used with distribution builds (default: "")
 	```
 
 * If you are on MacOS you must add this parameter to **Cmake**, with the Qt version you have installed<br/> `-DCMAKE_PREFIX_PATH=/usr/local/Cellar/qt5/5.6.2/lib/cmake/`
@@ -123,10 +141,7 @@ DESTDIR=X
 Packaging
 =========
 
-You can create a package to redistribute KeePassXC (zip, deb, rpm, dmg, etc..)
-```
-make package
-```
+You can create a package to redistribute KeePassXC (zip, deb, rpm, dmg, etc..). Refer to [keepassxc-packaging](https://github.com/keepassxreboot/keepassxc-packaging)
 
 
 Testing

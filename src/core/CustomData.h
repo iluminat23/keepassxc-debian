@@ -25,7 +25,7 @@
 
 class CustomData : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit CustomData(QObject* parent = nullptr);
@@ -42,12 +42,14 @@ public:
     int size() const;
     int dataSize() const;
     void copyDataFrom(const CustomData* other);
+    QDateTime getLastModified() const;
     bool operator==(const CustomData& other) const;
     bool operator!=(const CustomData& other) const;
 
+    static const QString LastModified;
 
 signals:
-    void modified();
+    void customDataModified();
     void aboutToBeAdded(const QString& key);
     void added(const QString& key);
     void aboutToBeRemoved(const QString& key);
@@ -56,6 +58,10 @@ signals:
     void renamed(const QString& oldKey, const QString& newKey);
     void aboutToBeReset();
     void reset();
+    void lastModified();
+
+private slots:
+    void updateLastModified();
 
 private:
     QHash<QString, QString> m_data;

@@ -23,7 +23,6 @@
 #include <QtPlugin>
 #include <memory>
 
-#include "AppKit.h"
 #include "autotype/AutoTypePlatformPlugin.h"
 #include "autotype/AutoTypeAction.h"
 
@@ -45,7 +44,7 @@ public:
     bool raiseWindow(WId pid) override;
     AutoTypeExecutor* createExecutor() override;
 
-    bool raiseLastActiveWindow() override;
+    bool hideOwnWindow() override;
     bool raiseOwnWindow() override;
 
     void sendChar(const QChar& ch, bool isKeyDown);
@@ -55,7 +54,6 @@ signals:
     void globalShortcutTriggered();
 
 private:
-    std::unique_ptr<AppKit> m_appkit;
     EventHotKeyRef m_hotkeyRef;
     EventHotKeyID m_hotkeyId;
 

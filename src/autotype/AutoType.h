@@ -1,4 +1,4 @@
- /*
+/*
  *  Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
  *  Copyright (C) 2017 KeePassXC Team <team@keepassxc.org>
  *
@@ -19,10 +19,10 @@
 #ifndef KEEPASSX_AUTOTYPE_H
 #define KEEPASSX_AUTOTYPE_H
 
+#include <QMutex>
 #include <QObject>
 #include <QStringList>
 #include <QWidget>
-#include <QMutex>
 
 #include "core/AutoTypeMatch.h"
 
@@ -47,8 +47,7 @@ public:
     static bool checkSlowKeypress(const QString& string);
     static bool checkHighDelay(const QString& string);
     static bool verifyAutoTypeSyntax(const QString& sequence);
-    void performAutoType(const Entry* entry,
-                         QWidget* hideWindow = nullptr);
+    void performAutoType(const Entry* entry, QWidget* hideWindow = nullptr);
 
     inline bool isAvailable()
     {
@@ -59,22 +58,23 @@ public:
     static void createTestInstance();
 
 public slots:
-    void performGlobalAutoType(const QList<Database*>& dbList);
+    void performGlobalAutoType(const QList<QSharedPointer<Database>>& dbList);
     void raiseWindow();
 
 signals:
-    void globalShortcutTriggered();
+    void globalAutoTypeTriggered();
     void autotypePerformed();
     void autotypeRejected();
 
 private slots:
+    void startGlobalAutoType();
     void performAutoTypeFromGlobal(AutoTypeMatch match);
     void autoTypeRejectedFromGlobal();
     void unloadPlugin();
 
 private:
     explicit AutoType(QObject* parent = nullptr, bool test = false);
-    ~AutoType();
+    ~AutoType() override;
     void loadPlugin(const QString& pluginPath);
     void executeAutoTypeActions(const Entry* entry,
                                 QWidget* hideWindow = nullptr,
@@ -95,8 +95,10 @@ private:
     QPluginLoader* m_pluginLoader;
     AutoTypePlatformInterface* m_plugin;
     AutoTypeExecutor* m_executor;
-    WId m_windowFromGlobal;
     static AutoType* m_instance;
+
+    QString m_windowTitleForGlobal;
+    WId m_windowForGlobal;
 
     Q_DISABLE_COPY(AutoType)
 };

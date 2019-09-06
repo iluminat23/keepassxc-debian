@@ -20,15 +20,16 @@
 #define KEEPASSX_EDITWIDGET_H
 
 #include <QScopedPointer>
-#include <QtWidgets/QStyledItemDelegate>
 #include <QStyledItemDelegate>
+#include <QtWidgets/QStyledItemDelegate>
 
 #include "gui/DialogyWidget.h"
 #include "gui/MessageWidget.h"
 
 class QLabel;
 
-namespace Ui {
+namespace Ui
+{
     class EditWidget;
 }
 
@@ -45,8 +46,11 @@ public:
     void setCurrentPage(int index);
     void setHeadline(const QString& text);
     QLabel* headlineLabel();
-    void setReadOnly(bool readOnly, bool applyEnabled = true);
+    void setReadOnly(bool readOnly);
     bool readOnly() const;
+    void enableApplyButton(bool enabled);
+    void showApplyButton(bool state);
+    virtual bool isModified() const;
 
 signals:
     void apply();
@@ -56,12 +60,13 @@ signals:
 protected slots:
     void showMessage(const QString& text, MessageWidget::MessageType type);
     void hideMessage();
+    void setModified(bool state = true);
+    void buttonClicked(QAbstractButton* button);
 
 private:
-    void setupButtons(bool applyEnabled);
-
     const QScopedPointer<Ui::EditWidget> m_ui;
     bool m_readOnly;
+    bool m_modified;
 
     Q_DISABLE_COPY(EditWidget)
 };

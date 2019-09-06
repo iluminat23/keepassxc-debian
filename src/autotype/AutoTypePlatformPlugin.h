@@ -25,7 +25,9 @@
 class AutoTypePlatformInterface
 {
 public:
-    virtual ~AutoTypePlatformInterface() {}
+    virtual ~AutoTypePlatformInterface()
+    {
+    }
     virtual bool isAvailable() = 0;
     virtual QStringList windowTitles() = 0;
     virtual WId activeWindow() = 0;
@@ -34,12 +36,14 @@ public:
     virtual void unregisterGlobalShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers) = 0;
     virtual int platformEventFilter(void* event) = 0;
     virtual bool raiseWindow(WId window) = 0;
-    virtual void unload() {}
+    virtual void unload()
+    {
+    }
 
     virtual AutoTypeExecutor* createExecutor() = 0;
 
-#if defined(Q_OS_MAC)
-    virtual bool raiseLastActiveWindow() = 0;
+#if defined(Q_OS_MACOS)
+    virtual bool hideOwnWindow() = 0;
     virtual bool raiseOwnWindow() = 0;
 #endif
 
