@@ -7,7 +7,7 @@ export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 export LC_ALL := C.UTF-8
 
 %:
-	dh $@ --parallel
+	dh $@
 
 override_dh_auto_configure:
 	if [ -e src/zxcvbn/ ]; then rm -r src/zxcvbn/ ; fi
