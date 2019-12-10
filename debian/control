@@ -37,3 +37,6 @@ Description: Cross Platform Password Manager
  key-disk. So you only have to remember one single master password or
  insert the key-disk to unlock the whole database. The databases are
  encrypted using the algorithms AES or Twofish.
+ .
+ In contrast to KeePassX (package keepassx), KeePassXC is actively developed,
+ and has more features, e.g., connectivity to a Web Browser plugin.
