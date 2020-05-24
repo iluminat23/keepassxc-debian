@@ -1,0 +1,22 @@
+From: Julian Andres Klode <jak@debian.org>
+Date: Sun, 24 May 2020 14:56:15 +0200
+Subject: tests: Disable testopvaultreader, test data did not have license
+
+---
+ tests/CMakeLists.txt | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index fc27f48..bfcfee4 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -145,9 +145,6 @@ add_unit_test(NAME testdeletedobjects SOURCES TestDeletedObjects.cpp
+ add_unit_test(NAME testkeepass1reader SOURCES TestKeePass1Reader.cpp
+         LIBS ${TEST_LIBRARIES})
+ 
+-add_unit_test(NAME testopvaultreader SOURCES TestOpVaultReader.cpp
+-              LIBS ${TEST_LIBRARIES})
+-
+ add_unit_test(NAME testwildcardmatcher SOURCES TestWildcardMatcher.cpp
+         LIBS ${TEST_LIBRARIES})
+ 

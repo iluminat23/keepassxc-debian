@@ -12,10 +12,10 @@ GUI test is fine (and the CLI test upstream).
  2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/tests/TestCli.cpp b/tests/TestCli.cpp
-index 9574f6d..b650f8d 100644
+index 076f7f7..a3bb5cd 100644
 --- a/tests/TestCli.cpp
 +++ b/tests/TestCli.cpp
-@@ -589,8 +589,8 @@ void TestCli::testEstimate()
+@@ -859,8 +859,8 @@ void TestCli::testEstimate()
      out.seek(0);
      auto result = out.readAll();
      QVERIFY(result.contains("Length " + length));
@@ -27,10 +27,10 @@ index 9574f6d..b650f8d 100644
          QVERIFY2(result.contains(string), qPrintable("String " + string + " missing"));
      }
 diff --git a/tests/gui/TestGui.cpp b/tests/gui/TestGui.cpp
-index 0db2a5d..0e70c5c 100644
+index 9118d3e..d4286eb 100644
 --- a/tests/gui/TestGui.cpp
 +++ b/tests/gui/TestGui.cpp
-@@ -658,17 +658,17 @@ void TestGui::testPasswordEntryEntropy()
+@@ -662,17 +662,17 @@ void TestGui::testPasswordEntryEntropy()
  
      editNewPassword->setText("");
      QTest::keyClicks(editNewPassword, "hello");
@@ -51,7 +51,7 @@ index 0db2a5d..0e70c5c 100644
      QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
  
      editNewPassword->setText("");
-@@ -678,12 +678,12 @@ void TestGui::testPasswordEntryEntropy()
+@@ -682,12 +682,12 @@ void TestGui::testPasswordEntryEntropy()
  
      editNewPassword->setText("");
      QTest::keyClicks(editNewPassword, "Tr0ub4dour&3");

@@ -1,2 +1,3 @@
 0001-Remove-code-references-to-source-directory.patch
 0002-tests-Adjust-entropy-for-system-wide-zxcvbn.patch
+0003-tests-Disable-testopvaultreader-test-data-did-not-ha.patch
