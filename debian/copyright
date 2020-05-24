@@ -233,6 +233,15 @@ Files: share/linux/org.keepassxc.KeePassXC.appdata.xml
 Copyright: Copyright 2017 KeePassXC Team <team@keepassxc.org>
 License: CC-BY-3.0
 
+Files: share/icons/application/scalable/apps/freedesktop.svg
+License: GPL-2+
+Comment: from Freedesktop.org website
+
+Files: share/icons/application/scalable/actions/object-locked.svg
+       share/icons/application/scalable/actions/object-unlocked.svg
+License: LGPL-3
+Comment: from Breeze icon theme (https://github.com/KDE/breeze-icons)
+
 License: GPL-2
  This program is free software; you can redistribute it
  and/or modify it under the terms of the GNU General Public
