@@ -1,0 +1,26 @@
+From: Jonathan Rubenstein <jrubcop@gmail.com>
+Date: Sun, 12 Apr 2020 00:55:48 -0400
+Subject: Backport reproducibility fix from 4411
+
+---
+ src/core/FilePath.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/core/FilePath.cpp b/src/core/FilePath.cpp
+index e62d196..27c377b 100644
+--- a/src/core/FilePath.cpp
++++ b/src/core/FilePath.cpp
+@@ -234,6 +234,13 @@ FilePath::FilePath()
+     }
+ #endif
+ 
++    if (m_dataPath.isEmpty()) {
++        // Last ditch check if we are running from inside the src or test build directory
++        testSetDir(appDirPath + QStringLiteral("/../../share"))
++            || testSetDir(appDirPath + QStringLiteral("/../share"))
++            || testSetDir(appDirPath + QStringLiteral("/../../../share"));
++    }
++
+     if (m_dataPath.isEmpty()) {
+         qWarning("FilePath::DataPath: can't find data dir");
+     } else {
