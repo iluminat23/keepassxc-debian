@@ -27,8 +27,16 @@ string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+# Use the Compiler Cache (ccache) if it is installed
+# (install with: sudo apt get ccache)
+find_program (CCACHE_FOUND ccache)
+if (CCACHE_FOUND)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+endif (CCACHE_FOUND)
+
 # Support Visual Studio Code
 include(CMakeToolsHelpers OPTIONAL)
+include(FeatureSummary)
 
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
@@ -50,6 +58,9 @@ option(WITH_XC_YUBIKEY "Include YubiKey support." OFF)
 option(WITH_XC_SSHAGENT "Include SSH agent support." OFF)
 option(WITH_XC_KEESHARE "Sharing integration with KeeShare (requires quazip5 for secure containers)" OFF)
 option(WITH_XC_UPDATECHECK "Include automatic update checks; disable for controlled distributions" ON)
+if(UNIX AND NOT APPLE)
+    option(WITH_XC_FDOSECRETS "Implement freedesktop.org Secret Storage Spec server side API." OFF)
+endif()
 if(APPLE)
     option(WITH_XC_TOUCHID "Include TouchID support for macOS." OFF)
 endif()
@@ -64,6 +75,9 @@ if(WITH_XC_ALL)
     set(WITH_XC_KEESHARE ON)
     if(APPLE)
         set(WITH_XC_TOUCHID ON)
+    endif()
+    if(UNIX AND NOT APPLE)
+        set(WITH_XC_FDOSECRETS ON)
     endif()
 endif()
 
@@ -80,8 +94,8 @@ if(NOT WITH_XC_NETWORKING AND WITH_XC_UPDATECHECK)
 endif()
 
 set(KEEPASSXC_VERSION_MAJOR "2")
-set(KEEPASSXC_VERSION_MINOR "4")
-set(KEEPASSXC_VERSION_PATCH "3")
+set(KEEPASSXC_VERSION_MINOR "5")
+set(KEEPASSXC_VERSION_PATCH "4")
 set(KEEPASSXC_VERSION "${KEEPASSXC_VERSION_MAJOR}.${KEEPASSXC_VERSION_MINOR}.${KEEPASSXC_VERSION_PATCH}")
 set(OVERRIDE_VERSION "" CACHE STRING "Override the KeePassXC Version for Snapshot builds")
 
@@ -160,15 +174,16 @@ if("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
     set(IS_32BIT TRUE)
 endif()
 
+set(CLANG_COMPILER_ID_REGEX "^(Apple)?[Cc]lang$")
 if("${CMAKE_C_COMPILER}" MATCHES "clang$"
         OR "${CMAKE_EXTRA_GENERATOR_C_SYSTEM_DEFINED_MACROS}" MATCHES "__clang__"
-        OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+        OR "${CMAKE_C_COMPILER_ID}" MATCHES ${CLANG_COMPILER_ID_REGEX})
     set(CMAKE_COMPILER_IS_CLANG 1)
 endif()
 
 if("${CMAKE_CXX_COMPILER}" MATCHES "clang(\\+\\+)?$"
         OR "${CMAKE_EXTRA_GENERATOR_CXX_SYSTEM_DEFINED_MACROS}" MATCHES "__clang__"
-        OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        OR "${CMAKE_CXX_COMPILER_ID}" MATCHES ${CLANG_COMPILER_ID_REGEX})
     set(CMAKE_COMPILER_IS_CLANGXX 1)
 endif()
 
@@ -247,6 +262,15 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcast-align")
 endif()
 
+if(WITH_COVERAGE AND CMAKE_COMPILER_IS_CLANGXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
+  # then:
+  # $ llvm-profdata merge -sparse default.profraw -o default.profdata
+  # $ llvm-cov show ./tests/${the_test_binary} \
+  #      -format=html -instr-profile=default.profdata -output-dir=./coverages \
+  #      `find src -iname '*.h' -or -iname '*.cpp'`
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wcast-align")
 endif()
@@ -270,12 +294,15 @@ if((CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9.
     add_gcc_compiler_cxxflags("-fsized-deallocation")
 endif()
 
-if(APPLE)
+if(APPLE AND CMAKE_COMPILER_IS_CLANGXX)
     add_gcc_compiler_cxxflags("-stdlib=libc++")
 endif()
 
 if(WITH_DEV_BUILD)
     add_definitions(-DQT_DEPRECATED_WARNINGS -DGCRYPT_NO_DEPRECATED)
+else()
+    add_definitions(-DQT_NO_DEPRECATED_WARNINGS)
+    add_gcc_compiler_cxxflags("-Wno-deprecated-declarations")
 endif()
 
 if(MINGW)
@@ -307,12 +334,13 @@ if(MINGW)
     set(PLUGIN_INSTALL_DIR ".")
     set(DATA_INSTALL_DIR "share")
 elseif(APPLE AND WITH_APP_BUNDLE)
-    set(CMAKE_INSTALL_MANDIR "${PROGNAME}.app/Contents/Resources/man")
-    set(CLI_INSTALL_DIR "${PROGNAME}.app/Contents/MacOS")
-    set(PROXY_INSTALL_DIR "${PROGNAME}.app/Contents/MacOS")
-    set(BIN_INSTALL_DIR "${PROGNAME}.app/Contents/MacOS")
-    set(PLUGIN_INSTALL_DIR "${PROGNAME}.app/Contents/PlugIns")
-    set(DATA_INSTALL_DIR "${PROGNAME}.app/Contents/Resources")
+    set(BUNDLE_INSTALL_DIR "${PROGNAME}.app/Contents")
+    set(CMAKE_INSTALL_MANDIR "${BUNDLE_INSTALL_DIR}/Resources/man")
+    set(CLI_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/MacOS")
+    set(PROXY_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/MacOS")
+    set(BIN_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/MacOS")
+    set(PLUGIN_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/PlugIns")
+    set(DATA_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/Resources")
 else()
     include(GNUInstallDirs)
 
@@ -415,6 +443,14 @@ if(UNIX)
     int main() { prctl(PR_SET_DUMPABLE, 0); return 0; }"
             HAVE_PR_SET_DUMPABLE)
 
+    check_cxx_source_compiles("#include <malloc.h>
+    int main() { return 0; }"
+            HAVE_MALLOC_H)
+
+    check_cxx_source_compiles("#include <malloc.h>
+    int main() { malloc_usable_size(NULL, 0); return 0; }"
+            HAVE_MALLOC_USABLE_SIZE)
+
     check_cxx_source_compiles("#include <sys/resource.h>
     int main() {
       struct rlimit limit;
@@ -433,8 +469,6 @@ if(UNIX)
 endif()
 
 include_directories(SYSTEM ${GCRYPT_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
-
-include(FeatureSummary)
 
 add_subdirectory(src)
 add_subdirectory(share)

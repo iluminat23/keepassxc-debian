@@ -37,12 +37,14 @@ public:
     bool hideProcess(pid_t pid);
     bool isHidden(pid_t pid);
     bool isDarkMode();
+    bool enableAccessibility();
+    bool enableScreenRecording();
 
 signals:
     void lockDatabases();
 
 private:
-    void *self;
+    void* self;
 };
 
-#endif  // KEEPASSX_APPKIT_H
+#endif // KEEPASSX_APPKIT_H

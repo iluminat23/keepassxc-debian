@@ -61,7 +61,7 @@ private:
     static CGEventFlags qtToNativeModifiers(Qt::KeyboardModifiers modifiers, bool native);
     static int windowLayer(CFDictionaryRef window);
     static QString windowTitle(CFDictionaryRef window);
-    static OSStatus hotkeyHandler(EventHandlerCallRef nextHandler, EventRef theEvent, void *userData);
+    static OSStatus hotkeyHandler(EventHandlerCallRef nextHandler, EventRef theEvent, void* userData);
 };
 
 class AutoTypeExecutorMac : public AutoTypeExecutor

@@ -19,9 +19,9 @@
 #ifndef KEEPASSXC_MACUTILS_H
 #define KEEPASSXC_MACUTILS_H
 
+#include "AppKit.h"
 #include <QObject>
 #include <QWidget>
-#include "AppKit.h"
 
 class MacUtils : public QObject
 {
@@ -38,6 +38,8 @@ public:
     bool hideOwnWindow();
     bool isHidden();
     bool isDarkMode();
+    bool enableAccessibility();
+    bool enableScreenRecording();
 
 signals:
     void lockDatabases();

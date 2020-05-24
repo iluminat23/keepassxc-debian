@@ -18,8 +18,11 @@
 
 #include "AutoTypeMatchView.h"
 
+#include "core/Entry.h"
+#include "gui/Clipboard.h"
 #include "gui/SortFilterHideProxyModel.h"
 
+#include <QAction>
 #include <QHeaderView>
 #include <QKeyEvent>
 
@@ -32,7 +35,7 @@ AutoTypeMatchView::AutoTypeMatchView(QWidget* parent)
     m_sortModel->setDynamicSortFilter(true);
     m_sortModel->setSortLocaleAware(true);
     m_sortModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    QTreeView::setModel(m_sortModel);
+    setModel(m_sortModel);
 
     setUniformRowHeights(true);
     setRootIsDecorated(false);
@@ -42,11 +45,33 @@ AutoTypeMatchView::AutoTypeMatchView(QWidget* parent)
     setSelectionMode(QAbstractItemView::SingleSelection);
     header()->setDefaultSectionSize(150);
 
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+    auto* copyUserNameAction = new QAction(tr("Copy &username"), this);
+    auto* copyPasswordAction = new QAction(tr("Copy &password"), this);
+    addAction(copyUserNameAction);
+    addAction(copyPasswordAction);
+
+    connect(copyUserNameAction, SIGNAL(triggered()), this, SLOT(userNameCopied()));
+    connect(copyPasswordAction, SIGNAL(triggered()), this, SLOT(passwordCopied()));
+
     connect(this, SIGNAL(doubleClicked(QModelIndex)), SLOT(emitMatchActivated(QModelIndex)));
     // clang-format off
-    connect(
-        selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(matchSelectionChanged()));
+    connect(selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SIGNAL(matchSelectionChanged()));
     // clang-format on
+}
+
+void AutoTypeMatchView::userNameCopied()
+{
+    clipboard()->setText(currentMatch().entry->username());
+    emit matchTextCopied();
+}
+
+void AutoTypeMatchView::passwordCopied()
+{
+    clipboard()->setText(currentMatch().entry->password());
+    emit matchTextCopied();
 }
 
 void AutoTypeMatchView::keyPressEvent(QKeyEvent* event)
@@ -65,12 +90,26 @@ void AutoTypeMatchView::keyPressEvent(QKeyEvent* event)
 void AutoTypeMatchView::setMatchList(const QList<AutoTypeMatch>& matches)
 {
     m_model->setMatchList(matches);
+
+    bool sameSequences = true;
+    if (matches.count() > 1) {
+        QString sequenceTest = matches[0].sequence;
+        for (const auto& match : matches) {
+            if (match.sequence != sequenceTest) {
+                sameSequences = false;
+                break;
+            }
+        }
+    }
+    setColumnHidden(AutoTypeMatchModel::Sequence, sameSequences);
+
     for (int i = 0; i < m_model->columnCount(); ++i) {
         resizeColumnToContents(i);
         if (columnWidth(i) > 250) {
             setColumnWidth(i, 250);
         }
     }
+
     setFirstMatchActive();
 }
 

@@ -27,6 +27,8 @@ The following libraries are required:
 * libxi, libxtst, qtx11extras (optional for auto-type on X11)
 * libsodium (>= 1.0.12)
 * libargon2
+* qrencode
+* yubikey ykpers (optional to support YubiKey)
 
 Prepare the Building Environment
 ================================
@@ -100,6 +102,7 @@ These steps place the compiled KeePassXC binary inside the `./build/src/` direct
 	  -DWITH_XC_NETWORKING=[ON|OFF] Enable/Disable Networking support (e.g., favicon downloading) (default: OFF)
 	  -DWITH_XC_SSHAGENT=[ON|OFF] Enable/Disable SSHAgent support (default: OFF)
 	  -DWITH_XC_TOUCHID=[ON|OFF] (macOS Only) Enable/Disable Touch ID unlock (default:OFF)
+	  -DWITH_XC_FDOSECRETS=[ON|OFF] (Linux Only) Enable/Disable Freedesktop.org Secrets Service support (default:OFF)
 	  -DWITH_XC_KEESHARE=[ON|OFF] Enable/Disable KeeShare group synchronization extension (default: OFF)
 	  -DWITH_XC_KEESHARE_SECURE=[ON|OFF] Enable/Disable KeeShare signed containers, requires libquazip5 (default: OFF)
 	  -DWITH_XC_ALL=[ON|OFF] Enable/Disable compiling all plugins above (default: OFF)
@@ -147,9 +150,15 @@ You can create a package to redistribute KeePassXC (zip, deb, rpm, dmg, etc..). 
 Testing
 =======
 
-You can perform test on the executable
+You can perform tests on the built executables with:
 ```
-make test
+make test ARGS+="--output-on-failure"
+```
+
+If you are not currently running on an X Server or Wayland, run the tests as follows:
+```
+make test ARGS+="-E test\(cli\|gui\) --output-on-failure"
+xvfb-run -e errors -a --server-args="-screen 0 1024x768x24" make test ARGS+="-R test\(cli\|gui\) --output-on-failure"
 ```
 
 Common parameters:

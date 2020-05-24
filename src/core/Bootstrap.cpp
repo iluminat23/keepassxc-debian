@@ -106,7 +106,11 @@ namespace Bootstrap
     {
         // start minimized if configured
         if (config()->get("GUI/MinimizeOnStartup").toBool()) {
+#ifdef Q_OS_WIN
             mainWindow.showMinimized();
+#else
+            mainWindow.hideWindow();
+#endif
         } else {
             mainWindow.bringToFront();
         }
@@ -257,7 +261,7 @@ namespace Bootstrap
                                       nullptr, // do not change owner or group
                                       pACL, // DACL specified
                                       nullptr // do not change SACL
-                      );
+                   );
 
     Cleanup:
 
