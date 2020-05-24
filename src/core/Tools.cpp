@@ -23,6 +23,7 @@
 #include "core/Config.h"
 #include "core/Translator.h"
 
+#include "git-info.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QIODevice>
@@ -31,9 +32,9 @@
 #include <QRegularExpression>
 #include <QStringList>
 #include <QSysInfo>
+#include <QUrl>
 #include <QUuid>
 #include <cctype>
-#include "git-info.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h> // for Sleep()
@@ -75,7 +76,6 @@ namespace Tools
 #endif
         debugInfo.append("\n");
 
-
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
         debugInfo.append(QObject::tr("Operating system: %1\nCPU architecture: %2\nKernel: %3 %4")
                              .arg(QSysInfo::prettyProductName(),
@@ -108,6 +108,9 @@ namespace Tools
 #endif
 #ifdef WITH_XC_TOUCHID
         extensions += "\n- " + QObject::tr("TouchID");
+#endif
+#ifdef WITH_XC_FDOSECRETS
+        extensions += "\n- " + QObject::tr("Secret Service Integration");
 #endif
 
         if (extensions.isEmpty())
@@ -194,7 +197,7 @@ namespace Tools
 
     bool isHex(const QByteArray& ba)
     {
-        for (const unsigned char c : ba) {
+        for (const uchar c : ba) {
             if (!std::isxdigit(c)) {
                 return false;
             }
@@ -255,6 +258,33 @@ namespace Tools
                 }
             } while (!timer.hasExpired(ms));
         }
+    }
+
+    bool checkUrlValid(const QString& urlField)
+    {
+        if (urlField.isEmpty() || urlField.startsWith("cmd://", Qt::CaseInsensitive)) {
+            return true;
+        }
+
+        QUrl url;
+        if (urlField.contains("://")) {
+            url = urlField;
+        } else {
+            url = QUrl::fromUserInput(urlField);
+        }
+
+        if (url.scheme() != "file" && url.host().isEmpty()) {
+            return false;
+        }
+
+        // Check for illegal characters. Adds also the wildcard * to the list
+        QRegularExpression re("[<>\\^`{|}\\*]");
+        auto match = re.match(urlField);
+        if (match.hasMatch()) {
+            return false;
+        }
+
+        return true;
     }
 
     // Escape common regex symbols except for *, ?, and |

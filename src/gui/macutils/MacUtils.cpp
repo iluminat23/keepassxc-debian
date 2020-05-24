@@ -21,7 +21,8 @@
 
 MacUtils* MacUtils::m_instance = nullptr;
 
-MacUtils::MacUtils(QObject* parent) : QObject(parent)
+MacUtils::MacUtils(QObject* parent)
+    : QObject(parent)
     , m_appkit(new AppKit())
 {
     connect(m_appkit.data(), SIGNAL(lockDatabases()), SIGNAL(lockDatabases()));
@@ -29,7 +30,6 @@ MacUtils::MacUtils(QObject* parent) : QObject(parent)
 
 MacUtils::~MacUtils()
 {
-    
 }
 
 MacUtils* MacUtils::instance()
@@ -74,4 +74,14 @@ bool MacUtils::isHidden()
 bool MacUtils::isDarkMode()
 {
     return m_appkit->isDarkMode();
+}
+
+bool MacUtils::enableAccessibility()
+{
+    return m_appkit->enableAccessibility();
+}
+
+bool MacUtils::enableScreenRecording()
+{
+    return m_appkit->enableScreenRecording();
 }

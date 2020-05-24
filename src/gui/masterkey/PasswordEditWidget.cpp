@@ -43,8 +43,9 @@ bool PasswordEditWidget::addToCompositeKey(QSharedPointer<CompositeKey> key)
     QString pw = m_compUi->enterPasswordEdit->text();
     if (!pw.isEmpty()) {
         key->addKey(QSharedPointer<PasswordKey>::create(pw));
+        return true;
     }
-    return true;
+    return false;
 }
 
 /**
@@ -94,8 +95,6 @@ void PasswordEditWidget::initComponentEditWidget(QWidget* widget)
 
 void PasswordEditWidget::hideEvent(QHideEvent* event)
 {
-    Q_ASSERT(m_compUi->enterPasswordEdit);
-
     if (!isVisible() && m_compUi->enterPasswordEdit) {
         m_compUi->enterPasswordEdit->setText("");
         m_compUi->repeatPasswordEdit->setText("");

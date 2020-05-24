@@ -30,6 +30,7 @@
 #include "core/Metadata.h"
 #include "core/Tools.h"
 #include "format/CsvExporter.h"
+#include "format/HtmlExporter.h"
 #include "gui/Clipboard.h"
 #include "gui/DatabaseOpenDialog.h"
 #include "gui/DatabaseWidget.h"
@@ -62,6 +63,8 @@ DatabaseTabWidget::DatabaseTabWidget(QWidget* parent)
     connect(autoType(), SIGNAL(globalAutoTypeTriggered()), SLOT(performGlobalAutoType()));
     connect(autoType(), SIGNAL(autotypePerformed()), SLOT(relockPendingDatabase()));
     connect(autoType(), SIGNAL(autotypeRejected()), SLOT(relockPendingDatabase()));
+    connect(m_databaseOpenDialog.data(), &DatabaseOpenDialog::dialogFinished,
+            this, &DatabaseTabWidget::databaseUnlockDialogFinished);
     // clang-format on
 
 #ifdef Q_OS_MACOS
@@ -116,15 +119,17 @@ QSharedPointer<Database> DatabaseTabWidget::execNewDatabaseWizard()
     return db;
 }
 
-void DatabaseTabWidget::newDatabase()
+DatabaseWidget* DatabaseTabWidget::newDatabase()
 {
     auto db = execNewDatabaseWizard();
     if (!db) {
-        return;
+        return nullptr;
     }
 
-    addDatabaseTab(new DatabaseWidget(db, this));
+    auto dbWidget = new DatabaseWidget(db, this);
+    addDatabaseTab(dbWidget);
     db->markAsModified();
+    return dbWidget;
 }
 
 void DatabaseTabWidget::openDatabase()
@@ -153,6 +158,7 @@ void DatabaseTabWidget::addDatabaseTab(const QString& filePath,
 {
     QFileInfo fileInfo(filePath);
     QString canonicalFilePath = fileInfo.canonicalFilePath();
+
     if (canonicalFilePath.isEmpty()) {
         emit messageGlobal(tr("Failed to open %1. It either does not exist or is not accessible.").arg(filePath),
                            MessageWidget::Error);
@@ -162,7 +168,8 @@ void DatabaseTabWidget::addDatabaseTab(const QString& filePath,
     for (int i = 0, c = count(); i < c; ++i) {
         auto* dbWidget = databaseWidgetFromIndex(i);
         Q_ASSERT(dbWidget);
-        if (dbWidget && dbWidget->database()->canonicalFilePath() == canonicalFilePath) {
+        if (dbWidget
+            && dbWidget->database()->canonicalFilePath().compare(canonicalFilePath, FILE_CASE_SENSITIVE) == 0) {
             dbWidget->performUnlockDatabase(password, keyfile);
             if (!inBackground) {
                 // switch to existing tab if file is already open
@@ -187,18 +194,24 @@ void DatabaseTabWidget::addDatabaseTab(DatabaseWidget* dbWidget, bool inBackgrou
 {
     Q_ASSERT(dbWidget->database());
 
+    // emit before index change
+    emit databaseOpened(dbWidget);
+
     int index = addTab(dbWidget, "");
     updateTabName(index);
     toggleTabbar();
-
     if (!inBackground) {
         setCurrentIndex(index);
     }
 
+    connect(dbWidget,
+            SIGNAL(requestOpenDatabase(QString, bool, QString, QString)),
+            SLOT(addDatabaseTab(QString, bool, QString, QString)));
     connect(dbWidget, SIGNAL(databaseFilePathChanged(QString, QString)), SLOT(updateTabName()));
-    connect(
-        dbWidget, SIGNAL(requestOpenDatabase(QString, bool, QString)), SLOT(addDatabaseTab(QString, bool, QString)));
     connect(dbWidget, SIGNAL(closeRequest()), SLOT(closeDatabaseTabFromSender()));
+    connect(dbWidget,
+            SIGNAL(databaseReplaced(const QSharedPointer<Database>&, const QSharedPointer<Database>&)),
+            SLOT(updateTabName()));
     connect(dbWidget, SIGNAL(databaseModified()), SLOT(updateTabName()));
     connect(dbWidget, SIGNAL(databaseSaved()), SLOT(updateTabName()));
     connect(dbWidget, SIGNAL(databaseUnlocked()), SLOT(updateTabName()));
@@ -256,6 +269,20 @@ void DatabaseTabWidget::importKeePass1Database()
     auto* dbWidget = new DatabaseWidget(db, this);
     addDatabaseTab(dbWidget);
     dbWidget->switchToImportKeepass1(fileName);
+}
+
+void DatabaseTabWidget::importOpVaultDatabase()
+{
+    QString fileName = fileDialog()->getExistingDirectory(this, "Open .opvault database");
+
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    auto db = QSharedPointer<Database>::create();
+    auto* dbWidget = new DatabaseWidget(db, this);
+    addDatabaseTab(dbWidget);
+    dbWidget->switchToImportOpVault(fileName);
 }
 
 /**
@@ -371,8 +398,12 @@ void DatabaseTabWidget::exportToCsv()
         return;
     }
 
-    QString fileName = fileDialog()->getSaveFileName(
-        this, tr("Export database to CSV file"), QString(), tr("CSV file").append(" (*.csv)"), nullptr, nullptr, "csv");
+    if (!warnOnExport()) {
+        return;
+    }
+
+    const QString fileName = fileDialog()->getSaveFileName(
+        this, tr("Export database to CSV file"), QString(), tr("CSV file").append(" (*.csv)"), nullptr, nullptr);
     if (fileName.isEmpty()) {
         return;
     }
@@ -382,6 +413,43 @@ void DatabaseTabWidget::exportToCsv()
         emit messageGlobal(tr("Writing the CSV file failed.").append("\n").append(csvExporter.errorString()),
                            MessageWidget::Error);
     }
+}
+
+void DatabaseTabWidget::exportToHtml()
+{
+    auto db = databaseWidgetFromIndex(currentIndex())->database();
+    if (!db) {
+        Q_ASSERT(false);
+        return;
+    }
+
+    if (!warnOnExport()) {
+        return;
+    }
+
+    const QString fileName = fileDialog()->getSaveFileName(
+        this, tr("Export database to HTML file"), QString(), tr("HTML file").append(" (*.html)"), nullptr, nullptr);
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    HtmlExporter htmlExporter;
+    if (!htmlExporter.exportDatabase(fileName, db)) {
+        emit messageGlobal(tr("Writing the HTML file failed.").append("\n").append(htmlExporter.errorString()),
+                           MessageWidget::Error);
+    }
+}
+
+bool DatabaseTabWidget::warnOnExport()
+{
+    auto ans =
+        MessageBox::question(this,
+                             tr("Export Confirmation"),
+                             tr("You are about to export your database to an unencrypted file. This will leave your "
+                                "passwords and sensitive information vulnerable! Are you sure you want to continue?"),
+                             MessageBox::Yes | MessageBox::No,
+                             MessageBox::No);
+    return ans == MessageBox::Yes;
 }
 
 void DatabaseTabWidget::changeMasterKey()

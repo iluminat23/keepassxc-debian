@@ -19,10 +19,11 @@
 #import "AppKitImpl.h"
 
 #import <AppKit/NSWorkspace.h>
+#import <CoreVideo/CVPixelBuffer.h>
 
 @implementation AppKitImpl
 
-- (id) initWithObject:(AppKit *)appkit
+- (id) initWithObject:(AppKit*)appkit
 {
     self = [super init];
     if (self) {
@@ -43,10 +44,10 @@
 //
 // Update last active application property
 //
-- (void) didDeactivateApplicationObserver:(NSNotification *) notification
+- (void) didDeactivateApplicationObserver:(NSNotification*) notification
 {
-    NSDictionary *userInfo = notification.userInfo;
-    NSRunningApplication *app = userInfo[NSWorkspaceApplicationKey];
+    NSDictionary* userInfo = notification.userInfo;
+    NSRunningApplication* app = userInfo[NSWorkspaceApplicationKey];
 
     if (app.processIdentifier != [self ownProcessId]) {
         self.lastActiveApplication = app;
@@ -74,7 +75,7 @@
 //
 - (bool) activateProcess:(pid_t) pid
 {
-    NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+    NSRunningApplication* app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
     return [app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
 }
 
@@ -83,7 +84,7 @@
 //
 - (bool) hideProcess:(pid_t) pid
 {
-    NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+    NSRunningApplication* app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
     return [app hide];
 }
 
@@ -92,7 +93,7 @@
 //
 - (bool) isHidden:(pid_t) pid
 {
-    NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+    NSRunningApplication* app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
     return [app isHidden];
 }
 
@@ -101,7 +102,7 @@
 //
 - (bool) isDarkMode
 {
-    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain];
+    NSDictionary* dict = [[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain];
     id style = [dict objectForKey:@"AppleInterfaceStyle"];
     return ( style && [style isKindOfClass:[NSString class]]
              && NSOrderedSame == [style caseInsensitiveCompare:@"dark"] );
@@ -116,6 +117,41 @@
     {
         emit m_appkit->lockDatabases();
     }
+}
+
+//
+// Check if accessibility is enabled, may show an popup asking for permissions
+//
+- (bool) enableAccessibility
+{
+    // Request accessibility permissions for Auto-Type type on behalf of the user
+    NSDictionary* opts = @{static_cast<id>(kAXTrustedCheckOptionPrompt): @YES};
+    return AXIsProcessTrustedWithOptions(static_cast<CFDictionaryRef>(opts));
+}
+
+//
+// Check if screen recording is enabled, may show an popup asking for permissions
+//
+- (bool) enableScreenRecording
+{
+    if (@available(macOS 10.15, *)) {
+        // Request screen recording permission on macOS 10.15+
+        // This is necessary to get the current window title
+        CGDisplayStreamRef stream = CGDisplayStreamCreate(CGMainDisplayID(), 1, 1, kCVPixelFormatType_32BGRA, nil,
+                                                          ^(CGDisplayStreamFrameStatus status, uint64_t displayTime, 
+                                                                  IOSurfaceRef frameSurface, CGDisplayStreamUpdateRef updateRef) {
+                                                              Q_UNUSED(status);
+                                                              Q_UNUSED(displayTime);
+                                                              Q_UNUSED(frameSurface);
+                                                              Q_UNUSED(updateRef);
+                                                          });
+        if (stream) {
+            CFRelease(stream);
+        } else {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 @end
@@ -168,4 +204,14 @@ bool AppKit::isHidden(pid_t pid)
 bool AppKit::isDarkMode()
 {
     return [static_cast<id>(self) isDarkMode];
+}
+
+bool AppKit::enableAccessibility()
+{
+    return [static_cast<id>(self) enableAccessibility];
+}
+
+bool AppKit::enableScreenRecording()
+{
+    return [static_cast<id>(self) enableScreenRecording];
 }

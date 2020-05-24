@@ -31,7 +31,7 @@
 HostInstaller::HostInstaller()
     : HOST_NAME("org.keepassxc.keepassxc_browser")
     , ALLOWED_EXTENSIONS(QStringList() << "keepassxc-browser@keepassxc.org")
-    , ALLOWED_ORIGINS(QStringList() << "chrome-extension://iopaggbpplllidnfmcghoonnokmjoicf/"
+    , ALLOWED_ORIGINS(QStringList() << "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
                                     << "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/")
 #if defined(Q_OS_MACOS)
     , TARGET_DIR_CHROME("/Library/Application Support/Google/Chrome/NativeMessagingHosts")
@@ -40,13 +40,7 @@ HostInstaller::HostInstaller()
     , TARGET_DIR_VIVALDI("/Library/Application Support/Vivaldi/NativeMessagingHosts")
     , TARGET_DIR_TOR_BROWSER("/Library/Application Support/TorBrowser-Data/Browser/Mozilla/NativeMessagingHosts")
     , TARGET_DIR_BRAVE("/Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts")
-#elif defined(Q_OS_LINUX)
-    , TARGET_DIR_CHROME("/.config/google-chrome/NativeMessagingHosts")
-    , TARGET_DIR_CHROMIUM("/.config/chromium/NativeMessagingHosts")
-    , TARGET_DIR_FIREFOX("/.mozilla/native-messaging-hosts")
-    , TARGET_DIR_VIVALDI("/.config/vivaldi/NativeMessagingHosts")
-    , TARGET_DIR_TOR_BROWSER("/.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts")
-    , TARGET_DIR_BRAVE("/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts")
+    , TARGET_DIR_EDGE("/Library/Application Support/Microsoft Edge/NativeMessagingHosts")
 #elif defined(Q_OS_WIN)
     // clang-format off
     , TARGET_DIR_CHROME("HKEY_CURRENT_USER\\Software\\Google\\Chrome\\NativeMessagingHosts\\org.keepassxc.keepassxc_browser")
@@ -56,6 +50,16 @@ HostInstaller::HostInstaller()
     , TARGET_DIR_VIVALDI(TARGET_DIR_CHROME)
     , TARGET_DIR_TOR_BROWSER(TARGET_DIR_FIREFOX)
     , TARGET_DIR_BRAVE(TARGET_DIR_CHROME)
+    , TARGET_DIR_EDGE(
+          "HKEY_CURRENT_USER\\Software\\Microsoft\\Edge\\NativeMessagingHosts\\org.keepassxc.keepassxc_browser")
+#else
+    , TARGET_DIR_CHROME("/.config/google-chrome/NativeMessagingHosts")
+    , TARGET_DIR_CHROMIUM("/.config/chromium/NativeMessagingHosts")
+    , TARGET_DIR_FIREFOX("/.mozilla/native-messaging-hosts")
+    , TARGET_DIR_VIVALDI("/.config/vivaldi/NativeMessagingHosts")
+    , TARGET_DIR_TOR_BROWSER("/.tor-browser/app/Browser/TorBrowser/Data/Browser/.mozilla/native-messaging-hosts")
+    , TARGET_DIR_BRAVE("/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts")
+    , TARGET_DIR_EDGE("/.config/microsoftedge/NativeMessagingHosts")
 #endif
 {
 }
@@ -109,9 +113,7 @@ void HostInstaller::installBrowser(SupportedBrowsers browser,
 #ifdef Q_OS_WIN
         // Create a registry key
         QSettings settings(getTargetPath(browser), QSettings::NativeFormat);
-        if (!registryEntryFound(settings)) {
-            settings.setValue("Default", getPath(browser));
-        }
+        settings.setValue("Default", getPath(browser));
 #endif
         // Always create the script file
         QJsonObject script = constructFile(browser, proxy, location);
@@ -128,9 +130,7 @@ void HostInstaller::installBrowser(SupportedBrowsers browser,
 #ifdef Q_OS_WIN
         // Remove the registry entry
         QSettings settings(getTargetPath(browser), QSettings::NativeFormat);
-        if (registryEntryFound(settings)) {
-            settings.remove("Default");
-        }
+        settings.remove("Default");
 #endif
     }
 }
@@ -143,8 +143,7 @@ void HostInstaller::installBrowser(SupportedBrowsers browser,
  */
 void HostInstaller::updateBinaryPaths(const bool& proxy, const QString& location)
 {
-    // Where 6 is the number of entries in the SupportedBrowsers enum declared in HostInstaller.h
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i <= SupportedBrowsers::EDGE; ++i) {
         if (checkIfInstalled(static_cast<SupportedBrowsers>(i))) {
             installBrowser(static_cast<SupportedBrowsers>(i), true, proxy, location);
         }
@@ -171,7 +170,9 @@ QString HostInstaller::getTargetPath(SupportedBrowsers browser) const
     case SupportedBrowsers::TOR_BROWSER:
         return TARGET_DIR_TOR_BROWSER;
     case SupportedBrowsers::BRAVE:
-      return TARGET_DIR_BRAVE;
+        return TARGET_DIR_BRAVE;
+    case SupportedBrowsers::EDGE:
+        return TARGET_DIR_EDGE;
     default:
         return QString();
     }
@@ -194,11 +195,13 @@ QString HostInstaller::getBrowserName(SupportedBrowsers browser) const
     case SupportedBrowsers::FIREFOX:
         return "firefox";
     case SupportedBrowsers::VIVALDI:
-      return "vivaldi";
+        return "vivaldi";
     case SupportedBrowsers::TOR_BROWSER:
         return "tor-browser";
     case SupportedBrowsers::BRAVE:
-      return "brave";
+        return "brave";
+    case SupportedBrowsers::EDGE:
+        return "edge";
     default:
         return QString();
     }
@@ -299,9 +302,9 @@ QJsonObject HostInstaller::constructFile(SupportedBrowsers browser, const bool& 
 
     QJsonObject script;
     script["name"] = HOST_NAME;
-    script["description"] = "KeePassXC integration with native messaging support";
+    script["description"] = QString("KeePassXC integration with native messaging support");
     script["path"] = path;
-    script["type"] = "stdio";
+    script["type"] = QString("stdio");
 
     QJsonArray arr;
     if (browser == SupportedBrowsers::FIREFOX || browser == SupportedBrowsers::TOR_BROWSER) {
