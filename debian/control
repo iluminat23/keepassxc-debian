@@ -2,6 +2,7 @@ Source: keepassxc
 Section: utils
 Priority: optional
 Maintainer: Julian Andres Klode <jak@debian.org>
+Uploaders: Christoph Martin <martin@uni-mainz.de>
 Build-Depends: cmake,
                debhelper-compat (= 12),
                libargon2-dev | libargon2-0-dev,
