@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.6.0 (unreleased)
+
+### Added
+- Added CLI db-info command [#4231]
+- Switch application icons to Material Design [#4066]
+- Health Check report [#551]
+- HIBP report: Check passwords against the HIBP online service [#1083]
+
+### Changed
+- Renamed CLI create command to db-create [#4231]
+- Added --set-password option for CLI db-create command
+- Added --set-key-file option for CLI db-create command (replacing --key-file option)
+
 ## 2.5.4 (2020-04-09)
 
 ### Fixed

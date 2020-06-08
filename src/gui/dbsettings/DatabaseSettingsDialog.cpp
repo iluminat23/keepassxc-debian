@@ -19,7 +19,6 @@
 #include "DatabaseSettingsDialog.h"
 #include "ui_DatabaseSettingsDialog.h"
 
-#include "DatabaseSettingsPageStatistics.h"
 #include "DatabaseSettingsWidgetEncryption.h"
 #include "DatabaseSettingsWidgetGeneral.h"
 #include "DatabaseSettingsWidgetMasterKey.h"
@@ -35,8 +34,8 @@
 
 #include "core/Config.h"
 #include "core/Database.h"
-#include "core/FilePath.h"
 #include "core/Global.h"
+#include "core/Resources.h"
 #include "touchid/TouchID.h"
 
 class DatabaseSettingsDialog::ExtraPage
@@ -77,15 +76,13 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget* parent)
     connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(save()));
     connect(m_ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
-    m_ui->categoryList->addCategory(tr("General"), FilePath::instance()->icon("categories", "preferences-other"));
-    m_ui->categoryList->addCategory(tr("Security"), FilePath::instance()->icon("status", "security-high"));
+    m_ui->categoryList->addCategory(tr("General"), Resources::instance()->icon("preferences-other"));
+    m_ui->categoryList->addCategory(tr("Security"), Resources::instance()->icon("security-high"));
     m_ui->stackedWidget->addWidget(m_generalWidget);
 
     m_ui->stackedWidget->addWidget(m_securityTabWidget);
     m_securityTabWidget->addTab(m_masterKeyWidget, tr("Master Key"));
     m_securityTabWidget->addTab(m_encryptionWidget, tr("Encryption Settings"));
-
-    addSettingsPage(new DatabaseSettingsPageStatistics());
 
 #if defined(WITH_XC_KEESHARE)
     addSettingsPage(new DatabaseSettingsPageKeeShare());
@@ -103,8 +100,7 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget* parent)
     connect(m_ui->advancedSettingsToggle, SIGNAL(toggled(bool)), SLOT(toggleAdvancedMode(bool)));
 
 #ifdef WITH_XC_BROWSER
-    m_ui->categoryList->addCategory(tr("Browser Integration"),
-                                    FilePath::instance()->icon("apps", "internet-web-browser"));
+    m_ui->categoryList->addCategory(tr("Browser Integration"), Resources::instance()->icon("internet-web-browser"));
     m_ui->stackedWidget->addWidget(m_browserWidget);
 #endif
 
@@ -127,7 +123,7 @@ void DatabaseSettingsDialog::load(const QSharedPointer<Database>& db)
     for (const ExtraPage& page : asConst(m_extraPages)) {
         page.loadSettings(db);
     }
-    m_ui->advancedSettingsToggle->setChecked(config()->get("GUI/AdvancedSettings", false).toBool());
+    m_ui->advancedSettingsToggle->setChecked(config()->get(Config::GUI_AdvancedSettings).toBool());
     m_db = db;
 }
 
@@ -210,5 +206,5 @@ void DatabaseSettingsDialog::toggleAdvancedMode(bool advanced)
         m_encryptionWidget->setAdvancedMode(advanced);
     }
 
-    config()->set("GUI/AdvancedSettings", advanced);
+    config()->set(Config::GUI_AdvancedSettings, advanced);
 }

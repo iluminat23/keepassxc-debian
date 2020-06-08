@@ -20,7 +20,7 @@
 #include "ui_AboutDialog.h"
 
 #include "config-keepassx.h"
-#include "core/FilePath.h"
+#include "core/Resources.h"
 #include "core/Tools.h"
 #include "crypto/Crypto.h"
 
@@ -76,7 +76,7 @@ static const QString aboutContributors = R"(
     <li>fonic (Entry Table View)</li>
     <li>kylemanna (YubiKey)</li>
     <li>c4rlo (Offline HIBP Checker)</li>
-    <li>wolframroesler (HTML Exporter)</li>
+    <li>wolframroesler (HTML Export, Statistics, Password Health, HIBP integration)</li>
     <li>mdaniel (OpVault Importer)</li>
     <li>keithbennett (KeePassHTTP)</li>
     <li>Typz (KeePassHTTP)</li>
@@ -207,7 +207,7 @@ AboutDialog::AboutDialog(QWidget* parent)
     nameLabelFont.setPointSize(nameLabelFont.pointSize() + 4);
     m_ui->nameLabel->setFont(nameLabelFont);
 
-    m_ui->iconLabel->setPixmap(filePath()->applicationIcon().pixmap(48));
+    m_ui->iconLabel->setPixmap(resources()->applicationIcon().pixmap(48));
 
     QString debugInfo = Tools::debugInfo().append("\n").append(Crypto::debugInfo());
     m_ui->debugInfo->setPlainText(debugInfo);
@@ -218,6 +218,8 @@ AboutDialog::AboutDialog(QWidget* parent)
     setAttribute(Qt::WA_DeleteOnClose);
     connect(m_ui->buttonBox, SIGNAL(rejected()), SLOT(close()));
     connect(m_ui->copyToClipboard, SIGNAL(clicked()), SLOT(copyToClipboard()));
+
+    m_ui->buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
 }
 
 AboutDialog::~AboutDialog()
