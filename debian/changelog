@@ -1,3 +1,17 @@
+keepassxc (2.6.0~beta1-1) unstable; urgency=medium
+
+  * New upstream version 2.6.0~beta1
+  * debian/copyright: Merge with COPYING
+  * debian/copyright: OpVault reader test is good now, got a new db
+  * debian/control: Build-Depend on qtbase5-private-dev
+  * debian/patches:
+    - Rebase
+    - Drop testopvaultreader disablement, not needed anymore
+    - revert a commit that caused keepassxc to look into .config/KeePassXC
+      instead of .config/keepassxc
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 08 Jun 2020 21:18:34 +0200
+
 keepassxc (2.5.4+dfsg.1-1) unstable; urgency=medium
 
   [ Julian Andres Klode ]
