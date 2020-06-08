@@ -1,0 +1,24 @@
+From: Julian Andres Klode <jak@debian.org>
+Date: Mon, 8 Jun 2020 21:17:26 +0200
+Subject: Revert "Properly stylize the application name (#3775)"
+
+This reverts commit 6339d61419e70bb9c3cf44caa9119166c0440fb4. It
+causes KeePassXC to look in the wrong directory inside .config
+and not find its settings.
+---
+ src/main.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 9a0ba41..a221969 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -54,7 +54,7 @@ int main(int argc, char** argv)
+ #endif
+ 
+     Application app(argc, argv);
+-    Application::setApplicationName("KeePassXC");
++    Application::setApplicationName("keepassxc");
+     Application::setApplicationVersion(KEEPASSXC_VERSION);
+     app.setProperty("KPXC_QUALIFIED_APPNAME", "org.keepassxc.KeePassXC");
+     app.applyTheme();
