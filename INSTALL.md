@@ -2,9 +2,7 @@ Build and Install KeePassXC
 =================
 
 This document will guide you through the steps to build and install KeePassXC from source.
-You can visit the online version of this document at the following link:
-
-https://github.com/keepassxreboot/keepassx/wiki/Install-Instruction-from-Source
+For more information, see also the [_Building KeePassXC_](https://github.com/keepassxreboot/keepassxc/wiki/Building-KeePassXC) page on the wiki.
 
 The [KeePassXC QuickStart](./docs/QUICKSTART.md) gets you started using KeePassXC on your
 Windows, Mac, or Linux computer using the pre-built binaries.
@@ -35,7 +33,7 @@ Prepare the Building Environment
 
 * [Building Environment on Linux](https://github.com/keepassxreboot/keepassxc/wiki/Set-up-Build-Environment-on-Linux)
 * [Building Environment on Windows](https://github.com/keepassxreboot/keepassxc/wiki/Set-up-Build-Environment-on-Windows)
-* [Building Environment on MacOS](https://github.com/keepassxreboot/keepassxc/wiki/Set-up-Build-Environment-on-OS-X)
+* [Building Environment on MacOS](https://github.com/keepassxreboot/keepassxc/wiki/Set-up-Build-Environment-on-macOS)
 
 Build Steps
 ===========
@@ -70,7 +68,6 @@ git checkout master
 Navigate to the directory where you have downloaded KeePassXC and type these commands:
 
 ```
-cd directory-where-sources-live
 mkdir build
 cd build
 cmake -DWITH_XC_ALL=ON ..

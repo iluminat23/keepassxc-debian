@@ -31,14 +31,14 @@
 #include "core/Config.h"
 #include "core/Database.h"
 #include "core/Entry.h"
-#include "core/FilePath.h"
 #include "core/Group.h"
 #include "core/ListDeleter.h"
+#include "core/Resources.h"
 #include "core/Tools.h"
 #include "gui/MessageBox.h"
 
 #ifdef Q_OS_MAC
-#include "gui/macutils/MacUtils.h"
+#include "gui/osutils/macutils/MacUtils.h"
 #endif
 
 AutoType* AutoType::m_instance = nullptr;
@@ -63,7 +63,7 @@ AutoType::AutoType(QObject* parent, bool test)
         pluginName += "test";
     }
 
-    QString pluginPath = filePath()->pluginPath(pluginName);
+    QString pluginPath = resources()->pluginPath(pluginName);
 
     if (!pluginPath.isEmpty()) {
 #ifdef WITH_XC_AUTOTYPE
@@ -234,7 +234,7 @@ void AutoType::executeAutoTypeActions(const Entry* entry, QWidget* hideWindow, c
 #endif
     }
 
-    Tools::wait(qMax(100, config()->get("AutoTypeStartDelay", 500).toInt()));
+    Tools::wait(qMax(100, config()->get(Config::AutoTypeStartDelay).toInt()));
 
     // Used only for selected entry auto-type
     if (!window) {
@@ -339,7 +339,7 @@ void AutoType::performGlobalAutoType(const QList<QSharedPointer<Database>>& dbLi
 
         m_inGlobalAutoTypeDialog.unlock();
         emit autotypeRejected();
-    } else if ((matchList.size() == 1) && !config()->get("security/autotypeask").toBool()) {
+    } else if ((matchList.size() == 1) && !config()->get(Config::Security_AutoTypeAsk).toBool()) {
         executeAutoTypeActions(matchList.first().entry, nullptr, matchList.first().sequence, m_windowForGlobal);
         m_inGlobalAutoTypeDialog.unlock();
     } else {
@@ -390,7 +390,7 @@ bool AutoType::parseActions(const QString& actionSequence, const Entry* entry, Q
 {
     QString tmpl;
     bool inTmpl = false;
-    m_autoTypeDelay = qMax(config()->get("AutoTypeDelay").toInt(), 0);
+    m_autoTypeDelay = qMax(config()->get(Config::AutoTypeDelay).toInt(), 0);
 
     QString sequence = actionSequence;
     sequence.replace("{{}", "{LEFTBRACE}");
@@ -617,12 +617,12 @@ QList<QString> AutoType::autoTypeSequences(const Entry* entry, const QString& wi
             }
         }
 
-        if (config()->get("AutoTypeEntryTitleMatch").toBool()
+        if (config()->get(Config::AutoTypeEntryTitleMatch).toBool()
             && windowMatchesTitle(windowTitle, entry->resolvePlaceholder(entry->title()))) {
             sequenceList.append(entry->effectiveAutoTypeSequence());
         }
 
-        if (config()->get("AutoTypeEntryURLMatch").toBool()
+        if (config()->get(Config::AutoTypeEntryURLMatch).toBool()
             && windowMatchesUrl(windowTitle, entry->resolvePlaceholder(entry->url()))) {
             sequenceList.append(entry->effectiveAutoTypeSequence());
         }
@@ -684,7 +684,7 @@ bool AutoType::checkSyntax(const QString& string)
     QString allowRepetition = "(?:\\s\\d+)?";
     // the ":" allows custom commands with syntax S:Field
     // exclude BEEP otherwise will be checked as valid
-    QString normalCommands = "(?!BEEP\\s)[A-Z:]*" + allowRepetition;
+    QString normalCommands = "(?!BEEP\\s)[A-Z:_]*" + allowRepetition;
     QString specialLiterals = "[\\^\\%\\(\\)~\\{\\}\\[\\]\\+]" + allowRepetition;
     QString functionKeys = "(?:F[1-9]" + allowRepetition + "|F1[0-2])" + allowRepetition;
     QString numpad = "NUMPAD\\d" + allowRepetition;

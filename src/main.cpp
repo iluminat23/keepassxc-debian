@@ -50,18 +50,18 @@ int main(int argc, char** argv)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#ifdef Q_OS_LINUX
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-#endif
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    QGuiApplication::setDesktopFileName("org.keepassxc.KeePassXC.desktop");
 #endif
 
     Application app(argc, argv);
     Application::setApplicationName("KeePassXC");
     Application::setApplicationVersion(KEEPASSXC_VERSION);
+    app.setProperty("KPXC_QUALIFIED_APPNAME", "org.keepassxc.KeePassXC");
+    app.applyTheme();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    QGuiApplication::setDesktopFileName(app.property("KPXC_QUALIFIED_APPNAME").toString() + QStringLiteral(".desktop"));
+#endif
+
     // don't set organizationName as that changes the return value of
     // QStandardPaths::writableLocation(QDesktopServices::DataLocation)
     Bootstrap::bootstrapApplication();
