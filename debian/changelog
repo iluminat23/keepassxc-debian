@@ -1,3 +1,13 @@
+keepassxc (2.6.0+dfsg.1-1) unstable; urgency=medium
+
+  * New upstream version 2.6.0+dfsg.1 (Closes: #962499)
+  * Add asciidoctor build-depends
+  * Use fonts-font-awesome for documentation instead of online version
+  * debian/source/lintian-overrides: Override spurious source-is-missing
+  * d/p/0002-Revert-Properly-stylize-the-...-name...: Drop, unneeded
+
+ -- Julian Andres Klode <jak@debian.org>  Sun, 12 Jul 2020 20:04:15 +0200
+
 keepassxc (2.6.0~beta1-1) unstable; urgency=medium
 
   * New upstream version 2.6.0~beta1
