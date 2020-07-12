@@ -31,6 +31,7 @@ Vcs-Browser: https://salsa.debian.org/debian/keepassxc
 Package: keepassxc
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
+Recommends: fonts-font-awesome
 Suggests: xclip, webext-keepassxc-browser
 Description: Cross Platform Password Manager
  KeePassXC is a free/open-source password manager or safe which helps you
