@@ -1,3 +1,9 @@
+keepassxc (2.6.1+dfsg.1-1) unstable; urgency=medium
+
+  * New upstream version 2.6.1+dfsg.1
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 20 Aug 2020 08:59:11 +0200
+
 keepassxc (2.6.0+dfsg.1-1) unstable; urgency=medium
 
   * New upstream version 2.6.0+dfsg.1 (Closes: #962499)
