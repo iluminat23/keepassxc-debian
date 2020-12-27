@@ -8,10 +8,10 @@ Build-Depends: asciidoctor,
                libargon2-dev | libargon2-0-dev,
                libcurl4-gnutls-dev,
                libgcrypt20-dev,
-               libquazip-dev,
+               libqrencode-dev,
                libqt5svg5-dev,
                libqt5x11extras5-dev,
-               libqrencode-dev,
+               libquazip-dev,
                libsodium-dev,
                libxtst-dev,
                libykpers-1-dev,
@@ -33,7 +33,7 @@ Package: keepassxc
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Recommends: fonts-font-awesome
-Suggests: xclip, webext-keepassxc-browser
+Suggests: webext-keepassxc-browser, xclip
 Description: Cross Platform Password Manager
  KeePassXC is a free/open-source password manager or safe which helps you
  to manage your passwords in a secure way. You can put all your
