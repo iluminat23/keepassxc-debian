@@ -59,7 +59,12 @@ void Clipboard::setText(const QString& text, bool clear)
     clipboard->setMimeData(mime, QClipboard::Clipboard);
 #else
     mime->setText(text);
+#ifdef Q_OS_LINUX
     mime->setData("x-kde-passwordManagerHint", QByteArrayLiteral("secret"));
+#endif
+#ifdef Q_OS_WIN
+    mime->setData("ExcludeClipboardContentFromMonitorProcessing", QByteArrayLiteral("1"));
+#endif
     clipboard->setMimeData(mime, QClipboard::Clipboard);
 
     if (clipboard->supportsSelection()) {
@@ -67,11 +72,13 @@ void Clipboard::setText(const QString& text, bool clear)
     }
 #endif
 
-    if (clear && config()->get("security/clearclipboard").toBool()) {
-        int timeout = config()->get("security/clearclipboardtimeout").toInt();
-        if (timeout > 0) {
-            m_lastCopied = text;
-            m_timer->start(timeout * 1000);
+    if (clear) {
+        m_lastCopied = text;
+        if (config()->get(Config::Security_ClearClipboard).toBool()) {
+            int timeout = config()->get(Config::Security_ClearClipboardTimeout).toInt();
+            if (timeout > 0) {
+                m_timer->start(timeout * 1000);
+            }
         }
     }
 }
@@ -80,8 +87,9 @@ void Clipboard::clearCopiedText()
 {
     if (m_timer->isActive()) {
         m_timer->stop();
-        clearClipboard();
     }
+
+    clearClipboard();
 }
 
 void Clipboard::clearClipboard()

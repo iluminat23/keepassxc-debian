@@ -12,12 +12,12 @@ GUI test is fine (and the CLI test upstream).
  2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/tests/TestCli.cpp b/tests/TestCli.cpp
-index 076f7f7..a3bb5cd 100644
+index 348afb6..71b68fc 100644
 --- a/tests/TestCli.cpp
 +++ b/tests/TestCli.cpp
-@@ -859,8 +859,8 @@ void TestCli::testEstimate()
-     out.seek(0);
-     auto result = out.readAll();
+@@ -884,8 +884,8 @@ void TestCli::testEstimate()
+     execCmd(estimateCmd, {"estimate", "-a"});
+     auto result = QString(m_stdout->readAll());
      QVERIFY(result.contains("Length " + length));
 -    QVERIFY(result.contains("Entropy " + entropy));
 -    QVERIFY(result.contains("Log10 " + log10));
@@ -27,42 +27,42 @@ index 076f7f7..a3bb5cd 100644
          QVERIFY2(result.contains(string), qPrintable("String " + string + " missing"));
      }
 diff --git a/tests/gui/TestGui.cpp b/tests/gui/TestGui.cpp
-index 9118d3e..d4286eb 100644
+index e59540a..da7d516 100644
 --- a/tests/gui/TestGui.cpp
 +++ b/tests/gui/TestGui.cpp
-@@ -662,17 +662,17 @@ void TestGui::testPasswordEntryEntropy()
+@@ -686,17 +686,17 @@ void TestGui::testPasswordEntryEntropy()
  
-     editNewPassword->setText("");
-     QTest::keyClicks(editNewPassword, "hello");
--    QCOMPARE(entropyLabel->text(), QString("Entropy: 6.38 bit"));
-+    QCOMPARE(entropyLabel->text(), QString("Entropy: 5.78 bit"));
-     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+                generatedPassword->setText("");
+                QTest::keyClicks(generatedPassword, "hello");
+-               QCOMPARE(entropyLabel->text(), QString("Entropy: 6.38 bit"));
++               QCOMPARE(entropyLabel->text(), QString("Entropy: 5.78 bit"));
+                QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
  
-     editNewPassword->setText("");
-     QTest::keyClicks(editNewPassword, "helloworld");
--    QCOMPARE(entropyLabel->text(), QString("Entropy: 13.10 bit"));
-+    QCOMPARE(entropyLabel->text(), QString("Entropy: 12.51 bit"));
-     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+                generatedPassword->setText("");
+                QTest::keyClicks(generatedPassword, "helloworld");
+-               QCOMPARE(entropyLabel->text(), QString("Entropy: 13.10 bit"));
++               QCOMPARE(entropyLabel->text(), QString("Entropy: 12.51 bit"));
+                QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
  
-     editNewPassword->setText("");
-     QTest::keyClicks(editNewPassword, "password1");
--    QCOMPARE(entropyLabel->text(), QString("Entropy: 4.00 bit"));
-+    QCOMPARE(entropyLabel->text(), QString("Entropy: 3.00 bit"));
-     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+                generatedPassword->setText("");
+                QTest::keyClicks(generatedPassword, "password1");
+-               QCOMPARE(entropyLabel->text(), QString("Entropy: 4.00 bit"));
++               QCOMPARE(entropyLabel->text(), QString("Entropy: 3.00 bit"));
+                QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
  
-     editNewPassword->setText("");
-@@ -682,12 +682,12 @@ void TestGui::testPasswordEntryEntropy()
+                generatedPassword->setText("");
+@@ -706,12 +706,12 @@ void TestGui::testPasswordEntryEntropy()
  
-     editNewPassword->setText("");
-     QTest::keyClicks(editNewPassword, "Tr0ub4dour&3");
--    QCOMPARE(entropyLabel->text(), QString("Entropy: 30.87 bit"));
-+    QCOMPARE(entropyLabel->text(), QString("Entropy: 30.89 bit"));
-     QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
+                generatedPassword->setText("");
+                QTest::keyClicks(generatedPassword, "Tr0ub4dour&3");
+-               QCOMPARE(entropyLabel->text(), QString("Entropy: 30.87 bit"));
++               QCOMPARE(entropyLabel->text(), QString("Entropy: 30.89 bit"));
+                QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
  
-     editNewPassword->setText("");
-     QTest::keyClicks(editNewPassword, "correcthorsebatterystaple");
--    QCOMPARE(entropyLabel->text(), QString("Entropy: 47.98 bit"));
-+    QCOMPARE(entropyLabel->text(), QString("Entropy: 47.43 bit"));
-     QCOMPARE(strengthLabel->text(), QString("Password Quality: Weak"));
+                generatedPassword->setText("");
+                QTest::keyClicks(generatedPassword, "correcthorsebatterystaple");
+-               QCOMPARE(entropyLabel->text(), QString("Entropy: 47.98 bit"));
++               QCOMPARE(entropyLabel->text(), QString("Entropy: 47.43 bit"));
+                QCOMPARE(strengthLabel->text(), QString("Password Quality: Weak"));
  
-     editNewPassword->setText("");
+                generatedPassword->setText("");

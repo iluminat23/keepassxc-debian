@@ -1,5 +1,221 @@
 # Changelog
 
+## 2.6.4 (2021-01-31)
+
+### Added
+
+- Automatically adapt to light/dark system theme changes (Windows/macOS only) [#6034]
+
+### Changed
+
+- Show window title as tooltip on system tray [#5948]
+- Compress Snap release as LZO for faster initial startup [#5877]
+- Password generator: Set maximum selectable password length to 999 [#5937]
+
+### Fixed
+
+- Fix crash on app close when using SSH agent [#5935]
+- Fix KDF selection showing wrong item when using Argon2id [#5923]
+- Automatically close About dialog on database lock if it is still open [#5947]
+- Linux: Fix automatic launch at system startup with AppImages [#5901]
+- Linux: Fix click-to-move on empty area activating when using menus [#5971]
+- Linux: Try multiple times to show tray icon if tray is not ready yet [#5948]
+- macOS: Fix KeePassXC blocking clean shutdown [#6002]
+
+## 2.6.3 (2021-01-12)
+
+### Added
+
+- Support Argon2id KDF [#5778]
+- Support XMLv2 key files [#5798]
+
+### Changed
+
+- Improve CSV Import/Export, include time fields and TOTP [#5346]
+- Support empty area dragging of the application window [#5860]
+- Display default Auto-Type sequence in preview pane [#5654]
+- Remove strict length limit on generated passwords [#5748]
+- Hide key file path by default when unlocking database [#5779]
+- Document browser extension use with Edge in managed mode [#5692]
+- Windows: Prevent clipboard history and cloud sync [#5853]
+- macOS: Update the application icon to Big Sur styling [#5851]
+
+### Fixed
+
+- Re-select previously selected entry on database unlock [#5559]
+- Properly save special character choice in password generator [#5610]
+- Fix crash in browser integration with multiple similar entries [#5653]
+- Remove offset on username field in classic theme [#5788]
+- Ensure entry history is copied when drag/dropping entries and groups [#5817]
+- Close modal dialogs when database is locked [#5820]
+- Prevent crash when KeeShare modifies an entry that is currently being edited [#5827]
+- Improve preview of entry attributes [#5834]
+- Always activate/focus database open dialog preventing mistype [#5878]
+- Reports: fix calculation of average password length [#5862]
+- Linux: Delay startup on login to correct tray icon issues [#5724]
+
+## 2.6.2 (2020-10-21)
+
+### Added
+
+- Add option to keep window always on top to view menu [#5542]
+- Move show/hide usernames and passwords to view menu [#5542]
+- Add command line options and environment variables for changing the config locations [#5452]
+- Include TOTP settings in CSV import/export and add support for ISO datetimes [#5346]
+
+### Changed
+
+- Mask sensitive information in command execution confirmation prompt [#5542]
+- SSH Agent: Avoid shortcut conflict on macOS by changing "Add key" to Ctrl+H on all platforms [#5484]
+
+### Fixed
+
+- Prevent data loss with drag and drop between databases [#5536]
+- Fix crash when toggling Capslock rapidly [#5545]
+- Don't mark URL references as invalid URL [#5380]
+- Reset entry preview after search [#5483]
+- Set Qt::Dialog flag on database open dialog [#5356]
+- Fix sorting of database report columns [#5426]
+- Fix IfDevice matching logic [#5344]
+- Fix layout issues and a stray scrollbar appearing on top of the entry edit screen [#5424]
+- Fix tabbing into the notes field [#5424]
+- Fix password generator ignoring settings on load [#5340]
+- Restore natural entry sort order on application load [#5438]
+- Fix paperclip and TOTP columns not saving state [#5327]
+- Enforce fixed password font in entry preview [#5454]
+- Add scrollbar when new database wizard exceeds screen size [#5560]
+- Do not mark database as modified when viewing Auto-Type associations [#5542]
+- CLI: Fix two heap-use-after-free crashes [#5368,#5470]
+- Browser: Fix key exchange not working with multiple simultaneous users on Windows [#5485]
+- Browser: Fix entry retrieval when "only best matching" is enabled [#5316]
+- Browser: Ignore recycle bin on KeePassHTTP migration [#5481]
+- KeeShare: Fix import crash [#5542]
+- macOS: Fix toolbar theming and breadcrumb display issues [#5482]
+- macOS: Fix file dialog randomly closing [#5479]
+- macOS: Fix being unable to select OPVault files for import [#5341]
+
+## 2.6.1 (2020-08-19)
+
+### Added
+
+- Add menu entries for auto-typing only username or only password [#4891]
+- Browser: Add command for retrieving current TOTP [#5278]
+- Improve man pages [#5010]
+- Linux: Support Xfce screen lock signals [#4971]
+- Linux: Add OARS metadata to AppStream markup [#5031]
+- SSH Agent: Substitute tilde with %USERPROFILE% on Windows [#5116]
+
+### Changed
+
+- Improve password generator UI and UX [#5129]
+- Do not prompt to restart if switching the theme back and forth [#5084]
+- Change actions for F1, F2, and F3 keys [#5082]
+- Skip referenced passwords in health check report [#5056]
+- Check system-wide Qt translations directory for downstream translations packaging [#5064]
+- macOS: Change password visibility toggle shortcut to Ctrl+H to avoid conflict with system shortcut [#5114]
+- Browser: Only display domain name in browser access confirm dialog to avoid overly wide window sizes [#5214]
+
+### Fixed
+
+- Fix clipboard not being cleared when database is locked while timeout is still active [#5184]
+- Fix list of previous databases not being cleared in some cases [#5123]
+- Fix saving of non-data changes on database lock [#5210]
+- Fix search results banner theming [#5197]
+- Don't enforce theme palette in Classic theme mode and add hover effect for buttons [#5122,#5267]
+- Fix label clipping in settings on high-DPI screens [#5227]
+- Fix excessive memory usage by icons on systems with high-DPI screens [#5266]
+- Fix crash if number of TOTP digits exceeds ten [#5106]
+- Fix slot detection when first YubiKey is configured on the second slot [#5004]
+- Prevent crash if focus widget gets deleted during saving [#5005]
+- Always show buttons for opening or saving attachments [#4956]
+- Update link to Auto-Type help [#5228]
+- Fix build errors with Ninja [#5121]
+- CLI: Fix db-info command wrongly labelled as db-show in usage listing [#5140]
+- Windows: Use Classic theme by default if high-contrast mode is on [#5191]
+- Linux: Add workaround for qt5ct bug, causing icons not to show up [#5011]
+- Linux: Correct high-DPI display by not allowing fractional scaling [#5185]
+- Browser: Consider subdomain and path when requesting only "best-matching credentials" [#4832]
+- SSH Agent: Always forget all keys on lock [#5115]
+
+## 2.6.0 (2020-07-06)
+
+### Added
+
+- Custom Light and Dark themes [#4110, #4769, #4791, #4892, #4915]
+- Compact mode to use classic Group and Entry line height [#4910]
+- New monochrome tray icons [#4796, #4803]
+- View menu to quickly switch themes, compact mode, and toggle UI elements [#4910]
+- Search for groups and scope search to matched groups [#4705]
+- Save Database Backup feature [#4550]
+- Sort entries by "natural order" and move lines up/down [#4357]
+- Option to launch KeePassXC on system startup/login [#4675]
+- Caps Lock warning on password input fields [#3646]
+- Add "Size" column to entry view [#4588]
+- Browser-like tab experience using Ctrl+[Num] (Alt+[Num] on Linux) [#4063, #4305]
+- Password Generator: Define additional characters to choose from [#3876]
+- Reports: Database password health check (offline) [#3993]
+- Reports: HIBP online service to check for breached passwords [#4438]
+- Auto-Type: DateTime placeholders [#4409]
+- Browser: Show group name in results sent to browser extension [#4111]
+- Browser: Ability to define a custom browser location (macOS and Linux only) [#4148]
+- Browser: Ability to change root group UUID and inline edit connection ID [#4315, #4591]
+- CLI: `db-info` command [#4231]
+- CLI: Use wl-clipboard if xclip is not available (Linux) [#4323]
+- CLI: Incorporate xclip into snap builds [#4697]
+- SSH Agent: Key file path env substitution, SSH_AUTH_SOCK override, and connection test [#3769, #3801, #4545]
+- SSH Agent: Context menu actions to add/remove keys [#4290]
+
+### Changed
+
+- Complete replacement of default database icons [#4699]
+- Complete replacement of application icons [#4066, #4161, #4203, #4411]
+- Complete rewrite of documentation and manpages using Asciidoctor [#4937]
+- Complete refactor of config files; separate between local and roaming [#4665]
+- Complete refactor of browser integration and proxy code [#4680]
+- Complete refactor of hardware key integration (YubiKey and OnlyKey) [#4584, #4843]
+- Significantly improve performance when saving and opening databases [#4309, #4833]
+- Remove read-only detection for database files [#4508]
+- Overhaul of password fields and password generator [#4367]
+- Replace instances of "Master Key" with "Database Credentials" [#4929]
+- Change settings checkboxes to positive phrasing for consistency [#4715]
+- Improve UX of using entry actions (focus fix) [#3893]
+- Set expiration time to Now when enabling entry expiration [#4406]
+- Always show "New Entry" in context menu [#4617]
+- Issue warning before adding large attachments [#4651]
+- Improve importing OPVault [#4630]
+- Improve AutoOpen capability [#3901, #4752]
+- Check for updates every 7 days even while still running [#4752]
+- Improve Windows installer UI/UX [#4675]
+- Improve config file handling of portable distribution [#4131, #4752]
+- macOS: Hide dock icon when application is hidden to tray [#4782]
+- Browser: Use unlock dialog to improve UX of opening a locked database [#3698]
+- Browser: Improve database and entry settings experience [#4392, #4591]
+- Browser: Improve confirm access dialog [#2143, #4660]
+- KeeShare: Improve monitoring file changes of shares [#4720]
+- CLI: Rename `create` command to `db-create` [#4231]
+- CLI: Cleanup `db-create` options (`--set-key-file` and `--set-password`) [#4313]
+- CLI: Use stderr for help text and password prompts [#4086, #4623]
+- FdoSecrets: Display existing secret service process [#4128]
+
+### Fixed
+
+- Fix changing focus around the main window using tab key [#4641]
+- Fix search field clearing while still using the application [#4368]
+- Improve search help widget displaying on macOS and Linux [#4236]
+- Return keyboard focus after editing an entry [#4287]
+- Reset database path after failed "Save As" [#4526]
+- Make builds reproducible [#4411]
+- Improve handling of ccache when building [#4104, #4335]
+- Windows: Use correct UI font and size [#4769]
+- macOS: Properly re-hide application window after browser integration and Auto-Type usage [#4909]
+- Linux: Fix version number not embedded in AppImage [#4842]
+- Auto-Type: Fix crash when performing on new entry [#4132]
+- Browser: Send legacy HTTP settings to recycle bin [#4589]
+- Browser: Fix merging browser keys [#4685]
+- CLI: Fix encoding when exporting database [#3921]
+- SSH Agent: Improve reliability and underlying code [#3833, #4256, #4549, #4595]
+- FdoSecrets: Fix crash when editing settings before service is enabled [#4332]
+
 ## 2.5.4 (2020-04-09)
 
 ### Fixed

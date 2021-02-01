@@ -16,6 +16,10 @@ override_dh_auto_configure:
 	                      -DWITH_XC_UPDATECHECK=OFF \
 	                      -DWITH_XC_ALL=ON
 
+override_dh_auto_install:
+	dh_auto_install
+	sed -i s#https://cdnjs.cloudflare.com/ajax/libs/font-awesome/.*/font-awesome.min.css#../../fonts-font-awesome/css/font-awesome.min.css#g $$(find debian/keepassxc/ -name '*.html')
+
 override_dh_auto_test:
 	dh_auto_test -- ARGS+="-E 'test(cli|gui)'"
 	# testcli and testgui use X, and have horrible X clipboard tests that

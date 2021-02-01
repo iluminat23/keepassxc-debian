@@ -50,54 +50,53 @@ int main(int argc, char** argv)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#ifdef Q_OS_LINUX
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) && defined(Q_OS_WIN)
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 #endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    QGuiApplication::setDesktopFileName("org.keepassxc.KeePassXC.desktop");
-#endif
-
-    Application app(argc, argv);
-    Application::setApplicationName("KeePassXC");
-    Application::setApplicationVersion(KEEPASSXC_VERSION);
-    // don't set organizationName as that changes the return value of
-    // QStandardPaths::writableLocation(QDesktopServices::DataLocation)
-    Bootstrap::bootstrapApplication();
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QObject::tr("KeePassXC - cross-platform password manager"));
     parser.addPositionalArgument(
-        "filename", QObject::tr("filenames of the password databases to open (*.kdbx)"), "[filename(s)]");
+        "filename(s)", QObject::tr("filenames of the password databases to open (*.kdbx)"), "[filename(s)]");
 
     QCommandLineOption configOption("config", QObject::tr("path to a custom config file"), "config");
+    QCommandLineOption localConfigOption(
+        "localconfig", QObject::tr("path to a custom local config file"), "localconfig");
     QCommandLineOption keyfileOption("keyfile", QObject::tr("key file of the database"), "keyfile");
     QCommandLineOption pwstdinOption("pw-stdin", QObject::tr("read password of the database from stdin"));
-    // This is needed under Windows where clients send --parent-window parameter with Native Messaging connect method
-    QCommandLineOption parentWindowOption(QStringList() << "pw"
-                                                        << "parent-window",
-                                          QObject::tr("Parent window handle"),
-                                          "handle");
 
     QCommandLineOption helpOption = parser.addHelpOption();
     QCommandLineOption versionOption = parser.addVersionOption();
     QCommandLineOption debugInfoOption(QStringList() << "debug-info", QObject::tr("Displays debugging information."));
     parser.addOption(configOption);
+    parser.addOption(localConfigOption);
     parser.addOption(keyfileOption);
     parser.addOption(pwstdinOption);
-    parser.addOption(parentWindowOption);
     parser.addOption(debugInfoOption);
+
+    Application app(argc, argv);
+    // don't set organizationName as that changes the return value of
+    // QStandardPaths::writableLocation(QDesktopServices::DataLocation)
+    Application::setApplicationName("KeePassXC");
+    Application::setApplicationVersion(KEEPASSXC_VERSION);
+    app.setProperty("KPXC_QUALIFIED_APPNAME", "org.keepassxc.KeePassXC");
 
     parser.process(app);
 
-    // Don't try and do anything with the application if we're only showing the help / version
+    // Exit early if we're only showing the help / version
     if (parser.isSet(versionOption) || parser.isSet(helpOption)) {
         return EXIT_SUCCESS;
     }
 
-    const QStringList fileNames = parser.positionalArguments();
+    // Process config file options early
+    if (parser.isSet(configOption) || parser.isSet(localConfigOption)) {
+        Config::createConfigFromFile(parser.value(configOption), parser.value(localConfigOption));
+    }
 
+    // Process single instance and early exit if already running
+    const QStringList fileNames = parser.positionalArguments();
     if (app.isAlreadyRunning()) {
         if (!fileNames.isEmpty()) {
             app.sendFileNamesToRunningInstance(fileNames);
@@ -106,7 +105,14 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
-    QApplication::setQuitOnLastWindowClosed(false);
+    // Apply the configured theme before creating any GUI elements
+    app.applyTheme();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    QGuiApplication::setDesktopFileName(app.property("KPXC_QUALIFIED_APPNAME").toString() + QStringLiteral(".desktop"));
+#endif
+
+    Bootstrap::bootstrapApplication();
 
     if (!Crypto::init()) {
         QString error = QObject::tr("Fatal error while testing the cryptographic functions.");
@@ -125,10 +131,6 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
-    if (parser.isSet(configOption)) {
-        Config::createConfigFromFile(parser.value(configOption));
-    }
-
     MainWindow mainWindow;
     QObject::connect(&app, SIGNAL(anotherInstanceStarted()), &mainWindow, SLOT(bringToFront()));
     QObject::connect(&app, SIGNAL(applicationActivated()), &mainWindow, SLOT(bringToFront()));
@@ -145,6 +147,7 @@ int main(int argc, char** argv)
             // buffer for native messaging, even if the specified file does not exist
             QTextStream out(stdout, QIODevice::WriteOnly);
             out << QObject::tr("Database password: ") << flush;
+            Utils::setDefaultTextStreams();
             password = Utils::getPassword();
         }
 
@@ -154,6 +157,11 @@ int main(int argc, char** argv)
     }
 
     int exitCode = Application::exec();
+
+    // Check if restart was requested
+    if (exitCode == RESTART_EXITCODE) {
+        QProcess::startDetached(QCoreApplication::applicationFilePath(), {});
+    }
 
 #if defined(WITH_ASAN) && defined(WITH_LSAN)
     // do leak check here to prevent massive tail of end-of-process leak errors from third-party libraries

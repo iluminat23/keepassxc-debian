@@ -18,8 +18,15 @@
  */
 
 #include "Application.h"
-#include "MainWindow.h"
+
+#include "autotype/AutoType.h"
 #include "core/Config.h"
+#include "core/Global.h"
+#include "core/Resources.h"
+#include "gui/MainWindow.h"
+#include "gui/osutils/OSUtils.h"
+#include "gui/styles/dark/DarkStyle.h"
+#include "gui/styles/light/LightStyle.h"
 
 #include <QFileInfo>
 #include <QFileOpenEvent>
@@ -27,9 +34,6 @@
 #include <QSocketNotifier>
 #include <QStandardPaths>
 #include <QtNetwork/QLocalSocket>
-
-#include "autotype/AutoType.h"
-#include "core/Global.h"
 
 #if defined(Q_OS_WIN) || (defined(Q_OS_UNIX) && !defined(Q_OS_MACOS))
 #include "core/OSEventFilter.h"
@@ -96,7 +100,7 @@ Application::Application(int& argc, char** argv)
         m_lockServer.listen(m_socketName);
         break;
     case QLockFile::LockFailedError: {
-        if (config()->get("SingleInstance").toBool()) {
+        if (config()->get(Config::SingleInstance).toBool()) {
             // Attempt to connect to the existing instance
             QLocalSocket client;
             for (int i = 0; i < 3; ++i) {
@@ -128,6 +132,12 @@ Application::Application(int& argc, char** argv)
         qWarning()
             << QObject::tr("The lock file could not be created. Single-instance mode disabled.").toUtf8().constData();
     }
+
+    connect(osUtils, &OSUtilsBase::interfaceThemeChanged, this, [this]() {
+        if (config()->get(Config::GUI_ApplicationTheme).toString() != "classic") {
+            applyTheme();
+        }
+    });
 }
 
 Application::~Application()
@@ -136,6 +146,41 @@ Application::~Application()
     if (m_lockFile) {
         m_lockFile->unlock();
         delete m_lockFile;
+    }
+}
+
+void Application::applyTheme()
+{
+    auto appTheme = config()->get(Config::GUI_ApplicationTheme).toString();
+    if (appTheme == "auto") {
+        appTheme = osUtils->isDarkMode() ? "dark" : "light";
+#ifdef Q_OS_WIN
+        if (winUtils()->isHighContrastMode()) {
+            appTheme = "classic";
+        }
+#endif
+    }
+    QPixmapCache::clear();
+    if (appTheme == "light") {
+        auto* s = new LightStyle;
+        setPalette(s->standardPalette());
+        setStyle(s);
+    } else if (appTheme == "dark") {
+        auto* s = new DarkStyle;
+        setPalette(s->standardPalette());
+        setStyle(s);
+        m_darkTheme = true;
+    } else {
+        // Classic mode, don't check for dark theme on Windows
+        // because Qt 5.x does not support it
+#ifndef Q_OS_WIN
+        m_darkTheme = osUtils->isDarkMode();
+#endif
+        QFile stylesheetFile(":/styles/base/classicstyle.qss");
+        if (stylesheetFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            setStyleSheet(stylesheetFile.readAll());
+            stylesheetFile.close();
+        }
     }
 }
 
@@ -257,7 +302,7 @@ bool Application::isAlreadyRunning() const
     // In DEBUG mode we can run unlimited instances
     return false;
 #endif
-    return config()->get("SingleInstance").toBool() && m_alreadyRunning;
+    return config()->get(Config::SingleInstance).toBool() && m_alreadyRunning;
 }
 
 bool Application::sendFileNamesToRunningInstance(const QStringList& fileNames)
@@ -280,4 +325,22 @@ bool Application::sendFileNamesToRunningInstance(const QStringList& fileNames)
     client.disconnectFromServer();
     const bool disconnected = client.waitForDisconnected(WaitTimeoutMSec);
     return writeOk && disconnected;
+}
+
+bool Application::isDarkTheme() const
+{
+    return m_darkTheme;
+}
+
+void Application::restart()
+{
+    // Disable single instance
+    m_lockServer.close();
+    if (m_lockFile) {
+        m_lockFile->unlock();
+        delete m_lockFile;
+        m_lockFile = nullptr;
+    }
+
+    exit(RESTART_EXITCODE);
 }
