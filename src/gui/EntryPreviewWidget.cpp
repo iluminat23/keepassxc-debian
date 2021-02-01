@@ -50,9 +50,9 @@ EntryPreviewWidget::EntryPreviewWidget(QWidget* parent)
     // Entry
     m_ui->entryTotpButton->setIcon(resources()->icon("chronometer"));
     m_ui->entryCloseButton->setIcon(resources()->icon("dialog-close"));
-    m_ui->togglePasswordButton->setIcon(resources()->onOffIcon("password-show"));
-    m_ui->toggleEntryNotesButton->setIcon(resources()->onOffIcon("password-show"));
-    m_ui->toggleGroupNotesButton->setIcon(resources()->onOffIcon("password-show"));
+    m_ui->togglePasswordButton->setIcon(resources()->onOffIcon("password-show", true));
+    m_ui->toggleEntryNotesButton->setIcon(resources()->onOffIcon("password-show", true));
+    m_ui->toggleGroupNotesButton->setIcon(resources()->onOffIcon("password-show", true));
 
     m_ui->entryAttachmentsWidget->setReadOnly(true);
     m_ui->entryAttachmentsWidget->setButtonsVisible(false);
@@ -199,16 +199,19 @@ void EntryPreviewWidget::setPasswordVisible(bool state)
     } else {
         m_ui->entryPasswordLabel->setText(QString("\u25cf").repeated(6));
     }
+    m_ui->togglePasswordButton->setIcon(resources()->onOffIcon("password-show", state));
 }
 
 void EntryPreviewWidget::setEntryNotesVisible(bool state)
 {
     setNotesVisible(m_ui->entryNotesTextEdit, m_currentEntry->notes(), state);
+    m_ui->toggleEntryNotesButton->setIcon(resources()->onOffIcon("password-show", state));
 }
 
 void EntryPreviewWidget::setGroupNotesVisible(bool state)
 {
     setNotesVisible(m_ui->groupNotesTextEdit, m_currentGroup->notes(), state);
+    m_ui->toggleGroupNotesButton->setIcon(resources()->onOffIcon("password-show", state));
 }
 
 void EntryPreviewWidget::setNotesVisible(QTextEdit* notesWidget, const QString& notes, bool state)
@@ -286,14 +289,18 @@ void EntryPreviewWidget::updateEntryAdvancedTab()
 
     setTabEnabled(m_ui->entryTabWidget, m_ui->entryAdvancedTab, hasAttributes || hasAttachments);
     if (hasAttributes) {
-        QString attributesText;
+        QString attributesText("<table>");
         for (const QString& key : customAttributes) {
-            QString value = m_currentEntry->attributes()->value(key);
+            QString value;
             if (m_currentEntry->attributes()->isProtected(key)) {
                 value = "<i>" + tr("[PROTECTED]") + "</i>";
+            } else {
+                value = m_currentEntry->attributes()->value(key).toHtmlEscaped();
+                value.replace('\n', QLatin1String("<br/>"));
             }
-            attributesText.append(tr("<b>%1</b>: %2", "attributes line").arg(key, value).append("<br/>"));
+            attributesText.append(tr("<tr><td><b>%1</b>:</td><td>%2</td></tr>", "attributes line").arg(key, value));
         }
+        attributesText.append("</table>");
         m_ui->entryAttributesEdit->setText(attributesText);
     }
 
@@ -303,6 +310,8 @@ void EntryPreviewWidget::updateEntryAdvancedTab()
 void EntryPreviewWidget::updateEntryAutotypeTab()
 {
     Q_ASSERT(m_currentEntry);
+
+    m_ui->entrySequenceLabel->setText(m_currentEntry->effectiveAutoTypeSequence());
     m_ui->entryAutotypeTree->clear();
     QList<QTreeWidgetItem*> items;
     const AutoTypeAssociations* autotypeAssociations = m_currentEntry->autoTypeAssociations();
@@ -314,7 +323,7 @@ void EntryPreviewWidget::updateEntryAutotypeTab()
     }
 
     m_ui->entryAutotypeTree->addTopLevelItems(items);
-    setTabEnabled(m_ui->entryTabWidget, m_ui->entryAutotypeTab, !items.isEmpty());
+    setTabEnabled(m_ui->entryTabWidget, m_ui->entryAutotypeTab, m_currentEntry->autoTypeEnabled());
 }
 
 void EntryPreviewWidget::updateGroupHeaderLine()
