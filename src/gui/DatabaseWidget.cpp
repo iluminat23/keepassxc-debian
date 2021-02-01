@@ -214,13 +214,6 @@ DatabaseWidget::DatabaseWidget(QSharedPointer<Database> db, QWidget* parent)
     m_EntrySearcher = new EntrySearcher(false);
     m_searchLimitGroup = config()->get(Config::SearchLimitGroup).toBool();
 
-#ifdef WITH_XC_SSHAGENT
-    if (sshAgent()->isEnabled()) {
-        connect(this, SIGNAL(databaseLockRequested()), sshAgent(), SLOT(databaseLocked()));
-        connect(this, SIGNAL(databaseUnlocked()), sshAgent(), SLOT(databaseUnlocked()));
-    }
-#endif
-
 #ifdef WITH_XC_KEESHARE
     // We need to reregister the database to allow exports
     // from a newly created database
@@ -437,6 +430,7 @@ void DatabaseWidget::showTotp()
     }
 
     auto totpDialog = new TotpDialog(this, currentEntry);
+    connect(this, &DatabaseWidget::databaseLockRequested, totpDialog, &TotpDialog::close);
     totpDialog->open();
 }
 
@@ -460,6 +454,7 @@ void DatabaseWidget::setupTotp()
 
     auto setupTotpDialog = new TotpSetupDialog(this, currentEntry);
     connect(setupTotpDialog, SIGNAL(totpUpdated()), SIGNAL(entrySelectionChanged()));
+    connect(this, &DatabaseWidget::databaseLockRequested, setupTotpDialog, &TotpSetupDialog::close);
     setupTotpDialog->open();
 }
 
@@ -701,6 +696,7 @@ void DatabaseWidget::showTotpKeyQrCode()
     auto currentEntry = currentSelectedEntry();
     if (currentEntry) {
         auto totpDisplayDialog = new TotpExportSettingsDialog(this, currentEntry);
+        connect(this, &DatabaseWidget::databaseLockRequested, totpDisplayDialog, &TotpExportSettingsDialog::close);
         totpDisplayDialog->open();
     }
 }
@@ -1081,8 +1077,14 @@ void DatabaseWidget::loadDatabase(bool accepted)
         replaceDatabase(openWidget->database());
         switchToMainView();
         processAutoOpen();
+        restoreGroupEntryFocus(m_groupBeforeLock, m_entryBeforeLock);
+        m_groupBeforeLock = QUuid();
+        m_entryBeforeLock = QUuid();
         m_saveAttempts = 0;
         emit databaseUnlocked();
+#ifdef WITH_XC_SSHAGENT
+        sshAgent()->databaseUnlocked(m_db);
+#endif
         if (config()->get(Config::MinimizeAfterUnlock).toBool()) {
             getMainWindow()->minimizeOrHide();
         }
@@ -1169,6 +1171,10 @@ void DatabaseWidget::unlockDatabase(bool accepted)
     switchToMainView();
     processAutoOpen();
     emit databaseUnlocked();
+
+#ifdef WITH_XC_SSHAGENT
+    sshAgent()->databaseUnlocked(m_db);
+#endif
 
     if (senderDialog && senderDialog->intent() == DatabaseOpenDialog::Intent::AutoType) {
         QList<QSharedPointer<Database>> dbList;
@@ -1528,6 +1534,11 @@ bool DatabaseWidget::lock()
 
     emit databaseLockRequested();
 
+    // ignore event if we are active and a modal dialog is still open (such as a message box or file dialog)
+    if (isVisible() && QApplication::activeModalWidget()) {
+        return false;
+    }
+
     clipboard()->clearCopiedText();
 
     if (isEditWidgetModified()) {
@@ -1585,6 +1596,10 @@ bool DatabaseWidget::lock()
     if (currentEntry) {
         m_entryBeforeLock = currentEntry->uuid();
     }
+
+#ifdef WITH_XC_SSHAGENT
+    sshAgent()->databaseLocked(m_db);
+#endif
 
     endSearch();
     clearAllWidgets();
