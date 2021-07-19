@@ -12,7 +12,7 @@ GUI test is fine (and the CLI test upstream).
  2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/tests/TestCli.cpp b/tests/TestCli.cpp
-index 348afb6..71b68fc 100644
+index 80af58b..0948279 100644
 --- a/tests/TestCli.cpp
 +++ b/tests/TestCli.cpp
 @@ -884,8 +884,8 @@ void TestCli::testEstimate()
@@ -27,10 +27,10 @@ index 348afb6..71b68fc 100644
          QVERIFY2(result.contains(string), qPrintable("String " + string + " missing"));
      }
 diff --git a/tests/gui/TestGui.cpp b/tests/gui/TestGui.cpp
-index e59540a..da7d516 100644
+index 0de8be3..0323d53 100644
 --- a/tests/gui/TestGui.cpp
 +++ b/tests/gui/TestGui.cpp
-@@ -686,17 +686,17 @@ void TestGui::testPasswordEntryEntropy()
+@@ -695,17 +695,17 @@ void TestGui::testPasswordEntryEntropy()
  
                 generatedPassword->setText("");
                 QTest::keyClicks(generatedPassword, "hello");
@@ -51,7 +51,7 @@ index e59540a..da7d516 100644
                 QCOMPARE(strengthLabel->text(), QString("Password Quality: Poor"));
  
                 generatedPassword->setText("");
-@@ -706,12 +706,12 @@ void TestGui::testPasswordEntryEntropy()
+@@ -715,12 +715,12 @@ void TestGui::testPasswordEntryEntropy()
  
                 generatedPassword->setText("");
                 QTest::keyClicks(generatedPassword, "Tr0ub4dour&3");
