@@ -1,0 +1,40 @@
+From: Philipp Rosenberger <p.rosenberger@kunbus.com>
+Date: Mon, 19 Jul 2021 12:17:04 +0200
+Subject: Disable git tag check in CMakeLists.txt
+
+Signed-off-by: Philipp Rosenberger <p.rosenberger@kunbus.com>
+---
+ CMakeLists.txt | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 401ab62..a71c717 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,16 +123,16 @@ endif()
+ message(STATUS "Found Git HEAD Revision: ${GIT_HEAD}\n")
+ 
+ # Check if on a tag, if so build as a release
+-execute_process(COMMAND git tag --points-at HEAD
+-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+-        OUTPUT_VARIABLE GIT_TAG
+-        ERROR_QUIET)
+-if(GIT_TAG)
+-    string(STRIP "${GIT_TAG}" GIT_TAG)
+-    set(OVERRIDE_VERSION ${GIT_TAG})
+-elseif(EXISTS ${CMAKE_SOURCE_DIR}/.version)
+-    file(READ ${CMAKE_SOURCE_DIR}/.version OVERRIDE_VERSION)
+-endif()
++#execute_process(COMMAND git tag --points-at HEAD
++#        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
++#        OUTPUT_VARIABLE GIT_TAG
++#        ERROR_QUIET)
++#if(GIT_TAG)
++#    string(STRIP "${GIT_TAG}" GIT_TAG)
++#    set(OVERRIDE_VERSION ${GIT_TAG})
++#elseif(EXISTS ${CMAKE_SOURCE_DIR}/.version)
++#    file(READ ${CMAKE_SOURCE_DIR}/.version OVERRIDE_VERSION)
++#endif()
+ 
+ string(REGEX REPLACE "(\r?\n)+" "" OVERRIDE_VERSION "${OVERRIDE_VERSION}")
+ if(OVERRIDE_VERSION)
