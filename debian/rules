@@ -11,10 +11,12 @@ export LC_ALL := C.UTF-8
 
 override_dh_auto_configure:
 	if [ -e src/zxcvbn/ ]; then rm -r src/zxcvbn/ ; fi
-	dh_auto_configure --  -DWITH_TESTS=ON \
-	                      -DWITH_GUI_TESTS=ON \
-	                      -DWITH_XC_UPDATECHECK=OFF \
-	                      -DWITH_XC_ALL=ON
+	dh_auto_configure -- \
+		-DKEEPASSXC_BUILD_TYPE=Release \
+		-DWITH_TESTS=ON \
+		-DWITH_GUI_TESTS=ON \
+		-DWITH_XC_UPDATECHECK=OFF \
+		-DWITH_XC_ALL=ON
 
 override_dh_auto_install:
 	dh_auto_install
